@@ -1,0 +1,48 @@
+﻿extends layout
+
+block content            
+    div.dasborad-tile
+        h3 Usuario
+        ul
+            li
+                a(href="/usuario/list/1" class="btn-link btn-dash") Gerenciar
+            li                             
+                                               
+                a(href="/usuario/addusuario" class="btn-link btn-dash") Adicionar novo
+                                               
+    div.dasborad-tile                      
+        h3 Cargo                           
+        ul                                 
+            li                             
+                a(href="/cargo/list/1" class="btn-link btn-dash") Gerenciar
+            li                             
+                a(href="/cargo/addcargo" class="btn-link btn-dash") Adicionar novo
+                                               
+    div.dasborad-tile                      
+        h3 Campus                          
+        ul                                 
+            li                             
+                a(href="/campus/list/1" class="btn-link btn-dash") Gerenciar
+            li                             
+                a(href="/campus/addcampus" class="btn-link btn-dash") Adicionar novo
+                                               
+    div.dasborad-tile                      
+        h3 Time                            
+        ul                                 
+            li                             
+                a(href="/time/list/1" class="btn-link btn-dash") Gerenciar
+            li                             
+                a(href="/time/addtime" class="btn-link btn-dash") Adicionar novo
+
+    div.dasborad-tile                      
+        h3 Evento                            
+        ul                                 
+            li                             
+                a(href="/evento/list/1" class="btn-link btn-dash") Gerenciar
+            li                             
+                a(href="/evento/addevento" class="btn-link btn-dash") Adicionar novo
+
+block styles
+    link(rel='stylesheet', href='/css/dashadmin.css')
+
+                

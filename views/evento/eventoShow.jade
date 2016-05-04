@@ -1,0 +1,27 @@
+﻿-var evento = locals.evento
+-function prettyDate(dateString){
+    -var date = new Date(dateString);
+    -var d = date.getDate();
+    -var monthNames = [ "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" ];
+    -var m = monthNames[date.getMonth()];
+    -var y = date.getFullYear();
+    -return d+' '+m+' '+y;
+-}
+div.detail-container
+    div.row
+        h3 #{evento.nome}
+    div.row.detail-section
+        h4 Criador: #{evento.criador.nome}
+    div.row.detail-section
+        h4 Descrição:
+        p #{evento.descricao}
+    div.row.detail-section
+        h4 Começa em:
+        p #{prettyDate(evento.dataIni)}
+    div.row.detail-section
+        h4 Termina em:
+        p #{prettyDate(evento.dataFim)}
+    div.row
+        h3 Participantes do evento
+        each usuario, index in evento.usuarios
+            div.detail-item #{usuario.nome}

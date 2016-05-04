@@ -1,0 +1,43 @@
+﻿extends ../layout
+//locals{
+//    campuss : array
+//    pages : array
+//    active : number
+//}
+
+block styles
+    link(rel='stylesheet', href='../../css/list.css')
+block content     
+    div.table-responsive.col-md-8.col-md-offset-2.col-lg-6.col-lg-offset-3
+        h2 Lista de campus
+        div.pull-right
+            a(class="btn btn-default" href="/campus/addcampus") Novo    
+                span.glyphicon.glyphicon-plus 
+        table.table.table-hover
+            thead
+                tr
+                    th Nome
+                    th Ações
+            tbody
+                -var campuss = locals.campuss
+                each campus, index in campuss
+                    tr(data-id="#{campus._id}")
+                        td !{campus.nome}
+                        td
+                            div.pull-right
+                                button(class = "btn edit")
+                                    span.glyphicon.glyphicon-pencil
+                                button(class = "btn remove")
+                                    span.glyphicon.glyphicon-trash
+        -var pages = locals.pages
+        -var active = locals.active
+        ul.pagination.pag-center
+            each pag, index in pages
+                if pag == active
+                    li(class = "active")
+                        a(page-id="#{pag}") #{pag}
+                else
+                    li
+                        a(page-id="#{pag}") #{pag}
+
+        script(src="../../js/campusList.js")

@@ -1,0 +1,51 @@
+﻿doctype html
+html
+  head
+    title If Conecta
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/layout.css')
+    link(rel="stylesheet", href="/css/font-awesome.min.css")
+    block styles
+    script(src="/js/InsigthsPageView.js" type="text/javascript")
+    script(src="/js/jquery-2.2.0.min.js" )
+    block javascript
+    meta(charset="UTF-8")
+  body
+    nav.navbar.navbar-default.navbar-fixed-top.main-navbar
+        .container-fluid
+            .navbar-brand
+                img(src="../../img/if_logo.png" alt="logo" class="nav-icon pull-left")
+                a(href="/" class="pull-left") If Conecta
+            .navbar-item-right
+                a(href="/logout") Sair
+
+    .main-menu
+        ul
+            if locals.admin == true
+                li
+                    a(href="/usuario/list/1")
+                        i.fa.fa-sidebar.fa-user.fa-2x
+                        span.nav-text Usuários
+                li
+                    a(href="/cargo/list/1")
+                        i.fa.fa-sidebar.fa-briefcase.fa-2x
+                        span.nav-text Cargos
+                li
+                    a(href="/campus/list/1")
+                        i.fa.fa-sidebar.fa-building.fa-2x
+                        span.nav-text Campus
+            li
+                a(href="/time/list/1")
+                    i.fa.fa-sidebar.fa-users.fa-2x
+                    span.nav-text Times
+            li
+                a(href="/evento/list/1")
+                    i.fa.fa-sidebar.fa-calendar.fa-2x
+                    span.nav-text Eventos
+            li
+                a(href="/arquivo/list/1")
+                    i.fa.fa-sidebar.fa-file.fa-2x
+                    span.nav-text Arquivos
+        
+    .container-fluid.content-block.content-top
+        block content

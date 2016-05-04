@@ -1,0 +1,66 @@
+﻿extends ../layout
+
+block styles
+    link(rel='stylesheet', href='/css/bootstrap-datetimepicker.min.css')
+    link(rel='stylesheet', href='/css/eventoForm.css')
+
+block javascript
+    script(type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js")
+    script(src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js")
+block content
+    .col-md-6
+        h2 Criar um Evento
+        form(role="form" id="evForm")
+            .form-group
+                label(for="nome") Nome: 
+                input(type="text", class="form-control", id="nome", placeholder="Nome", maxlength="200")
+            .form-group
+                label(for="descricao") Descrição:
+                textarea(class="form-control", id="descricao", placeholder="Descrição", rows="5", maxlength="500")
+
+            .row
+                .col-md-6
+                    .form-group
+                        label(for="dataIni") Data de início:
+                        div(id="dataIni" class="input-group date")
+                            input(type="text" class="form-control")
+                            span.input-group-addon
+                                span.glyphicon.glyphicon-calendar
+                .col-md-6
+                    .form-group
+                        label(for="dataFim") Data de Fim:
+                        div(id="dataFim" class="input-group date")
+                            input(type="text" class="form-control")
+                            span.input-group-addon
+                                span.glyphicon.glyphicon-calendar
+            .row
+                if(locals.usuarios)
+                    .col-md-6
+                        .form-group
+                            label(for="user_select") Usuarios:
+                            select(class="form-control", id="user_select")
+                                each usuario, index in locals.usuarios
+                                    option(value="#{usuario._id}") #{usuario.nome}
+                            button(type="button" class="btn select-button" id="add_user") Adicionar usuário
+                if(locals.times && locals.times.length > 0)
+                    .col-md-6
+                        .form-group
+                            label(for="time_select") Times:
+                            select(class="form-control", id="time_select")
+                                each time, index in locals.times
+                                    option(value="#{time._id}") #{time.nome}
+                            button(type="button" class="btn select-button" id="add_time") Adicionar usuários do time
+            .form-group
+                h2 Participantes do eventos
+                div.table-responsive
+                    table(class="table table-hover", id="users_table")
+                        thead
+                            tr
+                                th Nome
+                                th Ações
+                        tbody
+            button(type="button" class="btn btn-primary" id="btnSubmit") Gravar
+            a(class="btn btn-default" href="/") Cancelar
+        script(src="../js/eventoForm.js")
+

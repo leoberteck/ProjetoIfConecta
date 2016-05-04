@@ -1,0 +1,18 @@
+﻿-var time = locals.time
+
+div.detail-container
+    div.row
+        h3 #{time.nome}
+
+    div.row.detail-section
+        h4 Administrador: #{time.criador.nome}
+
+    div.row.detail-section
+        h4 Descrição:
+        p #{time.descricao}
+
+    div.row
+        h3 Usuários do time
+        each usuario, index in locals.time.usuarios
+            div.detail-item #{usuario.nome}
+

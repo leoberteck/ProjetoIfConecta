@@ -1,0 +1,27 @@
+﻿doctype html
+html
+  head
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/login.css')
+    link(rel='stylesheet', href='/css/loader.css')
+    title IfConecta
+  body
+    .container
+        .wrapper
+            form(class="form-signin" id="frm-login" action="/login", method="post")
+                h3.form-signin-heading Bem vindo ao If-Conecta
+                hr.colorgraph
+                input(type="text", class="form-control", id="email", placeholder="email", required="", autofocus="" name="email")
+                input(type="password", class="form-control", id="pass", placeholder="senha", required="" name="senha")
+                if locals.message != null && locals.message != ""
+                    div.alert.alert-danger #{locals.message}
+                button(id="login" type="submit" class="btn btn-lg btn-primary btn-block" ) Login
+                a(class="btn btn-lg btn-default btn-block" href="/usuario/new" ) Não sou cadastrado
+            div(class="text-center loading-container" id="loader")
+                .loading-inner
+                    .row
+                        span.glyphicon.glyphicon-refresh.glyphicon-refresh-animate
+                    .row
+                        span Carregando...
+    script(src="/js/jquery-2.2.0.min.js")
+    script(src="/js/login.js")

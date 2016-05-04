@@ -1,0 +1,12 @@
+﻿extends ../layout
+
+block content
+    .col-md-6
+        h2 Criar novo Cargo
+        form(role="form", id="caForm")
+            .form-group
+                label(for="nome") Nome: 
+                input(type="text", class="form-control", id="nome", placeholder="Nome", maxlength="200")
+            button(type="button" class="btn btn-primary" id="btnSubmit") Gravar
+            a(class="btn btn-default" href="/") Cancelar
+        script(src="../js/cargoForm.js")

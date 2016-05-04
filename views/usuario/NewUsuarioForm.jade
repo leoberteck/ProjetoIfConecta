@@ -1,0 +1,42 @@
+﻿doctype html
+html
+    head
+        title If Conecta
+        link(rel='stylesheet', href='/css/bootstrap.min.css')
+        script(src="/js/jquery-2.2.0.min.js")
+        meta(charset="UTF-8")
+    body
+        nav(class="navbar.navbar-default" style="background-color: #82b97f")
+            .container-fluid
+                .navbar-brand
+                    a(href="/" style="color: #FFFFFF;") If Conecta
+        .container-fluid.content-block.col-md-6.col-md-offset-3.col-lg-6.col-lg-offset-3
+            h2 Crie seu perfil de Usuário
+            if locals.message != null && locals.message != ""
+                div.alert.alert-danger #{locals.message}
+            form(role="form", id="usForm" action="/usuario/new" method="post")
+                .form-group
+                    label(for="nome") Nome: 
+                    input(type="text", class="form-control", id="nome", placeholder="Nome", maxlength="200" name="nome")
+                .form-group
+                    label(for="descricao") Descrição: 
+                    textarea(class="form-control", id="descricao", placeholder="Descrição", rows="5", maxlength="500" name="descricao")
+                .form-group
+                    label(for="email") Email: 
+                    input(type="email", class="form-control", id="email", placeholder="Email", maxlength="200" name="email")
+                .form-group
+                    label(for="senha") Senha: 
+                    input(type="password", class="form-control", id="senha", placeholder="Senha", maxlength="12" name="senha")
+                .form-group
+                    label(for="cargo") Cargo: 
+                    select(class="form-control", id="cargo" name="cargo")
+                        each cargo, index in locals.cargos
+                            option(value="#{cargo._id}") #{cargo.nome}
+                .form-group
+                    label(for="campus") Campus:
+                    select(class="form-control", id="campus" name="campus")
+                        each campus, index in locals.campuss
+                            option(value="#{campus._id}") #{campus.nome}
+                button(type="submit" class="btn btn-primary" id="btnSubmit") Gravar
+                a(class="btn btn-default" href="/") Cancelar
+            

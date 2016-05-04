@@ -1,0 +1,43 @@
+﻿extends ../layout
+
+block content
+    .col-md-6
+        h2 Criar um time
+        form(role="form", id="teFrom")
+            .form-group
+                label(for="nome") Nome: 
+                input(type="text", class="form-control", id="nome", placeholder="Nome", maxlength="200")
+            .form-group
+                label(for="descricao") Descrição: 
+                textarea(class="form-control", id="descricao", placeholder="Descrição", rows="5", maxlength="500")
+            .row
+                if(locals.usuarios)
+                    .col-md-6
+                        .form-group
+                            label(for="user_select") Usuarios:
+                            select(class="form-control", id="user_select")
+                                each usuario, index in locals.usuarios
+                                    option(value="#{usuario._id}") #{usuario.nome}
+                            button(type="button" class="btn select-button" id="add_user") Adicionar usuário
+                if(locals.times && locals.times.length > 0)
+                    .col-md-6
+                        .form-group
+                            label(for="time_select") Times:
+                            select(class="form-control", id="time_select")
+                                each time, index in locals.times
+                                    option(value="#{time._id}") #{time.nome}
+                            button(type="button" class="btn select-button" id="add_time") Adicionar usuários do time
+            .form-group
+                h2 Usuários do Time
+                div.table-responsive
+                    table(class="table table-hover", id="users_table")
+                        thead
+                            tr
+                                th Nome
+                                th Ações
+                        tbody
+            button(type="button" class="btn btn-primary" id="btnSubmit") Gravar
+            a(class="btn btn-default" href="/") Cancelar
+        script(src="../js/timeForm.js")
+block styles
+    link(rel='stylesheet', href='../css/timeForm.css')

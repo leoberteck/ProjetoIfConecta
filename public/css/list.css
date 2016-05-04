@@ -1,0 +1,32 @@
+﻿.edit {
+    float : left;
+}
+
+.remove {
+    float : left;
+}
+
+.show {
+    float : left;
+}
+
+.detail-item {
+    padding: 8px;
+    margin-left: 10px;
+
+}
+
+.detail-container {
+    width:420px;
+    margin:10px;
+}
+
+.detail-section {
+    margin:10px;
+}
+
+.pag-center {
+    display:table;
+    margin: 0 auto;
+    margin-bottom: 10px;
+}

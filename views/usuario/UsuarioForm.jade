@@ -1,0 +1,36 @@
+﻿extends ../layout
+
+block content
+    .col-md-6
+        h2 Criar perfil de Usuário
+        form(role="form", id="usForm")
+            .form-group
+                label(for="nome") Nome: 
+                input(type="text", class="form-control", id="nome", placeholder="Nome", maxlength="200")
+            .form-group
+                label(for="descricao") Descrição: 
+                textarea(class="form-control", id="descricao", placeholder="Descrição", rows="5", maxlength="500")
+            .form-group
+                label(for="email") Email: 
+                input(type="email", class="form-control", id="email", placeholder="Email", maxlength="200")
+            .form-group
+                label(for="senha") Senha: 
+                input(type="password", class="form-control", id="senha", placeholder="Senha", maxlength="12")
+            .form-group
+                label(for="cargo") Cargo: 
+                select(class="form-control", id="cargo")
+                    each cargo, index in locals.cargos
+                        option(value="#{cargo._id}") #{cargo.nome}
+            .form-group
+                label(for="campus") Campus:
+                select(class="form-control", id="campus")
+                    each campus, index in locals.campuss
+                        option(value="#{campus._id}") #{campus.nome}
+            if locals.admin == true
+                .form-group
+                    div.checkbox
+                        input(type="checkbox" style="margin-left:0" id="admin") 
+                        label Administrador
+            button(type="button" class="btn btn-primary" id="btnSubmit") Gravar
+            a(class="btn btn-default" href="/") Cancelar
+        script(src="../js/usuarioForm.js")

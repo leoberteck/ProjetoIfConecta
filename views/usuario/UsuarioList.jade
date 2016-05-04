@@ -1,0 +1,39 @@
+﻿extends ../layout
+
+block styles
+    link(rel='stylesheet', href='../../css/list.css')
+block content
+    div.table-responsive.col-lg-8.col-lg-offset-2
+        h2 Lista de usuários
+        div.pull-right
+            a(class="btn btn-default" href="/usuario/addusuario") Novo    
+                span.glyphicon.glyphicon-plus
+        table.table.table-hover
+            thead
+                tr
+                    th Nome
+                    th Cargo
+                    th Ações
+            tbody
+                -var usuarios = locals.usuarios
+                each usuario, index in usuarios
+                    tr(data-id="#{usuario._id}")
+                        td #{usuario.nome}
+                        td #{usuario.cargo.nome}
+                        td
+                            div.pull-right
+                                button(class = "btn edit")
+                                    span.glyphicon.glyphicon-pencil
+                                button(class = "btn remove")
+                                    span.glyphicon.glyphicon-trash
+        -var pages = locals.pages
+        -var active = locals.active
+        ul.pagination.pag-center
+            each pag, index in pages
+                if pag == active
+                    li(class = "active")
+                        a(page-id="#{pag}") #{pag}
+                else
+                    li
+                        a(page-id="#{pag}") #{pag}
+        script(src="../../js/usuarioList.js")

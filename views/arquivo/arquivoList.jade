@@ -1,0 +1,53 @@
+﻿extends ../layout
+
+block content
+    div.table-responsive.col-md-8.col-md-offset-2.col-lg-6.col-lg-offset-3
+        h2 Lista de arquivos
+        div.pull-right
+            a(class="btn btn-default" href="/arquivo/addarquivo") Novo    
+                span.glyphicon.glyphicon-plus
+        table.table.table-hover
+            thead
+                tr
+                    th Nome
+                    th Ações
+            tbody
+                -var arquivos = locals.arquivos
+                each arquivo, index in arquivos
+                    tr(data-id="#{arquivo._id}")
+                        td #{arquivo.nome}
+                        td
+                            div.pull-right
+                                if locals.admin == true || arquivo.criador == locals.userid
+                                    button(class = "btn edit")
+                                        span.glyphicon.glyphicon-pencil
+                                    button(class = "btn remove")
+                                        span.glyphicon.glyphicon-trash
+                                button(type="button", class = "btn show", data-toggle="modal", data-target="#arquivoModal")
+                                    span.glyphicon.glyphicon-eye-open
+        -var pages = locals.pages
+        -var active = locals.active
+        ul.pagination.pag-center
+            each pag, index in pages
+                if pag == active
+                    li(class = "active")
+                        a(page-id="#{pag}") #{pag}
+                else
+                    li
+                        a(page-id="#{pag}") #{pag}
+
+    div(class="modal fade", id="arquivoModal", role="dialog")
+        div.modal-dialog
+            div(class="modal-content")
+                div.modal-header
+                    button(type="button", class="close", data-dismiss="modal") &arquivos;
+                    h4.modal-title Detalhes do arquivo
+                div(class="modal-body" id="modalBody" style="height:500px;overflow:auto")
+                div.modal-footer
+                    button(type="button", class="btn btn-default", data-dismiss="modal") Fechar
+    script(src="../../js/arquivoList.js")
+
+block styles
+    link(rel='stylesheet', href='../../css/list.css')
+block javascript
+    script(src="../../js/bootstrap.min.js")

@@ -1,0 +1,52 @@
+﻿extends ../layout
+
+block content
+    .col-md-6
+        h2 Editar perfil de Usuário
+        -var usuario = locals.usuario
+        form(role="form", id="usForm")
+            .form-group
+                input(type="hidden" id="id" value="#{usuario._id}")
+                label(for="nome") Nome: 
+                input(type="text", class="form-control", id="nome", placeholder="Nome", maxlength="200", value="#{usuario.nome}")
+            .form-group
+                label(for="descricao") Descrição: 
+                textarea(class="form-control", id="descricao", placeholder="Descrição", rows="5", maxlength="500") #{usuario.descricao}
+            .form-group
+                label(for="email") Email: 
+                input(type="email", class="form-control", id="email", placeholder="Email", maxlength="200", value="#{usuario.email}")
+            .form-group
+                label(for="cargo") Cargo: 
+                select(class="form-control", id="cargo")
+                    each cargo, index in locals.cargos
+                        if cargo._id == usuario.cargo.id
+                            option(value="#{cargo._id}" selected) #{cargo.nome}
+                        else
+                            option(value="#{cargo._id}") #{cargo.nome}
+            .form-group
+                label(for="campus") Campus:
+                select(class="form-control", id="campus")
+                    each campus, index in locals.campuss
+                        if campus._id == usuario.campus.id
+                            option(value="#{campus._id}" selected) #{campus.nome}
+                        else
+                            option(value="#{campus._id}") #{campus.nome}
+            .form-group
+                h2 Times que você pertence
+                div.table-responsive
+                    table(class="table table-hover", id="times_table")
+                        thead
+                            tr
+                                th Nome
+                                th Ações
+                        tbody
+                            each time, index in locals.usuario.times
+                                tr(id="tr_#{index}" data-id="#{time._id}")
+                                    td #{time.nome}
+                                    td
+                                        button(type="button" class = "btn remove")
+                                            span.glyphicon.glyphicon-trash
+                                
+            button(type="button" class="btn btn-primary" id="btnSubmit") Gravar
+            a(class="btn btn-default" href="/") Cancelar
+        script(src="../../js/usuarioEdit.js")

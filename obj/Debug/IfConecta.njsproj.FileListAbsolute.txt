@@ -1,0 +1,2 @@
+C:\Users\leo\Documents\IfConecta\IfConecta\obj\Debug\IfConecta.njsprojResolveAssemblyReference.cache
+C:\Users\leo\Documents\IfConecta\IfConecta\bin\Microsoft.NodejsTools.WebRole.dll

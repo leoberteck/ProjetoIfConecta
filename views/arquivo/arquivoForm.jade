@@ -1,0 +1,16 @@
+﻿extends ../layout
+
+block content
+    .col-md-6
+        h2 Criar um arquivo
+        form
+            .form-group
+                legend Escolha um arquivo para fazer upload.
+                input(type='file', name='arquivo', id='arquivo', class='form-control btn')
+                button(type="button" class="btn btn-primary" id="btnSubmit") Upload
+        .form-group
+            div.progress.progress-striped.active.hide
+                div.bar(style='width: 0%')
+        script(src="../js/arquivoForm.js")
+block styles
+    
