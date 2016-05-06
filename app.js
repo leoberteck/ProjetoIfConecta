@@ -6,7 +6,7 @@ var mongoose = require('mongoose')
 var session = require('express-session')
 var passport = require('passport')
 var flash = require('connect-flash')
-var confString = require('./config/confString.js')
+//var confString = require('./config/confstring.js')
 var insights = require('applicationinsights')
 var grid = require('gridfs-stream')
 
@@ -17,7 +17,7 @@ grid.mongo = mongoose.mongo
 var gridfs = grid(db)
 
 //Configure Environment
-confString.config()
+//confString.config()
 insights.setup("01b3ae60-6cb5-4c64-81c6-2b4fc209b99b").start()
 
 var app = express()
