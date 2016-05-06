@@ -10,7 +10,7 @@ var flash = require('connect-flash')
 var insights = require('applicationinsights')
 var grid = require('gridfs-stream')
 
-var dbUrl = process.env.MONGO_URL || process.env.MONGOLAB_URI || 'mongodb//@localhost:27017/ifconecta'
+var dbUrl = process.env.MONGO_URL || process.env.MONGODB_URI || 'mongodb//@localhost:27017/ifconecta'
 var db = mongoose.connect(dbUrl, { safe: true })
 var logHelper = require('./helper/logHelper.js')
 grid.mongo = mongoose.mongo
