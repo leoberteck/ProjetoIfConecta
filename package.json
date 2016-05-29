@@ -19,6 +19,7 @@
     "express": "~4.9.0",
     "express-session": "^1.13.0",
     "googleapis": "^2.1.7",
+    "gridfs-storage-engine": "^0.2.4",
     "gridfs-stream": "^1.1.1",
     "jade": "~1.6.0",
     "method-override": "^2.3.5",
