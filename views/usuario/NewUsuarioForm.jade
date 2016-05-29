@@ -36,7 +36,7 @@ html
                     label(for="campus") Campus:
                     select(class="form-control", id="campus" name="campus")
                         each campus, index in locals.campuss
-                            option(value="#{campus._id}") #{campus.nome}
+                            option(value="#{campus._id}") !{campus.nome}
                 button(type="submit" class="btn btn-primary" id="btnSubmit") Gravar
                 a(class="btn btn-default" href="/") Cancelar
             

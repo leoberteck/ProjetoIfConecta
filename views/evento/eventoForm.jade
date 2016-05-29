@@ -19,21 +19,19 @@ block content
                 label(for="descricao") Descrição:
                 textarea(class="form-control", id="descricao", placeholder="Descrição", rows="5", maxlength="500")
 
-            .row
-                .col-md-6
-                    .form-group
-                        label(for="dataIni") Data de início:
-                        div(id="dataIni" class="input-group date")
-                            input(type="text" class="form-control")
-                            span.input-group-addon
-                                span.glyphicon.glyphicon-calendar
-                .col-md-6
-                    .form-group
-                        label(for="dataFim") Data de Fim:
-                        div(id="dataFim" class="input-group date")
-                            input(type="text" class="form-control")
-                            span.input-group-addon
-                                span.glyphicon.glyphicon-calendar
+            
+            div(style="margin:auto;" class="row")
+                label(for="dataIni") Data de início:
+                div(id="dataIni" class="input-group date" style="margin:auto;")
+                    //input(type="text" class="form-control" placeholder="Selecione a data e hora")
+                    //span.input-group-addon
+                    //    span.glyphicon.glyphicon-calendar
+            div(style="margin:auto;" class="row" )
+                label(for="dataFim") Data de Fim:
+                div(id="dataFim" class="input-group date" style="margin:auto;")
+                    //input(type="text" class="form-control" placeholder="Selecione a data e hora")
+                    //span.input-group-addon
+                    //    span.glyphicon.glyphicon-calendar
             .row
                 if(locals.usuarios)
                     .col-md-6

@@ -1,9 +1,8 @@
 ﻿var mongoose = require('mongoose')
 var logger = require('../helper/logHelper.js')
 var UsuarioModel = require('./Usuario.js')
-var fs = require('fs')
+var gridfs = require('../config/gridfs.js')()
 var Schema = mongoose.Schema
-var gridfs
 
 var ARQUIVO_ADD_NOTF = "Você ganhou acesso a um arquivo"
 var ARQUIVO_REMOVED_NOFT = "Um Arquivo foi removido"
@@ -13,10 +12,8 @@ var ARQUIVO_UPDATE_NOTF = "O arquivo foi alterado"
 var arquivoSchema = new Schema({
     nome : { type : String, required : true },
     nomeArquivo : String,
-    idArquivo : { type : Schema.Types.ObjectId },
+    gridId : { type : Schema.Types.ObjectId },
     descricao  : String,
-    dados : Buffer,
-    tamanhoBytes : Number,
     palavrasChave : [{ type: String, trim: true }],
     usuarios : [{ type : Schema.Types.ObjectId, ref : 'User' }],
     criador : { type : Schema.Types.ObjectId, ref : 'User' }
@@ -35,34 +32,22 @@ arquivoSchema.statics.validateArquivo = function (arquivo, callback) {
 
 arquivoSchema.statics.addNewArquivo = function (file, criador, callback) {
     var model = this
-    generateUsersArray(obj.usuarios, obj.times, function (usuarios) {
-        var extension = file.path.split(/[. ]+/).pop()
-        var is = fs.createReadStream(file.path)
-        var os = gridfs.createWriteStream({ filename : obj.nomeArquivo })
-        is.pipe(os)
-                
-        os.on('close', function (savedFile) {
-            fs.unlink(file.path)
-            var newarquivo = {
-                nome : file.name,
-                nomeArquivo : file.name,
-                idArquivo : savedFile._id
-            }
-                    
-            model.create(newarquivo, function saveCB(err, response) {
-                if (err) {
-                    logger.newErrorLog(err, "Error on route save validator: ", criador, "addNewArquivo")
-                    callback(err)
-                } else {
-                    response.usuarios.forEach(function (entry) {
-                        UsuarioModel.addNotfArquivo(response.criador, entry, ARQUIVO_ADD_NOTF, response)
-                    })
-                    upadteUserArquivo(response.usuarios, response._id)
-                    callback(null, response._id)
-                }
-            })
-        })
+    var newArquivo = {
+        nome : file.gridfsEntry.filename,
+        nomeArquivo : file.gridfsEntry.filename,
+        gridId : file.gridfsEntry._id,
+        usuarios : [criador],
+        criador : criador
+    }
+    model.create(newArquivo, function (err, response) {
+        if (err) {
+            logger.newErrorLog(err, "Error on save", null, "addNewArquivo")
+            callback(err)
+        } else { 
+            callback(null, response._id)
+        }
     })
+
 }
 
 arquivoSchema.statics.updateArquivo = function (obj, usuarios_to_remove, sessionUser, callback) {
@@ -185,8 +170,4 @@ function upadteUserArquivo(usuarios, idArquivo) {
     })
 }
 
-module.exports = function (gfs) 
-{
-    gridfs = gfs
-    return mongoose.model('Arquivo', arquivoSchema)
-}
+module.exports = mongoose.model('Arquivo', arquivoSchema)

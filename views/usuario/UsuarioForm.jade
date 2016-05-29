@@ -25,7 +25,7 @@ block content
                 label(for="campus") Campus:
                 select(class="form-control", id="campus")
                     each campus, index in locals.campuss
-                        option(value="#{campus._id}") #{campus.nome}
+                        option(value="#{campus._id}") !{campus.nome}
             if locals.admin == true
                 .form-group
                     div.checkbox

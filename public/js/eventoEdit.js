@@ -100,13 +100,17 @@ function removetablerow(event) {
 $(document).ready(function () {
     $("#dataIni").datetimepicker({
         format: 'DD/MM/YYYY HH:mm',
-        locale: 'pt-BR'
+        locale: 'pt-BR',
+        inline: true,
+        sideBySide: true
     })
     
     $("#dataFim").datetimepicker({
         format: 'DD/MM/YYYY HH:mm',
         locale: 'pt-BR',
-        useCurrent: false
+        useCurrent: false,
+        inline: true,
+        sideBySide: true
     })
     
     $("#dataIni").on("dp.change", function (e) {

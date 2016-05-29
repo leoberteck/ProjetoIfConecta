@@ -2,22 +2,21 @@
 var path = require('path')
 var logger = require('morgan')
 var bodyParser = require('body-parser')
-var mongoose = require('mongoose')
 var session = require('express-session')
 var passport = require('passport')
 var flash = require('connect-flash')
-//var confString = require('./config/confstring.js')
 var insights = require('applicationinsights')
-var grid = require('gridfs-stream')
-
-var dbUrl = process.env.MONGO_URL || process.env.MONGODB_URI || 'mongodb//@localhost:27017/ifconecta'
-var db = mongoose.connect(dbUrl, { safe: true })
+var multer = require('multer')
+var storage = require('gridfs-storage-engine')({
+    url: process.env.MONGO_URL || process.env.MONGODB_URI || 'mongodb://@localhost:27017/ifconecta'
+})
 var logHelper = require('./helper/logHelper.js')
-grid.mongo = mongoose.mongo
-var gridfs = grid(db)
 
 //Configure Environment
-//confString.config()
+//Adds the function string.parse to the String prototype
+require('./config/confstring.js')()
+//Connects with the database
+var db = require('./config/db.js')()
 insights.setup("01b3ae60-6cb5-4c64-81c6-2b4fc209b99b").start()
 
 var app = express()
@@ -25,9 +24,6 @@ var app = express()
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
-
-// seta gridfs
-app.set('gridfs', gridfs)
 
 //Autorization middleware
 var authorizeAdmin = function (req, res, next) {
@@ -51,7 +47,7 @@ var authorize = function (req, res, next) {
 };
 
 //Routes variables
-var routes = require('./routes/index.js')(app)
+var routes = require('./routes/index.js')
 
 require('./config/passport.js')(passport)
 
@@ -59,16 +55,18 @@ app.use(logger('dev'))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+//Os cookies são cookies de sessão, ou seja, quando fecha a aba perde os cookies
 app.use(session({
     secret : "037ac86061f8cccc60a64b4d399549fb",
     resave : false  ,
-    saveUninitialized : false,
-    cookie: {maxAge : 600000}
+    saveUninitialized : false
 }))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
-
+//Multer
+app.use('/uploads', express.static(__dirname + "/uploads"));
+app.use(multer({ storage: storage}).single('arquivo'))
 
 //Public Routes
 app.get('/', routes.index)
@@ -133,7 +131,6 @@ app.get('/time/show/:id', routes.time.viewShow)
 
 //Evento
 app.get('/evento/*', authorize)
-app.post('/time/*', authorize)
 app.get('/evento/addevento', routes.evento.viewForm)
 app.post('/evento/addevento', routes.evento.saveItem)
 app.get('/evento/editevento/:id', routes.evento.viewEdit)

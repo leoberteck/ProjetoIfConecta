@@ -16,7 +16,7 @@ exports.viewEdit = function (req, res, next) {
     var id = req.params.id
     model.findOne({ _id : id }, function showFindOneCB(err, obj) {
         if (err) { logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "viewEdit") }
-        var locals = { campus : obj, admin : req.session.admin }
+        var locals = { campus : obj, admin : req.session.admin, name : req.session.user.nome }
         res.render(viewEditUrl, locals)
     })
 }
@@ -40,7 +40,8 @@ exports.viewList = function (req, res, next) {
                             campuss : objs,
                             pages : pages,
                             active : page,
-                            admin : req.session.admin
+                            admin : req.session.admin,
+                            name : req.session.user.nome
                         }
                         res.render(viewListUrl, locals)
                     }
@@ -105,7 +106,7 @@ exports.removeItem = function (req, res, next) {
 //Generic functions can be used on both request  handlers and api functions
 
 var getAll = function (skip, callback) {
-    model.find({}, {}, { skip: skip, limit: 30 }, function getobjsCB(err, objs) {
+    model.find({}, {}, { skip: skip, limit: 30, sort: "nome" }, function getobjsCB(err, objs) {
         if (err) {
             callback(err)
         }

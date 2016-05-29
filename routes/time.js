@@ -31,7 +31,8 @@ exports.viewEdit = function (req, res, next) {
                         usuarios : result.usuarios,
                         times : result.times,
                         time : time,
-                        admin : req.session.admin
+                        admin : req.session.admin,
+                        name : req.session.user.nome
                     }
                     res.render(viewEditUrl, locals)
                 }
@@ -94,7 +95,8 @@ exports.viewShow = function (req, res, next) {
         } else {
             var locals = {
                 time : obj,
-                admin : req.session.admin
+                admin : req.session.admin,
+                name : req.session.user.nome
             }
             res.render(viewShowUrl, locals)
         }
@@ -155,7 +157,8 @@ var getAll = function (skip, idCriador, callback) {
     if (idCriador) {
         filtro = {criador : idCriador}
     }
-    model.find(filtro, {}, { skip: skip, limit: 30 }, function getobjsCB(err, objs) {
+    // }).sort({nome : 1}).exec(
+    model.find(filtro, {}, { skip: skip, limit: 30, sort: 'nome' }, function getobjsCB(err, objs) {
         if (err) {
             callback(err)
         } else {
@@ -170,13 +173,13 @@ function getFormLocals(callback) {
     var locals
     var UsuarioModel = require('../models/Usuario.js')
     //Get usuarios
-    UsuarioModel.find({}, function (err, usuarios) {
+    UsuarioModel.find({}, {}, {sort : "nome"}, function (err, usuarios) {
         if (err) {
             error.status = 500
             callback(error)
         } else {
             locals = { usuarios : usuarios, times : null, admin : false }
-            model.find({}, function (err, times) {
+            model.find({}, {}, {sort : "nome"}, function (err, times) {
                 if (err) {
                     callback(err)
                 } else {

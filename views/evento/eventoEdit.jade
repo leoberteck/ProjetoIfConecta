@@ -23,24 +23,14 @@ block content
             .form-group
                 label(for="descricao") Descrição:
                 textarea(class="form-control", id="descricao", placeholder="Descrição", rows="5", maxlength="500") #{evento.descricao}
-
-            .row
-                .col-md-6
-                    .form-group
-                        input(type="hidden" id="valDataIni" value="#{evento.dataIni}")
-                        label(for="dataIni") Data de início:
-                        div(id="dataIni" class="input-group date")
-                            input(type="text" class="form-control")
-                            span.input-group-addon
-                                span.glyphicon.glyphicon-calendar
-                .col-md-6
-                    .form-group
-                        input(type="hidden" id="valDataFim" value="#{evento.dataFim}")  
-                        label(for="dataFim") Data de Fim:
-                        div(id="dataFim" class="input-group date")
-                            input(type="text" class="form-control")
-                            span.input-group-addon
-                                span.glyphicon.glyphicon-calendar
+            div(style="margin:auto;" class="row")
+                input(type="hidden" id="valDataIni" value="#{evento.dataIni}")
+                label(for="dataIni") Data de início:
+                div(id="dataIni" class="input-group date" style="margin:auto;")
+            div(style="margin:auto;" class="row" )
+                input(type="hidden" id="valDataFim" value="#{evento.dataFim}")  
+                label(for="dataFim") Data de Fim:
+                div(id="dataFim" class="input-group date" style="margin:auto;")
             .row
                 if(locals.usuarios)
                     .col-md-6

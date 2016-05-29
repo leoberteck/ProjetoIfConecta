@@ -63,7 +63,8 @@ exports.viewEdit = function (req, res, next) {
                         cargos : result.cargos,
                         campuss : result.campuss,
                         usuario : usuario,
-                        admin : req.session.admin
+                        admin : req.session.admin,
+                        name : req.session.user.nome
                     }
                     res.render(viewEditUrl, locals)
                 }
@@ -91,7 +92,8 @@ exports.viewList = function (req, res, next) {
                             usuarios : objs,
                             pages : pages,
                             active : page,
-                            admin : req.session.admin
+                            admin : req.session.admin,
+                            name : req.session.user.nome
                         }
                         res.render(viewListUrl, locals)
                     }
@@ -187,7 +189,7 @@ exports.timeline = function (req, res, next) {
 
 //Generic functions can be used on both request  handlers and api functions
 var getAll = function (skip, callback) {
-    model.find({}, {}, { skip: skip, limit: 30 }, function getobjsCB(err, objs) {
+    model.find({}, {}, { skip: skip, limit: 30, sort : "nome" }, function getobjsCB(err, objs) {
         if (err) {
             callback(err)
         } else { 
@@ -203,7 +205,7 @@ function getFormLocals(callback) {
     var locals
     var CargoModel = require('../models/Cargo.js')
     //Gets cargos
-    CargoModel.find({}, function (error, cargos) {
+    CargoModel.find({}, {}, {sort : "nome"}, function (error, cargos) {
         if (error) {
             error.status = 500
             callback(error)
@@ -211,7 +213,7 @@ function getFormLocals(callback) {
             locals = { cargos : cargos, campuss : null, admin : false }
             //Get Campus
             var CampusModel = require('../models/Campus.js')
-            CampusModel.find({}, function (error, campuss) {
+            CampusModel.find({}, {}, {sort : "nome"}, function (error, campuss) {
                 if (error) {
                     error.status = 500
                     callback(error)

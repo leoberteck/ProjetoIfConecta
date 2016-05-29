@@ -18,9 +18,15 @@ html
                 a(href="/" class="pull-left") If Conecta
             .navbar-item-right
                 a(href="/logout") Sair
+            .navbar-item-right
+                p #{locals.name}
 
     .main-menu
         ul
+            li
+                a(href="/")
+                    i.fa.fa-sidebar.fa-home.fa-2x
+                    span.nav-text Home
             if locals.admin == true
                 li
                     a(href="/usuario/list/1")

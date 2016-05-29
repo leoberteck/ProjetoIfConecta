@@ -28,9 +28,9 @@ block content
                 select(class="form-control", id="campus")
                     each campus, index in locals.campuss
                         if campus._id == usuario.campus.id
-                            option(value="#{campus._id}" selected) #{campus.nome}
+                            option(value="#{campus._id}" selected) !{campus.nome}
                         else
-                            option(value="#{campus._id}") #{campus.nome}
+                            option(value="#{campus._id}") !{campus.nome}
             .form-group
                 h2 Times que você pertence
                 div.table-responsive

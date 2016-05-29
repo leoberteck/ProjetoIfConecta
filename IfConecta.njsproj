@@ -35,6 +35,8 @@
     <Compile Include="bin\www.js" />
     <Compile Include="config\auth.js" />
     <Compile Include="config\confstring.js" />
+    <Compile Include="config\db.js" />
+    <Compile Include="config\gridfs.js" />
     <Compile Include="config\passport.js" />
     <Compile Include="enum\logtype.js" />
     <Compile Include="enum\notftype.js" />
@@ -165,7 +167,6 @@
     <Content Include="public\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="public\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="public\img\if_logo.png" />
-    <Content Include="README.md" />
     <Content Include="seeds\Campus.json" />
     <Content Include="seeds\Cargo.json" />
     <Content Include="seeds\seeds.bat" />

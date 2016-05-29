@@ -4,7 +4,9 @@
     -var monthNames = [ "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" ];
     -var m = monthNames[date.getMonth()];
     -var y = date.getFullYear();
-    -return d+' '+m+' '+y;
+    -var h = date.getHours();
+    -var min = date.getMinutes();
+    -return d+' '+m+' '+y+' '+h+':'+min;
 -}
 
 -function getGlyph(type){
@@ -47,8 +49,14 @@ if(locals.notificacoes)
                     -var time = notf.tag
                     div.tag-head
                         h3 #{time.nome}
-
                     div.tag-detail
                         h4 Descrição:
                         p #{time.descricao}
+                else if(notf.tipo == "arquivo")
+                    -var arquivo = notf.tag
+                    div.tag-head
+                        h3 #{arquivo.nome}
+                    div.tag-detail
+                        h4 Descrição:
+                        p #{arquivo.descricao}
     div.load-more-container

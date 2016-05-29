@@ -9,8 +9,7 @@ var viewListUrl = 'arquivo/ArquivoList'
 var viewEditUrl = 'arquivo/ArquivoEdit'
 var viewShowUrl = 'arquivo/arquivoShow'
 var logger = require('../helper/logHelper.js')
-var model 
-var gridfs
+var model = require('../models/Arquivo.js')
 
 
 //Show the form for item edition
@@ -33,7 +32,8 @@ function viewEdit(req, res, next) {
                         usuarios : result.usuarios,
                         times : result.times,
                         arquivo : arquivo,
-                        admin : req.session.admin
+                        admin : req.session.admin,
+                        name : req.session.user.nome
                     }
                     res.render(viewEditUrl, locals)
                 }
@@ -91,16 +91,20 @@ function viewShow (req, res, next) {
 
 //Handles save requests
 function saveItem (req, res, next) {
-    console.log(req.body)
-    model.addNewArquivo(req.files[0], req.session.user, function (err, newid) {
-        if (err) {
-            logger.newErrorLog(err, "Error on route saveItem: ", req.session.user, "arquivoSaveItem")
-            res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
-        } else {
-            logger.newLogAdd(req.body, req.session.user, "ArquivoAdded")
-            res.status(200).send(newid)
-        }
-    })
+    if (req.file) {
+        model.addNewArquivo(req.file, req.session.user, function (err, newid) {
+            if (err) {
+                logger.newErrorLog(err, "Error on route saveItem: ", req.session.user, "arquivoSaveItem")
+                res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+            } else {
+                logger.newLogAdd(req.body, req.session.user, "ArquivoAdded")
+                res.status(200).send(newid)
+            }
+        })
+    } else {
+        logger.newErrorLog("A file was not uploaded", "Error on route saveItem: ", req.session.user, "arquivoSaveItem")
+        res.status(400).send("Erro tentar salvar o item, detalhes : Nenhum arquivo foi recebido");
+    }
 }
 
 //Handles update requests
@@ -143,7 +147,7 @@ function getAll (skip, idCriador, callback) {
     if (idCriador) {
         filtro = { criador : idCriador }
     }
-    model.find(filtro, {}, { skip: skip, limit: 30 }, function getobjsCB(err, objs) {
+    model.find(filtro, {}, { skip: skip, limit: 30, sort : "nome" }, function getobjsCB(err, objs) {
         if (err) {
             callback(err)
         } else {
@@ -158,14 +162,14 @@ function getFormLocals(callback) {
     var locals
     var UsuarioModel = require('../models/Usuario.js')
     //Get usuarios
-    UsuarioModel.find({}, function (err, usuarios) {
+    UsuarioModel.find({}, {}, { sort : "nome" }, function (err, usuarios) {
         if (err) {
             error.status = 500
             callback(error)
         } else {
             var TimeModel = require('../models/Time.js')
             locals = { usuarios : usuarios, times : null, admin : false }
-            TimeModel.find({}, function (err, times) {
+            TimeModel.find({}, {}, {sort :"nome"}, function (err, times) {
                 if (err) {
                     callback(err)
                 } else {
@@ -235,18 +239,12 @@ function getListLocals(page, idCriador, callback) {
     }
 }
 
-// @param {Object} app - express app instance
-module.exports = function (app) {
-   
-    gridfs = app.get("gridfs")
-    model = require('../models/Arquivo.js')(gridfs)
-    return {
-        viewEdit : viewEdit,
-        viewForm : viewForm,
-        viewList : viewList,
-        viewShow : viewShow,
-        saveItem : saveItem,
-        editItem : editItem,
-        removeItem : removeItem
-    }
+module.exports = {
+    viewEdit : viewEdit,
+    viewForm : viewForm,
+    viewList : viewList,
+    viewShow : viewShow,
+    saveItem : saveItem,
+    editItem : editItem,
+    removeItem : removeItem
 }

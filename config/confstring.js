@@ -4,7 +4,7 @@
  * exemplo : 
  * '{0} é um {1}'.format('isso', 'exemplo') = "isso é um exemplo"
 */
-module.exports.config = function (){
+module.exports = function (){
     if (!String.prototype.format) {
         String.prototype.format = function () {
             var args = arguments;

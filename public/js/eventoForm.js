@@ -23,25 +23,30 @@ function save() {
         times : times
     }
     
-    $.ajax({
-        type : "POST",
-        url : "/evento/addevento",
-        contentType: "application/json; charset=utf-8",
-        traditional: true,
-        data: JSON.stringify(obj),
-        success : function (data, status, xhr) {
-            alert(data)
-            window.location.href = "/"
-        },
-        error : function (jqXHR, status, error) {
-            if (jqXHR.status == 500) {
-                window.location.href = "/500"
+    if (obj.dataIni == null || obj.dataFim == null) {
+        alert("Você deve escolher uma data de início e fim para o evento")
+    } else {
+        
+        $.ajax({
+            type : "POST",
+            url : "/evento/addevento",
+            contentType: "application/json; charset=utf-8",
+            traditional: true,
+            data: JSON.stringify(obj),
+            success : function (data, status, xhr) {
+                alert(data)
+                window.location.href = "/"
+            },
+            error : function (jqXHR, status, error) {
+                if (jqXHR.status == 500) {
+                    window.location.href = "/500"
+                }
+                else {
+                    alert(jqXHR.status + ": " + jqXHR.responseText)
+                }
             }
-            else {
-                alert(jqXHR.status + ": " + jqXHR.responseText)
-            }
-        }
-    })
+        })
+    }
 }
 
 var findTr = function (event) {
@@ -89,13 +94,17 @@ function removetablerow(event) {
 $(document).ready(function () {
     $("#dataIni").datetimepicker({
         format: 'DD/MM/YYYY HH:mm',
-        locale: 'pt-BR'
+        locale: 'pt-BR',
+        inline: true,
+        sideBySide: true
     })
 
     $("#dataFim").datetimepicker({
         format: 'DD/MM/YYYY HH:mm',
         locale: 'pt-BR',
-        useCurrent: false
+        useCurrent: false,
+        inline: true,
+        sideBySide: true
     })
 
     $("#dataIni").on("dp.change", function (e) {
