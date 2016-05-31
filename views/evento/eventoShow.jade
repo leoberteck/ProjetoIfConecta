@@ -5,7 +5,9 @@
     -var monthNames = [ "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" ];
     -var m = monthNames[date.getMonth()];
     -var y = date.getFullYear();
-    -return d+' '+m+' '+y;
+    -var h = date.getHours();
+    -var min = date.getMinutes();
+    -return d+' '+m+' '+y +' - '+h+':'+min;
 -}
 div.detail-container
     div.row
