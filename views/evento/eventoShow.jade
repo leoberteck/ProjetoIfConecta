@@ -7,6 +7,8 @@
     -var y = date.getFullYear();
     -var h = date.getHours();
     -var min = date.getMinutes();
+    -if(min < 10)
+        -min = '0' + min;
     -return d+' '+m+' '+y +' - '+h+':'+min;
 -}
 div.detail-container
