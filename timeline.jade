@@ -1,0 +1,62 @@
+﻿-function prettyDate(dateString){
+    -var date = new Date(dateString);
+    -var d = date.getDate();
+    -var monthNames = [ "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" ];
+    -var m = monthNames[date.getMonth()];
+    -var y = date.getFullYear();
+    -var h = date.getHours();
+    -var min = date.getMinutes();
+    -return d+' '+m+' '+y +' - '+h+':'+min;
+-}
+
+-function getGlyph(type){
+    -var glyph = "fa-evento"
+    -if(type == "time"){
+        -glyph = "fa-time"
+    -}else if(type == "notificacao"){
+        -glyph = "fa-notificacao"
+    -}else if(type == "arquivo"){
+        -glyph = "fa-arquivo"
+    -}
+    -return glyph
+-}
+
+if(locals.notificacoes)
+    each notf, index in locals.notificacoes
+        .time-item(class="#{notf.tipo}" data-id="#{notf.tag._id}")
+            div
+                .tag-icon.pull-left
+                    i(class="fa #{getGlyph(notf.tipo)}")
+                .header-text.pull-left
+                    h3 #{notf.mensagem}
+                .header-text.pull-right
+                    h4 #{prettyDate(notf.data)}
+            .item-inner
+                if(notf.tipo == "evento")
+                    -var evento = notf.tag
+                    div.tag-head
+                        h3 #{evento.nome}
+                    div.tag-detail
+                        h4 Descrição:
+                        p #{evento.descricao}
+                    div.tag-detail
+                        h4 Começa em:
+                        p #{prettyDate(evento.dataIni)}
+                    div.tag-detail
+                        h4 Termina em:
+                        p #{prettyDate(evento.dataFim)}
+                else if(notf.tipo == "time")
+                    -var time = notf.tag
+                    div.tag-head
+                        h3 #{time.nome}
+                    div.tag-detail
+                        h4 Descrição:
+                        p #{time.descricao}
+                else if(notf.tipo == "arquivo")
+                    -var arquivo = notf.tag
+                    div.tag-head
+                        h3 #{arquivo.nome}
+                    div.tag-detail
+                        h4 Descrição:
+                        p #{arquivo.descricao}
+    div.load-more-container
