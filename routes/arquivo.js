@@ -98,7 +98,7 @@ function saveItem (req, res, next) {
                 res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
                 logger.newLogAdd(req.body, req.session.user, "ArquivoAdded")
-                res.status(200).send(newid)
+                res.redirect('/arquivo/editarquivo/' + newid);
             }
         })
     } else {
