@@ -45,14 +45,11 @@ function viewEdit(req, res, next) {
 //Show the form with a list of items
 function viewList(req, res, next) {
     var idCriador = req.session.admin == true || req.params.all ? null : req.session.user._id
-    console.log("Start getting list. idCriador : " + idCriador);
     getListLocals(req.params.page, idCriador, function (err, locals) {
         if (err) {
-            console.log("Done getting list. err : " + err);
             logger.newErrorLog(err, "Error on route viewList: ", req.session.user, "arquivoviewList")
             next(err)
         } else {
-            console.log("Done getting list. locals: " + locals);
             locals.admin = req.session.admin
             locals.userid = req.session.user._id
             res.render(viewListUrl, locals)
@@ -150,12 +147,10 @@ function getAll(skip, idCriador, callback) {
     if (idCriador) {
         filtro = { criador : idCriador }
     }
-    console.log("Getting list. filtro : " + filtro);
     model.find(filtro, {}, { skip: skip, limit: 30, sort : "nome" }, function getobjsCB(err, objs) {
         if (err) {
             callback(err)
         } else {
-            console.log("Getting list. objs : " + objs);
             callback(null, objs)
         }
         return objs
@@ -213,19 +208,15 @@ function generatePagination (page, callback) {
 
 function getListLocals(page, idCriador, callback) {
     page = page || 1
-    console.log("Getting list. page : " + page);
     if (page >= 1) {
         var skip = 30 * (page - 1)
-        console.log("Getting list. skip : " + skip);
         getAll(skip, idCriador, function (err, objs) {
             if (err) {
                 err.status = 500
                 callback(err)
             } else {
-                console.log("Getting list. Starting to generate pagination");        
                 generatePagination(page, function (err, pages) {
                     if (err) {
-                        console.log("Getting list. err : " + err);
                         err.status = 404
                         callback(err)
                     } else {
@@ -236,7 +227,6 @@ function getListLocals(page, idCriador, callback) {
                             admin : null,
                             userid : null
                         }
-                        console.log("Getting list. skip : " + locals);
                         callback(null, locals)
                     }
                 })
