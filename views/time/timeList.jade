@@ -10,12 +10,15 @@ block content
             thead
                 tr
                     th Nome
-                    th Ações
+                    th Usuários
+                    th.pull-right Ações
             tbody
                 -var times = locals.times
                 each time, index in times
                     tr(data-id="#{time._id}")
                         td #{time.nome}
+                        -var count = time.usuarios ? time.usuarios.length : 0
+                        td #{count}
                         td
                             div.pull-right
                                 if locals.admin == true || time.criador == locals.userid

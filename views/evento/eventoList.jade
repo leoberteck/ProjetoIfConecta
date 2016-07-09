@@ -6,25 +6,31 @@ block content
         div.pull-right
             a(class="btn btn-default" href="/evento/addevento") Novo    
                 span.glyphicon.glyphicon-plus
-        table.table.table-hover
-            thead
-                tr
-                    th Nome
-                    th Ações
-            tbody
-                -var eventos = locals.eventos
-                each evento, index in eventos
-                    tr(data-id="#{evento._id}")
-                        td #{evento.nome}
-                        td
-                            div.pull-right
-                                if locals.admin == true || evento.criador == locals.userid
-                                    button(class = "btn edit")
-                                        span.glyphicon.glyphicon-pencil
-                                    button(class = "btn remove")
-                                        span.glyphicon.glyphicon-trash
-                                button(type="button", class = "btn show", data-toggle="modal", data-target="#eventModal")
-                                    span.glyphicon.glyphicon-eye-open
+        -var grupos = locals.eventos
+        each grupo, index in grupos
+            -var header = index == 0 ? "Eventos futuros" : index == 1 ? "Eventos em adamento" : "Eventos passados"
+            h3 #{header}
+            table.table.table-hover
+                thead
+                    tr
+                        th Nome
+                        th Usuários
+                        th.pull-right Ações
+                tbody
+                    each evento, index in grupo
+                        tr(data-id="#{evento._id}" )
+                            td #{evento.nome}
+                            -var count = evento.usuarios ? evento.usuarios.length : 0
+                            td #{count}
+                            td
+                                div.pull-right
+                                    if locals.admin == true || evento.criador == locals.userid
+                                        button(class = "btn edit")
+                                            span.glyphicon.glyphicon-pencil
+                                        button(class = "btn remove")
+                                            span.glyphicon.glyphicon-trash
+                                    button(type="button", class = "btn show", data-toggle="modal", data-target="#eventModal")
+                                        span.glyphicon.glyphicon-eye-open
         -var pages = locals.pages
         -var active = locals.active
         ul.pagination.pag-center

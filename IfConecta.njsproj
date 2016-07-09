@@ -143,6 +143,7 @@
     <Content Include="public\css\bootstrap.min.css" />
     <Content Include="public\css\dashadmin.css" />
     <Content Include="public\css\dashuser.css" />
+    <Content Include="public\css\evento.css" />
     <Content Include="public\css\eventoForm.css" />
     <Content Include="public\css\font-awesome.min.css" />
     <Content Include="public\css\layout.css" />

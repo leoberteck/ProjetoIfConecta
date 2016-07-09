@@ -150,13 +150,28 @@ exports.removeItem = function (req, res, next) {
 var getAll = function (skip, idCriador, callback) {
     var filtro = {}
     if (idCriador) {
-        filtro = { criador : idCriador }
+        filtro = { $or : [ { criador : idCriador}, { usuarios : { $in : [idCriador] } }] }
     }
-    model.find(filtro, {}, { skip: skip, limit: 30, sort : "nome" }, function getobjsCB(err, objs) {
+    model.find(filtro, {}, { skip: skip, limit: 30, sort : "-dataIni" }, function getobjsCB(err, objs) {
         if (err) {
             callback(err)
         } else {
-            callback(null, objs)
+            //quebra os eventos dos usuários por "Futuros", "Agora" e "Passados"
+            var grouped = []
+            grouped[0] = [] //future
+            grouped[1] = [] //ongoing
+            grouped[2] = [] //past
+            var today = new Date()
+            objs.forEach(function (evento) { 
+                if (today >= evento.dataIni && today <= evento.dataFim) {
+                    grouped[1].push(evento);
+                } else if (today < evento.dataIni) {
+                    grouped[0].push(evento);
+                } else {
+                    grouped[2].push(evento);
+                }
+            })
+            callback(null, grouped)
         }
         return objs
     })

@@ -175,3 +175,8 @@ nav {
         color: #fff;
         background-color: #82b97f;
     }
+
+.table-responsive td {
+    word-wrap: break-word;
+    white-space:normal;
+}
