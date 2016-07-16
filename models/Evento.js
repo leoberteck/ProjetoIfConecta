@@ -2,6 +2,8 @@
 var logger = require('../helper/logHelper.js')
 var Schema = mongoose.Schema
 var UsuarioModel = require('./Usuario.js')
+var TimeModel = require('./Time.js')
+var helper = require('../helper/modelHelper.js')
 
 var EVENTO_ADD_NOTF = "Você foi incluído em um evento"
 var EVENTO_REMOVED_NOFT = "Um evento foi removido"
@@ -12,6 +14,7 @@ var eventoSchema = new Schema({
     nome: { type : String, required : true, },
     descricao : String,
     usuarios : [{ type : Schema.Types.ObjectId, ref : 'User' }],
+    times : [{ type : Schema.Types.ObjectId, ref : 'Time' }],
     criador : { type : Schema.Types.ObjectId, ref : 'User' },
     dataIni : Date,
     dataFim : Date
@@ -39,13 +42,14 @@ eventoSchema.statics.addNewEvento = function (obj, criador, callback) {
             logger.newErrorLog(err, "Error on save validator", criador, "addNewEvento")
             callback(err)
         } else {
-            generateUsersArray(obj.usuarios, obj.times, function (usuarios) {
+            helper.generateUsersArray(obj.usuarios, obj.times, function (usuarios) {
                 var newevento = {
                     nome : obj.nome,
                     descricao : obj.descricao,
                     dataIni : Date.parse(obj.dataIni),
                     dataFim : Date.parse(obj.dataFim),
                     usuarios : usuarios,
+                    times : obj.times,
                     criador : criador
                 }
                 model.create(newevento, function (err, evento) {
@@ -65,7 +69,7 @@ eventoSchema.statics.addNewEvento = function (obj, criador, callback) {
     })
 }
 
-eventoSchema.statics.updateEvento = function (obj, usuarios_to_remove, sessionUser, callback) {
+eventoSchema.statics.updateEvento = function (obj, usuarios_to_remove, times_to_remove, sessionUser, callback) {
     var model = this
     if ((obj.criador._id == sessionUser._id) || sessionUser.admin) {
         model.validateEvento(obj, function (err) {
@@ -74,18 +78,39 @@ eventoSchema.statics.updateEvento = function (obj, usuarios_to_remove, sessionUs
                 callback(err)
             } else {
                 var id = obj._id
-                model.findByIdAndUpdate(id, obj, {}, function (err, doc) {
-                    if (err) {
-                        logger.newErrorLog(err, "Error on route update: ", null, "updateEvento")
-                        callback(err)
-                    } else {
-                        upadteUserEvento(obj.usuarios, doc)
-                        removeEventoFromUsuarios(usuarios_to_remove, doc, function () { })
-                        doc.usuarios.forEach(function (entry) {
-                            UsuarioModel.addNotfEvento(doc.criador, entry, EVENTO_UPDATE_NOTF, obj)
-                        })
-                        callback()
+                //Retira os usuários do envento.usuários antes de da update
+                TimeModel.find({ _id : { $in : times_to_remove } }, {}, {}, function (err, times) {
+                    if (times) {
+                        for (var x = 0; x < times.length; x++) {
+                            var timeObj = times[x]
+                            if (timeObj.usuarios) {
+                                for (var y = 0; y < timeObj.usuarios.length; y++) {
+                                    var index = obj.usuarios.indexOf(timeObj.usuarios[y].toString())
+                                    if (index >= 0) {
+                                        obj.usuarios.splice(index, 1)
+                                    }
+                                }
+                            }
+                        }
                     }
+                    //Gera novamente o array de usuários
+                    helper.generateUsersArray(obj.usuarios, obj.times, function (usuarios) {
+                        obj.usuarios = usuarios;
+                        //update o evento    
+                        model.findByIdAndUpdate(id, obj, {}, function (err, doc) {
+                            if (err) {
+                                logger.newErrorLog(err, "Error on route update: ", null, "updateEvento")
+                                callback(err)
+                            } else {
+                                upadteUserEvento(obj.usuarios, doc)
+                                removeEventoFromUsuarios(usuarios_to_remove, times_to_remove, doc, function () { })
+                                doc.usuarios.forEach(function (entry) {
+                                    UsuarioModel.addNotfEvento(doc.criador, entry, EVENTO_UPDATE_NOTF, obj)
+                                })
+                                callback()
+                            }
+                        })
+                    })
                 })
             }
         })
@@ -107,7 +132,7 @@ eventoSchema.statics.removeEvento = function (id, user, callback) {
                 doc.usuarios.forEach(function (entry, doc) {
                     UsuarioModel.addNotfEvento(doc.criador, entry, EVENTO_REMOVED_NOFT, doc)
                 })
-                removeEventoFromUsuarios(doc.usuarios, doc, function (err) {
+                removeEventoFromUsuarios(doc.usuarios, [], doc, function (err) {
                     if (err) {
                         callback(err)
                     } else {
@@ -129,41 +154,21 @@ eventoSchema.statics.removeEvento = function (id, user, callback) {
     })
 }
 
-function generateUsersArray(usuarios, times, callback) {
-    var timeModel = require('./Time.js')
-    if (usuarios && usuarios.length > 0) {
-        if (times && times.length > 0) {
-            timeModel.find({ _id : { $in: times } }, function (err, docs) {
-                docs.forEach(function (entry) {
-                    if (entry.usuarios) {
-                        usuarios.concat(entry.usuarios)
-                    }
-                })
-                callback(usuarios)
-            })
-        }
-        else {
-            callback(usuarios)
-        }
-    }
-    else {
-        callback(usuarios)
-    }
-}
-
-function removeEventoFromUsuarios(usuarios_to_remove, evento, callback) {
+function removeEventoFromUsuarios(usuarios_to_remove, times_to_remove, evento, callback) {
     var idEvento = evento._id
     if (usuarios_to_remove) {
-        UsuarioModel.find({ _id : { $in : usuarios_to_remove } }, function (err, docs) {
+        UsuarioModel.find({ $or :[{ _id : { $in : usuarios_to_remove } }, { times : { $in : times_to_remove } }] }, function (err, docs) {
             if (err) {
                 logger.newErrorLog(err, "Error getting usuarios for update", null, "removeEventoFromUsuarios")
                 callback(err)
             } else {
                 docs.forEach(function (entry) {
                     var index = entry.eventos.indexOf(idEvento)
-                    entry.eventos.splice(index, 1)
-                    entry.save()
-                    UsuarioModel.addNotfEvento(evento.criador, entry._id, EVENTO_REMOVED_USER_NOTF, evento)
+                    if (index >= 0) {
+                        entry.eventos.splice(index, 1)
+                        entry.save()
+                        UsuarioModel.addNotfEvento(evento.criador, entry._id, EVENTO_REMOVED_USER_NOTF, evento)
+                    }
                 })
                 callback()
             }

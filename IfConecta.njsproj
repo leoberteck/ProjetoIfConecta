@@ -41,6 +41,7 @@
     <Compile Include="enum\logtype.js" />
     <Compile Include="enum\notftype.js" />
     <Compile Include="helper\logHelper.js" />
+    <Compile Include="helper\modelHelper.js" />
     <Compile Include="models\Arquivo.js" />
     <Compile Include="models\Campus.js" />
     <Compile Include="models\Cargo.js" />
@@ -49,6 +50,7 @@
     <Compile Include="models\Time.js" />
     <Compile Include="models\Usuario.js" />
     <Compile Include="public\js\bootstrap-datetimepicker.min.js" />
+    <Compile Include="public\js\bootstrap-filestyle.min.js" />
     <Compile Include="public\js\bootstrap.js" />
     <Compile Include="public\js\bootstrap.min.js" />
     <Compile Include="public\js\campusEdit.js" />
@@ -178,7 +180,7 @@
     <Content Include="views\arquivo\arquivoEdit.jade" />
     <Content Include="views\arquivo\arquivoForm.jade" />
     <Content Include="views\arquivo\arquivoList.jade" />
-    <Content Include="views\arquivo\timeShow.jade" />
+    <Content Include="views\arquivo\arquivoShow.jade" />
     <Content Include="views\campus\campusEdit.jade" />
     <Content Include="views\campus\campusForm.jade" />
     <Content Include="views\campus\campusList.jade" />

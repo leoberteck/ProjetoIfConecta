@@ -69,9 +69,10 @@ function adduser() {
     $("#users_table > tbody:last-child").append(createRow($("#user_select").val(), "user", $(userop).text()))
     $(userop).wrap("<span/>")
 }
+
 function addtime() {
     var timeop = "#time_select option[value='" + $("#time_select").val() + "']"
-    $("#users_table > tbody:last-child").append(createRow($("#time_select").val(), "team", $(timeop).text()))
+    $("#times_table > tbody:last-child").append(createRow($("#time_select").val(), "team", $(timeop).text()))
     $(timeop).wrap("<span/>")
 }
 
@@ -114,8 +115,11 @@ $(document).ready(function () {
         $('#dataIni').data("DateTimePicker").maxDate(e.date);
     });
 
-    var $table = $('.table tbody')
-    $table.on('click', 'button.remove', removetablerow)
+    var $users_table = $('#users_table')
+    $users_table.on('click', 'button.remove', removetablerow)
+    
+    var $times_table = $('#times_table')
+    $times_table.on('click', 'button.remove', removetablerow)
     $('#add_user').click(adduser)
     $('#add_time').click(addtime)
     $("#btnSubmit").click(save)

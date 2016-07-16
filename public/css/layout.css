@@ -180,3 +180,21 @@ nav {
     word-wrap: break-word;
     white-space:normal;
 }
+
+@media (min-width:600px) {
+    .name-header2 {
+        display:none;
+    }
+}
+
+@media (max-width:600px) {
+    .name-header {
+        display:none;    
+    }
+    .name-header2 {
+        float:right;
+        text-align:center;
+        font-weight:bold;
+        width:100%;
+    }
+}

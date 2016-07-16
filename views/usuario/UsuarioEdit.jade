@@ -19,7 +19,7 @@ block content
                 label(for="cargo") Cargo: 
                 select(class="form-control", id="cargo")
                     each cargo, index in locals.cargos
-                        if cargo._id == usuario.cargo.id
+                        if cargo._id == usuario.cargo.id.toString()
                             option(value="#{cargo._id}" selected) #{cargo.nome}
                         else
                             option(value="#{cargo._id}") #{cargo.nome}
@@ -27,7 +27,7 @@ block content
                 label(for="campus") Campus:
                 select(class="form-control", id="campus")
                     each campus, index in locals.campuss
-                        if campus._id == usuario.campus.id
+                        if campus._id == usuario.campus.id.toString()
                             option(value="#{campus._id}" selected) !{campus.nome}
                         else
                             option(value="#{campus._id}") !{campus.nome}

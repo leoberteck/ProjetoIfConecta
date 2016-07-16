@@ -1,4 +1,5 @@
 ﻿.timeline {
+    display:inline;
     overflow:auto;
 }
 

@@ -32,6 +32,7 @@ block content
                                 each time, index in locals.times
                                     option(value="#{time._id}") #{time.nome}
                             button(type="button" class="btn select-button" id="add_time") Adicionar usuários do time
+            -var count = 0;
             .form-group
                 h2 Usuários do Time
                 div.table-responsive
@@ -42,11 +43,28 @@ block content
                                 th Ações
                         tbody
                             each usuario, index in time.usuarios
-                                tr( id="tr_#{index}" data-id="#{usuario._id}" class="user")
+                                tr( id="tr_#{count}" data-id="#{usuario._id}" class="user")
                                     td #{usuario.nome}
                                     td
                                         button(type="button" class = "btn remove")
                                             span.glyphicon.glyphicon-trash
+                                -count++
+            .form-group
+                h2 Times participantes do evento
+                div.table-responsive
+                    table(class="table table-hover", id="times_table")
+                        thead
+                            tr
+                                th Nome
+                                th Ações
+                        tbody
+                            each _time, index in time.times
+                                tr( id="tr_#{count}" data-id="#{_time._id}" class="team")
+                                    td #{_time.nome}
+                                    td
+                                        button(type="button" class = "btn remove")
+                                            span.glyphicon.glyphicon-trash 
+                                -count++
                                     
             button(type="button" class="btn btn-primary" id="btnSubmit") Gravar
             a(class="btn btn-default" href="/") Cancelar

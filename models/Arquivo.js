@@ -15,7 +15,6 @@ var arquivoSchema = new Schema({
     gridId : { type : Schema.Types.ObjectId },
     descricao  : String,
     palavrasChave : [{ type: String, trim: true }],
-    usuarios : [{ type : Schema.Types.ObjectId, ref : 'User' }],
     criador : { type : Schema.Types.ObjectId, ref : 'User' }
 })
 
@@ -36,7 +35,6 @@ arquivoSchema.statics.addNewArquivo = function (file, criador, callback) {
         nome : file.gridfsEntry.filename,
         nomeArquivo : file.gridfsEntry.filename,
         gridId : file.gridfsEntry._id,
-        usuarios : [criador],
         criador : criador
     }
     model.create(newArquivo, function (err, response) {
@@ -50,7 +48,7 @@ arquivoSchema.statics.addNewArquivo = function (file, criador, callback) {
 
 }
 
-arquivoSchema.statics.updateArquivo = function (obj, usuarios_to_remove, sessionUser, callback) {
+arquivoSchema.statics.updateArquivo = function (obj, sessionUser, callback) {
     if ((obj.criador._id == sessionUser._id) || sessionUser.admin) {
         var model = this
         model.validateArquivo(obj, function (err) {
@@ -64,11 +62,6 @@ arquivoSchema.statics.updateArquivo = function (obj, usuarios_to_remove, session
                         logger.newErrorLog(err, "Error on route update: ", null, "updateArquivo")
                         callback(err)
                     } else {
-                        doc.usuarios.forEach(function (entry) {
-                            UsuarioModel.addNotfArquivo(doc.criador, entry, ARQUIVO_UPDATE_NOTF, obj)
-                        })
-                        upadteUserArquivo(obj.usuarios, doc._id)
-                        removeArquivoFromUsuarios(usuarios_to_remove, doc, function () { })
                         callback()
                     }
                 })
@@ -89,21 +82,11 @@ arquivoSchema.statics.removeArquivo = function (id, user, callback) {
             callback(err)
         } else {
             if (user.admin == true || doc.criador == user._id) {
-                doc.usuarios.forEach(function (entry) {
-                    UsuarioModel.addNotfArquivo(doc.criador, entry, ARQUIVO_REMOVED_NOFT, doc)
-                })
-                removeArquivoFromUsuarios(doc.usuarios, doc, function (err) {
+                doc.remove(function (err) {
                     if (err) {
                         callback(err)
-                    } else {
-                        doc.remove(function (err) {
-                            if (err) {
-                                callback(err)
-                            } else {
-                                
-                                callback()
-                            }
-                        })
+                    } else {           
+                        callback()
                     }
                 })
             } else {
@@ -112,61 +95,6 @@ arquivoSchema.statics.removeArquivo = function (id, user, callback) {
                 callback(err)
             }
         }
-    })
-}
-
-function generateUsersArray(usuarios, times, callback) {
-    var model = require('./Time.js')
-    if (usuarios && usuarios.length > 0) {
-        if (times && times.length > 0) {
-            model.find({ _id : { $in: times } }, function (err, docs) {
-                docs.forEach(function (entry) {
-                    if (entry.usuarios) {
-                        usuarios.concat(entry.usuarios)
-                    }
-                })
-                callback(usuarios)
-            })
-        }
-        else {
-            callback(usuarios)
-        }
-    }
-    else {
-        callback(usuarios)
-    }
-}
-
-function removeArquivoFromUsuarios(usuarios_to_remove, arquivo, callback) {
-    var idArquivo = arquivo._id
-    if (usuarios_to_remove) {
-        UsuarioModel.find({ _id : { $in : usuarios_to_remove } }, function (err, docs) {
-            if (err) {
-                logger.newErrorLog(err, "Error getting usuarios for update", null, "removeArquivoFromUsuarios")
-                callback(err)
-            } else {
-                docs.forEach(function (entry) {
-                    UsuarioModel.addNotfArquivo(arquivo.criador, entry, ARQUIVO_REMOVED_USER_NOTF, arquivo)
-                    var index = entry.arquivos.indexOf(idArquivo)
-                    entry.arquivos.splice(index, 1)
-                    entry.save()
-                })
-                callback()
-            }
-        })
-    } else {
-        callback()
-    }
-}
-
-function upadteUserArquivo(usuarios, idArquivo) {
-    userModel = require('./Usuario.js')
-    usuarios.forEach(function (usuario) {
-        userModel.update({ _id : usuario }, { $addToSet: { arquivos : idArquivo } }, function (err, docs) {
-            if (err) {
-                logger.newErrorLog(err, "Error updating users archives", null, "upadteUserArquivo")
-            }
-        })
     })
 }
 

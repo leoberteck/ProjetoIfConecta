@@ -57,7 +57,7 @@ exports.viewList = function (req, res, next) {
 
 //Show the form for item inclusion
 exports.viewForm = function (req, res, next) {
-    res.render(viewFormUrl, { admin: req.session.admin })
+    res.render(viewFormUrl, { admin: req.session.admin, name : req.session.user.nome })
 }
 
 //Handles save requests

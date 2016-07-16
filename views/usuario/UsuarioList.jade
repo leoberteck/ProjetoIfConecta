@@ -8,25 +8,24 @@ block content
         div.pull-right
             a(class="btn btn-default" href="/usuario/addusuario") Novo    
                 span.glyphicon.glyphicon-plus
-        div.table-responsive
-            table.table.table-hover
-                thead
-                    tr
-                        th Nome
-                        th Cargo
-                        th.pull-right Ações
-                tbody
-                    -var usuarios = locals.usuarios
-                    each usuario, index in usuarios
-                        tr(data-id="#{usuario._id}")
-                            td #{usuario.nome}
-                            td #{usuario.cargo.nome}
-                            td
-                                div.pull-right
-                                    button(class = "btn edit")
-                                        span.glyphicon.glyphicon-pencil
-                                    button(class = "btn remove")
-                                        span.glyphicon.glyphicon-trash
+        table.table.table-hover
+            thead
+                tr
+                    th Nome
+                    th Cargo
+                    th.pull-right Ações
+            tbody
+                -var usuarios = locals.usuarios
+                each usuario, index in usuarios
+                    tr(data-id="#{usuario._id}")
+                        td #{usuario.nome}
+                        td #{usuario.cargo.nome}
+                        td
+                            div.pull-right
+                                button(class = "btn edit")
+                                    span.glyphicon.glyphicon-pencil
+                                button(class = "btn remove")
+                                    span.glyphicon.glyphicon-trash
         -var pages = locals.pages
         -var active = locals.active
         ul.pagination.pag-center

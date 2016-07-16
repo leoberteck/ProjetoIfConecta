@@ -115,6 +115,7 @@ exports.viewForm = function (req, res, next) {
             next(err)
         } else {
             locals.admin = req.session.admin
+            locals.name = req.session.user.nome
             res.render(viewFormUrl, locals)
         }
     })

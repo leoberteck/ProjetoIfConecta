@@ -1,10 +1,6 @@
-﻿/*
- * Quando salvar ler todas as linhas da tabela
- * Mandar usuarios e times separados
- */
-
-var tr_id = 0
+﻿var tr_id = 0
 var usuarios_to_remove = []
+var times_to_remove = []
 
 function save() {
     var users = []
@@ -33,7 +29,8 @@ function save() {
 
     var obj = {
         time : time,
-        usuarios_to_remove : usuarios_to_remove
+        usuarios_to_remove : usuarios_to_remove,
+        times_to_remove : times_to_remove
     }
 
     $.ajax({
@@ -76,11 +73,19 @@ function adduser() {
     var userop = "#user_select option[value='" + $("#user_select").val() + "']"
     $("#users_table > tbody:last-child").append(createRow($("#user_select").val(), "user", $(userop).text()))
     $(userop).wrap("<span/>")
+    var index = usuarios_to_remove.indexOf(id)
+    if (index >= 0) {
+        usuarios_to_remove.splice(index, 1)
+    }
 }
 function addtime() {
     var timeop = "#time_select option[value='" + $("#time_select").val() + "']"
     $("#users_table > tbody:last-child").append(createRow($("#time_select").val(), "team", $(timeop).text()))
     $(timeop).wrap("<span/>")
+    var index = times_to_remove.indexOf(id)
+    if (index >= 0) {
+        times_to_remove.splice(index, 1)
+    }
 }
 
 function removetablerow(event) {
@@ -94,6 +99,7 @@ function removetablerow(event) {
         usuarios_to_remove.push(data_id);
     } else {
         selectOp = "#time_select option[value='" + data_id + "']"
+        times_to_remove.push(data_id)
     }
     $(selectOp).unwrap()
     $(id).remove()
@@ -101,8 +107,11 @@ function removetablerow(event) {
 }
 
 $(document).ready(function () {
-    var $table = $('.table tbody')
-    $table.on('click', 'button.remove', removetablerow)
+    var $users_table = $('#users_table')
+    $users_table.on('click', 'button.remove', removetablerow)
+    
+    var $times_table = $('#times_table')
+    $times_table.on('click', 'button.remove', removetablerow)
     $('#add_user').click(adduser)
     $('#add_time').click(addtime)
     $("#btnSubmit").click(save)
@@ -111,6 +120,13 @@ $(document).ready(function () {
         $this = $(this);
         var id = $this.attr('data-id')
         var userop = "#user_select option[value='" + id + "']"
+        $(userop).wrap("<span/>")
+    })
+
+    $("tr.team").each(function () {
+        $this = $(this);
+        var id = $this.attr('data-id')
+        var userop = "#time_select option[value='" + id + "']"
         $(userop).wrap("<span/>")
     })
 })

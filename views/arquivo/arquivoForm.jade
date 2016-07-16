@@ -6,10 +6,12 @@ block content
         form(action="/arquivo/addarquivo" method="post" enctype="multipart/form-data")
             .form-group
                 legend Escolha um arquivo para fazer upload.
-                input(type='file', name='arquivo', id='arquivo', class='form-control btn')
+                input(type='file', name='arquivo', id='arquivo', class='form-control btn' )
                 button(type="submit" class="btn btn-primary" id="btnSubmit") Upload
         .form-group
             div.progress.progress-striped.active.hide
                 div.bar(style='width: 0%')
+    script(src="../js/bootstrap-filestyle.min.js")
+    script(src="../js/ArquivoForm.js")
 block styles
     

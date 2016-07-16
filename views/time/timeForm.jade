@@ -28,9 +28,18 @@ block content
                                     option(value="#{time._id}") #{time.nome}
                             button(type="button" class="btn select-button" id="add_time") Adicionar usuários do time
             .form-group
-                h2 Usuários do Time
+                h2 Usuários participantes do time
                 div.table-responsive
                     table(class="table table-hover", id="users_table")
+                        thead
+                            tr
+                                th Nome
+                                th Ações
+                        tbody
+            .form-group
+                h2 Times participantes do time
+                div.table-responsive
+                    table(class="table table-hover", id="times_table")
                         thead
                             tr
                                 th Nome

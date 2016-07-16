@@ -16,7 +16,7 @@ exports.viewEdit = function (req, res, next) {
     if (!req.params.id) return next(Error('Nenhum item selecionado'))
     var id = req.params.id
     //procura registro a ser atualizado
-    model.findOne({ _id : id }).populate({ path : 'usuarios', select : '_id nome', options : { sort : 'nome' } }).populate({ path : 'criador', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
+    model.findOne({ _id : id }).populate({ path : 'usuarios', select : '_id nome', options : { sort : 'nome' } }).populate({ path : 'times', select : '_id nome', options : { sort : 'nome' } }).populate({ path : 'criador', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
         if (err) {
             logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "eventoViewEdit")
             next(err)
@@ -41,6 +41,21 @@ exports.viewEdit = function (req, res, next) {
     })
 }
 
+//Show the form with a list of items
+exports.viewList = function (req, res, next) {
+    var idCriador = req.session.admin == true || req.params.all ? null : req.session.user._id
+    getListLocals(req.params.page, idCriador, function (err, locals) {
+        if (err) {
+            next(err)
+        } else {
+            locals.admin = req.session.admin
+            locals.userid = req.session.user._id
+            locals.name = req.session.user.nome
+            res.render(viewListUrl, locals)
+        }
+    })
+}
+
 //Show the form for item inclusion
 exports.viewForm = function (req, res, next) {
     getFormLocals(function (err, locals) {
@@ -48,6 +63,7 @@ exports.viewForm = function (req, res, next) {
             next(err)
         } else {
             locals.admin = req.session.admin
+            locals.name = req.session.user.nome
             res.render(viewFormUrl, locals)
         }
     })
@@ -69,21 +85,6 @@ exports.viewShow = function (req, res, next) {
                 name : req.session.user.nome
             }
             res.render(viewShowUrl, locals)
-        }
-    })
-}
-
-
-//Show the form with a list of items
-exports.viewList = function (req, res, next) {
-    var idCriador = req.session.admin == true || req.params.all ? null : req.session.user._id
-    getListLocals(req.params.page, idCriador, function (err, locals) {
-        if (err) {
-            next(err)
-        } else {
-            locals.admin = req.session.admin
-            locals.userid = req.session.user._id
-            res.render(viewListUrl, locals)
         }
     })
 }
@@ -117,7 +118,8 @@ exports.saveItem = function (req, res, next) {
 exports.editItem = function (req, res, next) {
     var evento = req.body.evento
     var usuarios_to_remove = req.body.usuarios_to_remove
-    model.updateEvento(evento, usuarios_to_remove, req.session.user, function (err) {
+    var times_to_remove = req.body.times_to_remove
+    model.updateEvento(evento, usuarios_to_remove, times_to_remove, req.session.user, function (err) {
         if (err) {
             logger.newErrorLog(err, "Error on route editItem: ", req.session.user, "eventoEditItem")
             res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")

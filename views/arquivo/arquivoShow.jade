@@ -1,0 +1,18 @@
+﻿-var arquivo = locals.arquivo
+
+div.detail-container
+    div.row
+        h3 #{arquivo.nome}
+
+    div.row.detail-section
+        h4 Administrador: #{arquivo.criador.nome}
+
+    div.row.detail-section
+        h4 Descrição:
+        p #{arquivo.descricao}
+
+    div.row
+        h3 Enxergam o arquivo
+        each usuario, index in arquivo.usuarios
+            div.detail-item #{usuario.nome}
+

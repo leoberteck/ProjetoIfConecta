@@ -1,6 +1,7 @@
 ﻿var mongoose = require('mongoose')
 var logger = require('../helper/logHelper.js')
 var UsuarioModel = require('./Usuario.js')
+var helper = require('../helper/modelHelper.js')
 
 var TIME_ADD_NOTF = "Você foi incluído em um time"
 var TIME_REMOVED_NOFT = "Um time foi removido"
@@ -12,6 +13,7 @@ var timeSchema = new Schema({
     nome : { type : String, unique: true, required : true },
     descricao : String,
     usuarios : [{ type : Schema.Types.ObjectId, ref : 'User' }],
+    times : [{ type : Schema.Types.ObjectId, ref : 'Time' }],
     criador : { type : Schema.Types.ObjectId, ref : 'User' }
 })
 
@@ -51,11 +53,12 @@ timeSchema.statics.addNewTime = function (obj, criador, callback) {
             logger.newErrorLog(err, "Error on route save validator: ", criador, "addNewTime")
             callback(err)
         } else {
-            generateUsersArray(obj.usuarios, obj.times, function (usuarios) {
+            helper.generateUsersArray(obj.usuarios, obj.times, function (usuarios) {
                 var newtime = {
                     nome : obj.nome,
                     descricao : obj.descricao,
                     usuarios : usuarios,
+                    times : obj.times,
                     criador : criador
                 }
                 model.create(newtime, function saveCB(err, response) {
@@ -75,7 +78,7 @@ timeSchema.statics.addNewTime = function (obj, criador, callback) {
     })
 }
 
-timeSchema.statics.updateTime = function (obj, usuarios_to_remove, sessionUser, callback) {
+timeSchema.statics.updateTime = function (obj, usuarios_to_remove, times_to_remove, sessionUser, callback) {
     if ((obj.criador._id == sessionUser._id) || sessionUser.admin) {
         var model = this
         model.validateTeam(obj, true, function (err) {
@@ -84,18 +87,36 @@ timeSchema.statics.updateTime = function (obj, usuarios_to_remove, sessionUser, 
                 callback(err)
             } else {
                 var id = obj._id
-                model.findByIdAndUpdate(id, obj, {}, function (err, doc) {
-                    if (err) {
-                        logger.newErrorLog(err, "Error on route update: ", null, "updateTime")
-                        callback(err)
-                    } else {
-                        doc.usuarios.forEach(function (entry) {
-                            UsuarioModel.addNotfTime(doc.criador, entry, TIME_UPDATE_NOTF, obj)
-                        })
-                        upadteUserTeam(obj.usuarios, doc._id)
-                        removeTimeFromUsuarios(usuarios_to_remove, doc, function () { })
-                        callback()
+                model.find({ _id : { $in : times_to_remove } }, {}, {}, function (err, times) {
+                    if (times) {
+                        for (var x = 0; x < times.length; x++) {
+                            var timeObj = times[x]
+                            if (timeObj.usuarios) {
+                                for (var y = 0; y < timeObj.usuarios.length; y++) {
+                                    var index = obj.usuarios.indexOf(timeObj.usuarios[y].toString())
+                                    if (index >= 0) {
+                                        obj.usuarios.splice(index, 1)
+                                    }
+                                }
+                            }
+                        }
                     }
+                    helper.generateUsersArray(obj.usuarios, obj.times, function (usuarios) {
+                        obj.usuarios = usuarios;
+                        model.findByIdAndUpdate(id, obj, {}, function (err, doc) {
+                            if (err) {
+                                logger.newErrorLog(err, "Error on route update: ", null, "updateTime")
+                                callback(err)
+                            } else {
+                                doc.usuarios.forEach(function (entry) {
+                                    UsuarioModel.addNotfTime(doc.criador, entry, TIME_UPDATE_NOTF, obj)
+                                })
+                                upadteUserTeam(obj.usuarios, doc._id)
+                                removeTimeFromUsuarios(usuarios_to_remove, times_to_remove, doc, function () { })
+                                callback()
+                            }
+                        })
+                    })
                 })
             }
         })
@@ -117,7 +138,7 @@ timeSchema.statics.removeTime = function (id, user, callback) {
                 doc.usuarios.forEach(function (entry) { 
                     UsuarioModel.addNotfTime(doc.criador, entry, TIME_REMOVED_NOFT, doc)
                 })
-                removeTimeFromUsuarios(doc.usuarios, doc, function (err) {
+                removeTimeFromUsuarios(doc.usuarios, [], doc, function (err) {
                     if (err) {
                         callback(err)
                     } else {
@@ -140,41 +161,21 @@ timeSchema.statics.removeTime = function (id, user, callback) {
     })
 }
 
-function generateUsersArray(usuarios, times, callback) {
-    var model = require('./Time.js')
-    if (usuarios && usuarios.length > 0) {
-        if (times && times.length > 0) {
-            model.find({ _id : { $in: times } }, function (err, docs) {
-                docs.forEach(function (entry) {
-                    if (entry.usuarios) {
-                        usuarios.concat(entry.usuarios)
-                    }
-                })
-                callback(usuarios)
-            })
-        }
-        else {
-            callback(usuarios)
-        }
-    }
-    else {
-        callback(usuarios)
-    }
-}
-
-function removeTimeFromUsuarios(usuarios_to_remove, time, callback) {
+function removeTimeFromUsuarios(usuarios_to_remove, times_to_remove, time, callback) {
     var idTime = time._id
     if (usuarios_to_remove) {
-        UsuarioModel.find({ _id : { $in : usuarios_to_remove } }, function (err, docs) {
+        UsuarioModel.find({ $or : [{ _id : { $in : usuarios_to_remove } }, { times : { $in : times_to_remove } }] }, function (err, docs) {
             if (err) {
                 logger.newErrorLog(err, "Error getting usuarios for update", null, "removeTimeFromUsuarios")
                 callback(err)
             } else {
                 docs.forEach(function (entry) {
-                    UsuarioModel.addNotfTime(time.criador, entry, TIME_REMOVED_USER_NOTF, time)
                     var index = entry.times.indexOf(idTime)
-                    entry.times.splice(index, 1)
-                    entry.save()
+                    if (index > 0) {
+                        entry.times.splice(index, 1)
+                        entry.save()
+                        UsuarioModel.addNotfTime(time.criador, entry, TIME_REMOVED_USER_NOTF, time)
+                    }
                 })
                 callback()
             }

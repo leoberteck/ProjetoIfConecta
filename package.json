@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "applicationinsights": "^0.15.12",
+    "async": "^1.5.2",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.8.1",
     "connect-flash": "^0.1.1",

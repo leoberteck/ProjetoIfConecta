@@ -1,9 +1,4 @@
-﻿/*
- * Quando salvar ler todas as linhas da tabela
- * Mandar usuarios e times separados
- */
-
-var tr_id = 0
+﻿var tr_id = 0
 
 function save() {
     var users = []
@@ -18,19 +13,12 @@ function save() {
         var id = $this.attr('data-id')
         times.push(id)
     })
-    var chaves = []
-    $("tr.key").each(function () {
-        $this = $(this);
-        var id = $this.attr('data-id')
-        chaves.push(id)
-    })
     
     var obj = {
         nome : $("#nome").val(),
         descricao : $("#descricao").val(),
         usuarios : users,
         times : times,
-        palavrasChave : chaves
     }
     
     $.ajax({
@@ -74,14 +62,11 @@ function adduser() {
     $("#users_table > tbody:last-child").append(createRow($("#user_select").val(), "user", $(userop).text()))
     $(userop).wrap("<span/>")
 }
+
 function addtime() {
     var timeop = "#time_select option[value='" + $("#time_select").val() + "']"
-    $("#users_table > tbody:last-child").append(createRow($("#time_select").val(), "team", $(timeop).text()))
+    $("#times_table > tbody:last-child").append(createRow($("#time_select").val(), "team", $(timeop).text()))
     $(timeop).wrap("<span/>")
-}
-function addpalavra() {
-    $("#keys_table > tbody:last-child").append(createRow($("#chaves").val(), "key", $("#chaves").val()))
-    $("#chaves").val("")
 }
 
 function removetablerow(event) {
@@ -102,17 +87,16 @@ function removetablerow(event) {
 }
 
 $(document).ready(function () {
-    var $table = $('#users_table')
-    $table.on('click', 'button.remove', removetablerow)
+    var $users_table = $('#users_table')
+    $users_table.on('click', 'button.remove', removetablerow)
     
-    var $tableKey = $('#keys_table')
-    $tableKey.on('click', 'button.remove', removetablerow)
-    
+    var $times_table = $('#times_table')
+    $times_table.on('click', 'button.remove', removetablerow)
+
     $('form').on('submit', function (e) {
         e.preventDefault();
     });
     
-    $('#add_key').click(addpalavra)
     $('#add_user').click(adduser)
     $('#add_time').click(addtime)
     $("#btnSubmit").click(save)

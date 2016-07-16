@@ -20,7 +20,7 @@ html
                 a(href="/" class="pull-left") If Conecta
             .navbar-item-right
                 a(href="/logout") Sair
-            .navbar-item-right
+            .navbar-item-right.name-header
                 p #{locals.name}
 
     .main-menu
@@ -54,6 +54,7 @@ html
                 a(href="/arquivo/list/1")
                     i.fa.fa-sidebar.fa-file.fa-2x
                     span.nav-text Arquivos
-        
     .container-fluid.content-block.content-top
+        div.name-header2 
+            p #{locals.name}
         block content

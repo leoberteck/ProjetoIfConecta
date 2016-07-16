@@ -1,11 +1,24 @@
 ﻿extends ../layout
-
 block content
     div.table-responsive.col-md-8.col-md-offset-2.col-lg-6.col-lg-offset-3
         h2 Lista de eventos
         div.pull-right
             a(class="btn btn-default" href="/evento/addevento") Novo    
                 span.glyphicon.glyphicon-plus
+
+        -function prettyDate(dateString){
+            -var date = new Date(dateString);
+            -var d = date.getDate();
+            -var monthNames = [ "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" ];
+            -var m = monthNames[date.getMonth()];
+            -var y = date.getFullYear();
+            -var h = date.getHours();
+            -var min = date.getMinutes();
+            -if(min < 10)
+                -min = '0' + min;
+            -return d+' '+m+' '+y +' - '+h+':'+min;
+        -}
+
         -var grupos = locals.eventos
         each grupo, index in grupos
             -var header = index == 0 ? "Eventos futuros" : index == 1 ? "Eventos em adamento" : "Eventos passados"
@@ -14,12 +27,16 @@ block content
                 thead
                     tr
                         th Nome
+                        th.not_mobie Início
+                        th.not_mobie Término
                         th Usuários
                         th.pull-right Ações
                 tbody
                     each evento, index in grupo
                         tr(data-id="#{evento._id}" )
                             td #{evento.nome}
+                            td.not_mobie #{prettyDate(evento.dataIni)}
+                            td.not_mobie #{prettyDate(evento.dataFim)}
                             -var count = evento.usuarios ? evento.usuarios.length : 0
                             td #{count}
                             td

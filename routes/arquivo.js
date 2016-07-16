@@ -17,7 +17,7 @@ function viewEdit(req, res, next) {
     if (!req.params.id) return next(Error('Nenhum item selecionado'))
     var id = req.params.id
     //procura registro a ser atualizado
-    model.findOne({ _id : id }).populate({ path : 'usuarios', select : '_id nome', options : { sort : 'nome' } }).populate({ path : 'criador', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
+    model.findOne({ _id : id }).populate({ path : 'criador', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
         if (err) {
             logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "arquivoViewEdit")
             next(err)
@@ -52,6 +52,7 @@ function viewList(req, res, next) {
         } else {
             locals.admin = req.session.admin
             locals.userid = req.session.user._id
+            locals.name = req.session.user.nome
             res.render(viewListUrl, locals)
         }
     })
@@ -65,6 +66,7 @@ function viewForm (req, res, next) {
             next(err)
         } else {
             locals.admin = req.session.admin
+            locals.name = req.session.user.nome
             res.render(viewFormUrl, locals)
         }
     })
@@ -75,7 +77,7 @@ function viewShow (req, res, next) {
     if (!req.params.id) return next(Error('Nenhum item selecionado'))
     var id = req.params.id
     //procura registro
-    model.findOne({ _id : id }).populate({ path : 'usuarios', select : '_id nome', options : { sort : 'nome' } }).populate({ path : 'criador', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
+    model.findOne({ _id : id }).populate({ path : 'criador', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
         if (err) {
             logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "arquivoViewShow")
             next(err)
@@ -110,9 +112,7 @@ function saveItem (req, res, next) {
 //Handles update requests
 function editItem (req, res, next) {
     var arquivo = req.body.arquivo
-    var usuarios_to_remove = req.body.usuarios_to_remove
-    
-    model.updateArquivo(arquivo, usuarios_to_remove, req.session.user, function (err) {
+    model.updateArquivo(arquivo, req.session.user, function (err) {
         if (err) {
             logger.newErrorLog(err, "Error on route editItem: ", req.session.user, "arquivoEditItem")
             res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
