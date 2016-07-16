@@ -1,6 +1,7 @@
 ﻿var mongoose = require('mongoose')
 var logger = require('../helper/logHelper.js')
 var UsuarioModel = require('./Usuario.js')
+var EventoModel = require('./Evento.js')
 var helper = require('../helper/modelHelper.js')
 
 var TIME_ADD_NOTF = "Você foi incluído em um time"
@@ -142,12 +143,24 @@ timeSchema.statics.removeTime = function (id, user, callback) {
                     if (err) {
                         callback(err)
                     } else {
-                        doc.remove(function (err) {
+                        removeTimeFromEventos(doc, function (err) {
                             if (err) {
                                 callback(err)
                             } else {
-
-                                callback()
+                                removeTimeFromTimes(doc, function (err) {
+                                    if (err) {
+                                        callback(err)
+                                    } else {
+                                        doc.remove(function (err) {
+                                            if (err) {
+                                                callback(err)
+                                            } else {
+                                                
+                                                callback()
+                                            }
+                                        })
+                                    }
+                                })
                             }
                         })
                     }
@@ -183,6 +196,45 @@ function removeTimeFromUsuarios(usuarios_to_remove, times_to_remove, time, callb
     } else {
         callback()
     }
+}
+
+function removeTimeFromEventos(time, callback) {
+    var time_to_remove = time._id
+    EventoModel.find({ times : { $in : [time_to_remove] } }, function (err, docs) { 
+        if (err) {
+            logger.newErrorLog(err, "Error getting eventos for update", null, "removeTimeFromEventos")
+            callback(err)
+        } else {
+            docs.forEach(function (entry) {
+                var index = entry.times.indexOf(time_to_remove)
+                if (index > 0) {
+                    entry.times.splice(index, 1)
+                    entry.save()
+                }
+            })
+            callback()
+        }
+    })
+}
+
+function removeTimeFromTimes(time, callback) {
+    model = require("./Time.js")
+    var time_to_remove = time._id
+    model.find({ times : { $in : [time_to_remove] } }, function (err, docs) {
+        if (err) {
+            logger.newErrorLog(err, "Error getting eventos for update", null, "removeTimeFromEventos")
+            callback(err)
+        } else {
+            docs.forEach(function (entry) {
+                var index = entry.times.indexOf(time_to_remove)
+                if (index > 0) {
+                    entry.times.splice(index, 1)
+                    entry.save()
+                }
+            })
+            callback()
+        }
+    })
 }
 
 function upadteUserTeam(usuarios, idTime) {
