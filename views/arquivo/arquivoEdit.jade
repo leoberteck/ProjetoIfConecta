@@ -15,38 +15,6 @@ block content
             .form-group
                 label(for="descricao") Descrição: 
                 textarea(class="form-control", id="descricao", placeholder="Descrição", rows="5", maxlength="500") #{arquivo.descricao}
-            .row
-                if(locals.usuarios)
-                    .col-md-6
-                        .form-group
-                            label(for="user_select") Usuarios:
-                            select(class="form-control", id="user_select")
-                                each usuario, index in locals.usuarios
-                                    option(value="#{usuario._id}") #{usuario.nome}
-                            button(type="button" class="btn select-button" id="add_user") Adicionar usuário
-                if(locals.times && locals.times.length > 0)
-                    .col-md-6
-                        .form-group
-                            label(for="time_select") Times:
-                            select(class="form-control", id="time_select")
-                                each time, index in locals.times
-                                    option(value="#{time._id}") #{time.nome}
-                            button(type="button" class="btn select-button" id="add_time") Adicionar usuários do time
-            .form-group
-                h2 Usuários com acesso ao Arquivo
-                div.table-responsive
-                    table(class="table table-hover", id="users_table")
-                        thead
-                            tr
-                                th Nome
-                                th Ações
-                        tbody
-                            each usuario, index in arquivo.usuarios
-                                tr( id="tr_#{index}" data-id="#{usuario._id}" class="user")
-                                    td #{usuario.nome}
-                                    td
-                                        button(type="button" class = "btn remove")
-                                            span.glyphicon.glyphicon-trash
             .form-group
                 label(for="chaves") Palavras Chave
                 input(type="text", class="form-control", id="chaves", placeholder="Adicione uma palavra chave", maxlength="50")

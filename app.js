@@ -66,8 +66,11 @@ app.use(passport.session())
 app.use(flash())
 //Multer
 app.use('/uploads', express.static(__dirname + "/uploads"));
-app.use(multer({ storage: storage}).single('arquivo'))
-
+//Limit upload files in 10MB
+app.use(multer({
+        storage: storage, 
+        limits : { fileSize : 10485760 },
+    }).single('arquivo'))
 //Public Routes
 app.get('/', routes.index)
 app.get('/login', routes.login)
@@ -83,6 +86,8 @@ app.get('/timeline/:page', authorize, routes.usuario.timeline)
 app.get('/500', function (req, res) { res.render('500') })
 app.get('/404', function (req, res) { res.render('404') })
 app.get('/401', function (req, res) { res.render('401') })
+app.get('/400', function (req, res) { res.render('400') })
+app.get('/errfile', function (req, res) { res.render('errfile') })
 //Link google account
 app.get('/auth/google', authorize, passport.authorize('google', { scope : ['profile', 'email'] }))
 app.get('/auth/google/callback', passport.authorize('google', {
@@ -146,8 +151,9 @@ app.post('/arquivo/addarquivo', routes.arquivo.saveItem)
 app.get('/arquivo/editarquivo/:id', routes.arquivo.viewEdit)
 app.post('/arquivo/editarquivo', routes.arquivo.editItem)
 app.post('/arquivo/removearquivo', routes.arquivo.removeItem)
-app.get('/arquivo/list/:page', routes.arquivo.viewList)
+app.get('/arquivo/list/:page/:search?', routes.arquivo.viewList)
 app.get('/arquivo/show/:id', routes.arquivo.viewShow)
+app.get('/arquivo/download/:id', routes.arquivo.download)
 
 
 // catch 404 and forward to error handler
@@ -162,15 +168,41 @@ app.use(function (req, res, next) {
 // development error handler
 // will print stacktrace
 app.use(function (err, req, res, next) {
-    logHelper.newErrorLog(err, "Error : ", req.session.user, "error middleware")
-    res.status(err.status || 500)
-    if (err.status === 500) {
+    logHelper.newErrorLog(err, "Error : ", req.session ? req.session.user : "no session data", "error middleware")
+    err.status = err.status || 500;
+    res.status(err.status)
+    if (err.code == "LIMIT_FILE_SIZE") {
+        deleteCorruptedFiles()
+        res.redirect('/errfile')
+    } else if (err.status === 500) {
         res.redirect('/500')
     } else if (err.status === 404) {
         res.redirect('/404')
     } else if (err.status === 401) {
         res.redirect('/401')
+    } else if (err.status === 400) { 
+        res.redirect('/400')
     }
 })
+
+/*Deletes files on de /upload folder
+ * These files were probably bigger than 10MB
+ * and multer rejected them, but they have been kept on harddrive
+ */
+function deleteCorruptedFiles() {
+   var db = require('./config/db.js')().connection.db
+   var gridfs = require('./config/gridfs.js')()
+   db.collection('fs.files')
+    .find({ $or : [{ status : { $exists: false } }, { status: null }] })
+    .toArray(function (err, files) {
+        files.forEach(function (file) {
+            gridfs.findOne({ _id : file._id }, function (err, doc) { 
+                if (doc) {
+                    gridfs.remove(doc)
+                }
+            });
+        });
+    });
+}
 
 module.exports = app

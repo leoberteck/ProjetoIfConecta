@@ -37,6 +37,7 @@ arquivoSchema.statics.addNewArquivo = function (file, criador, callback) {
         gridId : file.gridfsEntry._id,
         criador : criador
     }
+    gridfs.db.collection('fs.files').update({ _id : newArquivo.gridId }, { $set: { status: 'OK' } })
     model.create(newArquivo, function (err, response) {
         if (err) {
             logger.newErrorLog(err, "Error on save", null, "addNewArquivo")
@@ -82,6 +83,13 @@ arquivoSchema.statics.removeArquivo = function (id, user, callback) {
             callback(err)
         } else {
             if (user.admin == true || doc.criador == user._id) {
+                gridfs.findOne({ _id : doc.gridId }, function (err, file) {
+                    if (err) {
+                        callback(err)
+                    } else {
+                        gridfs.remove(file)
+                    }
+                })
                 doc.remove(function (err) {
                     if (err) {
                         callback(err)
@@ -95,6 +103,15 @@ arquivoSchema.statics.removeArquivo = function (id, user, callback) {
                 callback(err)
             }
         }
+    })
+}
+
+arquivoSchema.statics.getForDownload = function (id, callback) {
+    gridfs.findOne({ _id : id, root : null }, function (err, file) {
+        var readstream = gridfs.createReadStream({
+            _id: id
+        });
+        callback(err, file, readstream)
     })
 }
 

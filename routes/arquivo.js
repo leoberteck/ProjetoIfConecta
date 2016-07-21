@@ -22,22 +22,12 @@ function viewEdit(req, res, next) {
             logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "arquivoViewEdit")
             next(err)
         } else {
-            var arquivo = obj
-            //busca por todos os usuarios para preencher dropdowns
-            getFormLocals(function (err, result) {
-                if (err) {
-                    next(err)
-                } else {
-                    var locals = {
-                        usuarios : result.usuarios,
-                        times : result.times,
-                        arquivo : arquivo,
-                        admin : req.session.admin,
-                        name : req.session.user.nome
-                    }
-                    res.render(viewEditUrl, locals)
-                }
-            })
+            var locals = {
+                arquivo : obj,
+                admin : req.session.admin,
+                name : req.session.user.nome
+            }
+            res.render(viewEditUrl, locals)
         }
     })
 }
@@ -45,7 +35,9 @@ function viewEdit(req, res, next) {
 //Show the form with a list of items
 function viewList(req, res, next) {
     var idCriador = req.session.admin == true || req.params.all ? null : req.session.user._id
-    getListLocals(req.params.page, idCriador, function (err, locals) {
+    var search = req.params.search
+    var page = req.params.page
+    getListLocals(search, page, idCriador, function (err, locals) {
         if (err) {
             logger.newErrorLog(err, "Error on route viewList: ", req.session.user, "arquivoviewList")
             next(err)
@@ -53,6 +45,7 @@ function viewList(req, res, next) {
             locals.admin = req.session.admin
             locals.userid = req.session.user._id
             locals.name = req.session.user.nome
+            locals.search = search
             res.render(viewListUrl, locals)
         }
     })
@@ -60,16 +53,7 @@ function viewList(req, res, next) {
 
 //Show the form for item inclusion
 function viewForm (req, res, next) {
-    getFormLocals(function (err, locals) {
-        if (err) {
-            logger.newErrorLog(err, "Error on route viewForm: ", req.session.user, "arquivoviewForm")
-            next(err)
-        } else {
-            locals.admin = req.session.admin
-            locals.name = req.session.user.nome
-            res.render(viewFormUrl, locals)
-        }
-    })
+    res.render(viewFormUrl, { admin : req.session.admin, name : req.session.user.nome })
 }
 
 //Mostra detalhes do arquivo
@@ -79,7 +63,7 @@ function viewShow (req, res, next) {
     //procura registro
     model.findOne({ _id : id }).populate({ path : 'criador', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "arquivoViewShow")
+            logger.newErrorLog(err, "Error on route viewShow: ", req.session.user, "arquivoViewShow")
             next(err)
         } else {
             var locals = {
@@ -87,6 +71,25 @@ function viewShow (req, res, next) {
                 admin : req.session.admin
             }
             res.render(viewShowUrl, locals)
+        }
+    })
+}
+
+
+function download(req, res, next) {
+    if (!req.params.id) return next(Error('Nenhum item selecionado'))
+    var id = req.params.id
+    model.getForDownload(id, function (err, file, readstream) {
+        if (err) {
+            res.status(400).send("Erro tentar salvar o item, detalhes : O arquivo não pode ser encontrado");
+        } else {
+            res.set('Content-Type', file.contentType);
+            res.set('Content-Disposition', 'attachment; filename="' + file.filename + '"');
+            
+            readstream.on("error", function (err) {
+                res.end();
+            });
+            readstream.pipe(res);
         }
     })
 }
@@ -142,10 +145,14 @@ function removeItem (req, res, next) {
 }
 
 //Generic functions can be used on both request  handlers and api functions
-function getAll(skip, idCriador, callback) {
+function getAll(search ,skip, idCriador, callback) {
     var filtro = {}
     if (idCriador) {
-        filtro = { criador : idCriador }
+        filtro.criador = idCriador 
+    }
+    if (search) { 
+        var searchClause = new RegExp('.*' + search + '.*', "i")
+        filtro.$or = [{ nome : searchClause }, { descricao : searchClause } , { palavrasChave : { $in : [searchClause]} }]
     }
     model.find(filtro, {}, { skip: skip, limit: 30, sort : "nome" }, function getobjsCB(err, objs) {
         if (err) {
@@ -154,30 +161,6 @@ function getAll(skip, idCriador, callback) {
             callback(null, objs)
         }
         return objs
-    })
-}
-
-//Search for all cargos and all campus to fill form dropdowns
-function getFormLocals(callback) {
-    var locals
-    var UsuarioModel = require('../models/Usuario.js')
-    //Get usuarios
-    UsuarioModel.find({}, {}, { sort : "nome" }, function (err, usuarios) {
-        if (err) {
-            error.status = 500
-            callback(error)
-        } else {
-            var TimeModel = require('../models/Time.js')
-            locals = { usuarios : usuarios, times : null, admin : false }
-            TimeModel.find({}, {}, {sort :"nome"}, function (err, times) {
-                if (err) {
-                    callback(err)
-                } else {
-                    locals.times = times
-                    callback(null, locals)
-                }
-            })
-        }
     })
 }
 
@@ -206,11 +189,11 @@ function generatePagination (page, callback) {
     })
 }
 
-function getListLocals(page, idCriador, callback) {
+function getListLocals(search, page, idCriador, callback) {
     page = page || 1
     if (page >= 1) {
         var skip = 30 * (page - 1)
-        getAll(skip, idCriador, function (err, objs) {
+        getAll(search, skip, idCriador, function (err, objs) {
             if (err) {
                 err.status = 500
                 callback(err)
@@ -246,5 +229,6 @@ module.exports = {
     viewShow : viewShow,
     saveItem : saveItem,
     editItem : editItem,
-    removeItem : removeItem
+    removeItem : removeItem,
+    download : download
 }

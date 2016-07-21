@@ -36,3 +36,34 @@
         display:none;
     }
 }
+
+.search-box.input-group {
+    margin:15px;
+}
+
+.search-box input {
+    border:0px;
+}
+
+.search-box span {
+    background-color:white;
+    border:0px;
+}
+
+.dasborad-tile {
+    width:150px;
+    height:150px;
+    background-color:#82b97f;
+    margin:10px;
+    float:left;
+    text-align : center;
+    color:white;
+}
+
+    .dasborad-tile:hover {
+        background-color:#51b7de;
+    }
+
+    .dasborad-tile .btn {
+        border-radius:0px;
+    }
