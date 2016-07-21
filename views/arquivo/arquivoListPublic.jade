@@ -1,17 +1,33 @@
-﻿extends ../layout
+﻿doctype html
+html
+  head
+    title If Conecta
+    link(rel='stylesheet', href='../../../css/bootstrap.min.css')
+    link(rel='stylesheet', href='../../../css/layout.css')
+    link(rel="stylesheet", href="../../../css/font-awesome.min.css")
+    link(rel='stylesheet', href='../../../css/list.css')
+    script(src="../../../js/jquery-2.2.0.min.js" )
+    script(src="../../../js/bootstrap.min.js")
+    script(src="../../../js/arquivoPublic.js")
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible" content="IE-edge")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+  body
+    nav.navbar.navbar-default.navbar-fixed-top.main-navbar
+        .container-fluid
+            .navbar-brand
+                img(src="../../../img/if_logo.png" alt="logo" class="nav-icon pull-left")
+                a(href="/" class="pull-left") If Conecta
+            .navbar-item-right
+                a(href="/") Login
 
-block content
-    div.table-responsive.col-md-8.col-md-offset-2.col-lg-6.col-lg-offset-3
-        h2 Lista de arquivos
+    div.container-fluid.content-top.col-md-8.col-md-offset-2.col-lg-6.col-lg-offset-3
+        h2 Repositório público de arquivos oficiais do IFSP
         .row
             .input-group.search-box
                 span.input-group-addon.search-box
                     i.glyphicon.glyphicon-search
                 input(id="search", type="text", class="form-control search-box", placeholder="Buscar...", value="#{locals.search || ''}")
-        .row
-            .pull-right.netralize-row
-                a(class="btn btn-default" href="/arquivo/addarquivo") Novo    
-                    span.glyphicon.glyphicon-plus
         div.container-fluid
             -var arquivos = locals.arquivos
             each arquivo, index in arquivos
@@ -49,9 +65,3 @@ block content
                 div(class="modal-body" id="modalBody" style="height:500px;overflow:auto")
                 div.modal-footer
                     button(type="button", class="btn btn-default", data-dismiss="modal") Fechar
-    script(src="../../../js/arquivoList.js")
-
-block styles
-    link(rel='stylesheet', href='../../../css/list.css')
-block javascript
-    script(src="../../../js/bootstrap.min.js")

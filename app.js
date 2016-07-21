@@ -152,9 +152,11 @@ app.get('/arquivo/editarquivo/:id', routes.arquivo.viewEdit)
 app.post('/arquivo/editarquivo', routes.arquivo.editItem)
 app.post('/arquivo/removearquivo', routes.arquivo.removeItem)
 app.get('/arquivo/list/:page/:search?', routes.arquivo.viewList)
+app.get('/arquivo/listmy/:page/:search?', routes.arquivo.viewListMy)
 app.get('/arquivo/show/:id', routes.arquivo.viewShow)
 app.get('/arquivo/download/:id', routes.arquivo.download)
-
+//Rota pública para acessar os arquivos
+app.get('/public/list/:page/:search?', routes.arquivo.viewListPublic)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -15,7 +15,8 @@ var arquivoSchema = new Schema({
     gridId : { type : Schema.Types.ObjectId },
     descricao  : String,
     palavrasChave : [{ type: String, trim: true }],
-    criador : { type : Schema.Types.ObjectId, ref : 'User' }
+    criador : { type : Schema.Types.ObjectId, ref : 'User' },
+    dataCriacao : Date
 })
 
 arquivoSchema.statics.validateArquivo = function (arquivo, callback) {
@@ -35,18 +36,20 @@ arquivoSchema.statics.addNewArquivo = function (file, criador, callback) {
         nome : file.gridfsEntry.filename,
         nomeArquivo : file.gridfsEntry.filename,
         gridId : file.gridfsEntry._id,
-        criador : criador
+        criador : criador,
+        dataCriacao : new Date()
     }
     gridfs.db.collection('fs.files').update({ _id : newArquivo.gridId }, { $set: { status: 'OK' } })
+    var newnotf = UsuarioModel.generateNotf(criador._id, ARQUIVO_ADD_NOTF, newArquivo, "arquivo")
+    UsuarioModel.update({}, { $push: { notificacoes : newnotf } }, { multi : true }, function (err, result) { })
     model.create(newArquivo, function (err, response) {
         if (err) {
             logger.newErrorLog(err, "Error on save", null, "addNewArquivo")
             callback(err)
-        } else { 
+        } else {
             callback(null, response._id)
         }
     })
-
 }
 
 arquivoSchema.statics.updateArquivo = function (obj, sessionUser, callback) {

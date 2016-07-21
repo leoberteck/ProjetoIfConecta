@@ -55,14 +55,14 @@ var navigate = function (event) {
     var page = $target.attr('page-id')
     var search = $("#search").val()
     search = search.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
-    window.location.href = "/arquivo/list/" + page + "/" + search
+    window.location.href = "/public/list/" + page + "/" + search
 }
 
 function doSearch() {
     $("#search").prop('disabled', true);
     var search = $("#search").val()
     search = search.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
-    window.location.href = "/arquivo/list/1/" + search
+    window.location.href = "/public/list/1/" + search
 }
 
 $(document).ready(function () {

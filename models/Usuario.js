@@ -47,17 +47,21 @@ userSchema.statics.addNotfComunicado = function (idremetente, iddestinatario, me
     addNotf(idremetente, iddestinatario, mensagem, comunicado, notftype.comunicado, callback)
 }
 
-function addNotf(idremetente, iddestinatario, mensagem, tag, type, callback) {
-    callback = callback || function () { }
-    var newnotf = {
+userSchema.statics.generateNotf = function (idremetente, mensagem, tag, type) {
+    return {
         remetente : idremetente,
         data : new Date(),
         mensagem : mensagem,
         tag : tag,
         tipo : type
     }
+}
+
+function addNotf(idremetente, iddestinatario, mensagem, tag, type, callback) {
     var model = require("./Usuario.js")
-    model.update({ _id : iddestinatario }, { $addToSet: { notificacoes : newnotf } }, function (err, docs) {
+    callback = callback || function () { }
+    var newnotf = model.generateNotf(idremetente, mensagem, tag, type)
+    model.update({ _id : iddestinatario }, { $push: { notificacoes : newnotf } }, function (err, docs) {
         if (err) {
             callback(err)
         } else {

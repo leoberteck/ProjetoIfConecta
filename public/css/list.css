@@ -50,20 +50,42 @@
     border:0px;
 }
 
-.dasborad-tile {
-    width:150px;
-    height:150px;
-    background-color:#82b97f;
+.tile {
+    width:165px;
+    height:165px;
+    background-color:#EEE;
+    border:solid 1px;
+    border-color:#414141;
     margin:10px;
     float:left;
     text-align : center;
-    color:white;
+    color:#414141;
+    position:relative;
 }
 
-    .dasborad-tile:hover {
-        background-color:#51b7de;
+    .tile .texto {
+        display:inline-block;
+        justify-content:center;
+        align-items:center;
+        height:100%;
+        width:100%;
+        word-wrap:break-word;
     }
 
-    .dasborad-tile .btn {
+    .tile:hover {
+        background-color:#ffa96c;
+    }
+
+    .tile .btn {
         border-radius:0px;
+        background-color:transparent;
+    }
+
+    .tile .btn:hover {
+        background-color:rgba(255, 255, 255, 0.50);
+    }
+
+    .tile div {
+        position:absolute;
+        bottom:0px;
     }

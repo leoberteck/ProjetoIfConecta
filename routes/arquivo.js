@@ -34,6 +34,23 @@ function viewEdit(req, res, next) {
 
 //Show the form with a list of items
 function viewList(req, res, next) {
+    var search = req.params.search
+    var page = req.params.page
+    getListLocals(search, page, null, function (err, locals) {
+        if (err) {
+            logger.newErrorLog(err, "Error on route viewList: ", req.session.user, "arquivoviewList")
+            next(err)
+        } else {
+            locals.admin = req.session.admin
+            locals.userid = req.session.user._id
+            locals.name = req.session.user.nome
+            locals.search = search
+            res.render(viewListUrl, locals)
+        }
+    })
+}
+
+function viewListMy(req, res, next) {
     var idCriador = req.session.admin == true || req.params.all ? null : req.session.user._id
     var search = req.params.search
     var page = req.params.page
@@ -47,6 +64,20 @@ function viewList(req, res, next) {
             locals.name = req.session.user.nome
             locals.search = search
             res.render(viewListUrl, locals)
+        }
+    })
+}
+
+function viewListPublic(req, res, next) {
+    var search = req.params.search
+    var page = req.params.page
+    getListLocals(search, page, null, function (err, locals) {
+        if (err) {
+            logger.newErrorLog(err, "Error on route viewList: ", req.session.user, "arquivoviewList")
+            next(err)
+        } else {
+            locals.search = search
+            res.render("arquivo/arquivoListPublic", locals)
         }
     })
 }
@@ -226,6 +257,8 @@ module.exports = {
     viewEdit : viewEdit,
     viewForm : viewForm,
     viewList : viewList,
+    viewListMy : viewListMy,
+    viewListPublic : viewListPublic,
     viewShow : viewShow,
     saveItem : saveItem,
     editItem : editItem,

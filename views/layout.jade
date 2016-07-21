@@ -55,6 +55,11 @@ html
                 a(href="/arquivo/list/1")
                     i.fa.fa-sidebar.fa-file.fa-2x
                     span.nav-text Arquivos
+            if locals.admin != true
+                li
+                    a(href="/arquivo/listmy/1")
+                        i.fa.fa-sidebar.fa-folder-open.fa-2x
+                        span.nav-text Arquivos que eu criei
     .container-fluid.content-block.content-top
         div.name-header2 
             p #{locals.name}
