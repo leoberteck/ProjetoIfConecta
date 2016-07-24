@@ -107,6 +107,7 @@ app.get('/usuario/editusuario/:id', authorize, routes.usuario.viewEdit)
 app.post('/usuario/editusuario', authorize, routes.usuario.editItem)
 app.post('/usuario/removeusuario', authorizeAdmin, routes.usuario.removeItem)
 app.get('/usuario/list/:page', authorize, routes.usuario.viewList)
+app.get('/usuario/show/:id', routes.usuario.viewShow)
 //cargo
 app.post('/cargo/*', authorizeAdmin)
 app.get('/cargo/addcargo', routes.cargo.viewForm)
@@ -123,6 +124,14 @@ app.get('/campus/editcampus/:id', routes.campus.viewEdit)
 app.post('/campus/editcampus', routes.campus.editItem)
 app.post('/campus/removecampus', routes.campus.removeItem)
 app.get('/campus/list/:page', routes.campus.viewList)
+//categoria
+app.get('/categoria/*', authorize)
+app.get('/categoria/addcategoria', routes.categoria.viewForm)
+app.post('/categoria/addcategoria', routes.categoria.saveItem)
+app.get('/categoria/editcategoria/:id', routes.categoria.viewEdit)
+app.post('/categoria/editcategoria', routes.categoria.editItem)
+app.post('/categoria/removecategoria', routes.categoria.removeItem)
+app.get('/categoria/list/:page', routes.categoria.viewList)
 //Time
 app.post('/time/*', authorize)
 app.get('/time/addtime', routes.time.viewForm)
@@ -151,12 +160,12 @@ app.post('/arquivo/addarquivo', routes.arquivo.saveItem)
 app.get('/arquivo/editarquivo/:id', routes.arquivo.viewEdit)
 app.post('/arquivo/editarquivo', routes.arquivo.editItem)
 app.post('/arquivo/removearquivo', routes.arquivo.removeItem)
-app.get('/arquivo/list/:page/:search?', routes.arquivo.viewList)
-app.get('/arquivo/listmy/:page/:search?', routes.arquivo.viewListMy)
+app.get('/arquivo/list/:page', routes.arquivo.viewList)
+app.get('/arquivo/listmy/:page', routes.arquivo.viewListMy)
 app.get('/arquivo/show/:id', routes.arquivo.viewShow)
 app.get('/arquivo/download/:id', routes.arquivo.download)
 //Rota pública para acessar os arquivos
-app.get('/public/list/:page/:search?', routes.arquivo.viewListPublic)
+app.get('/public/list/:page', routes.arquivo.viewListPublic)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

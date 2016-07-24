@@ -10,6 +10,7 @@ var viewEditUrl = 'arquivo/arquivoEdit'
 var viewShowUrl = 'arquivo/arquivoShow'
 var logger = require('../helper/logHelper.js')
 var model = require('../models/Arquivo.js')
+var CategoriaModel = require('../models/Categoria.js')
 
 
 //Show the form for item edition
@@ -17,67 +18,91 @@ function viewEdit(req, res, next) {
     if (!req.params.id) return next(Error('Nenhum item selecionado'))
     var id = req.params.id
     //procura registro a ser atualizado
-    model.findOne({ _id : id }).populate({ path : 'criador', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
+    model.findOne({ _id : id }).populate({ path : 'criador', select : '_id nome' }).populate({ path : 'categoria', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
         if (err) {
             logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "arquivoViewEdit")
             next(err)
         } else {
-            var locals = {
-                arquivo : obj,
-                admin : req.session.admin,
-                name : req.session.user.nome
-            }
-            res.render(viewEditUrl, locals)
+            CategoriaModel.find({}, function (err, categorias) {
+                var locals = {
+                    categorias : categorias,
+                    arquivo : obj,
+                    admin : req.session.admin,
+                    name : req.session.user.nome
+                }
+                res.render(viewEditUrl, locals)
+            })
         }
     })
 }
 
 //Show the form with a list of items
 function viewList(req, res, next) {
-    var search = req.params.search
+    var order = req.query ? req.query.order : null
+    var search = req.query? req.query.search : null
+    var categoria = req.query && req.query.categoria != "none" ? req.query.categoria : null
     var page = req.params.page
-    getListLocals(search, page, null, function (err, locals) {
+    getListLocals(categoria, order, search, page, null, function (err, locals) {
         if (err) {
             logger.newErrorLog(err, "Error on route viewList: ", req.session.user, "arquivoviewList")
             next(err)
         } else {
-            locals.admin = req.session.admin
-            locals.userid = req.session.user._id
-            locals.name = req.session.user.nome
-            locals.search = search
-            res.render(viewListUrl, locals)
+            CategoriaModel.find({}, function (err, categorias) {
+                locals.categorias = categorias
+                locals.admin = req.session.admin
+                locals.userid = req.session.user._id
+                locals.name = req.session.user.nome
+                locals.search = search
+                locals.order = order
+                locals.categoria = categoria
+                res.render(viewListUrl, locals)
+            })
         }
     })
 }
 
 function viewListMy(req, res, next) {
     var idCriador = req.session.admin == true || req.params.all ? null : req.session.user._id
-    var search = req.params.search
+    var order = req.query ? req.query.order : null
+    var search = req.query? req.query.search : null
+    var categoria = req.query && req.query.categoria != "none" ? req.query.categoria : null
     var page = req.params.page
-    getListLocals(search, page, idCriador, function (err, locals) {
+    getListLocals(categoria, order, search, page, idCriador, function (err, locals) {
         if (err) {
             logger.newErrorLog(err, "Error on route viewList: ", req.session.user, "arquivoviewList")
             next(err)
         } else {
-            locals.admin = req.session.admin
-            locals.userid = req.session.user._id
-            locals.name = req.session.user.nome
-            locals.search = search
-            res.render(viewListUrl, locals)
+            CategoriaModel.find({}, function (err, categorias) {
+                locals.categorias = categorias
+                locals.admin = req.session.admin
+                locals.userid = req.session.user._id
+                locals.name = req.session.user.nome
+                locals.search = search
+                locals.order = order
+                locals.categoria = categoria
+                res.render(viewListUrl, locals)
+            })
         }
     })
 }
 
 function viewListPublic(req, res, next) {
-    var search = req.params.search
+    var order = req.query ? req.query.order : null
+    var search = req.query? req.query.search : null
+    var categoria = req.query && req.query.categoria != "none" ? req.query.categoria : null
     var page = req.params.page
-    getListLocals(search, page, null, function (err, locals) {
+    getListLocals(categoria, order, search, page, null, function (err, locals) {
         if (err) {
             logger.newErrorLog(err, "Error on route viewList: ", req.session.user, "arquivoviewList")
             next(err)
         } else {
-            locals.search = search
-            res.render("arquivo/arquivoListPublic", locals)
+            CategoriaModel.find({}, function (err, categorias) {
+                locals.categorias = categorias
+                locals.search = search
+                locals.order = order
+                locals.categoria = categoria
+                res.render("arquivo/arquivoListPublic", locals)
+            })
         }
     })
 }
@@ -92,7 +117,7 @@ function viewShow (req, res, next) {
     if (!req.params.id) return next(Error('Nenhum item selecionado'))
     var id = req.params.id
     //procura registro
-    model.findOne({ _id : id }).populate({ path : 'criador', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
+    model.findOne({ _id : id }).populate({ path : 'criador', select : '_id nome' }).populate({ path : 'categoria', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
         if (err) {
             logger.newErrorLog(err, "Error on route viewShow: ", req.session.user, "arquivoViewShow")
             next(err)
@@ -176,16 +201,26 @@ function removeItem (req, res, next) {
 }
 
 //Generic functions can be used on both request  handlers and api functions
-function getAll(search ,skip, idCriador, callback) {
+function getAll(categoria, order, search ,skip, idCriador, callback) {
     var filtro = {}
+    var orderBy = {}
     if (idCriador) {
         filtro.criador = idCriador 
+    }
+    if (order && order == 2) {
+        orderBy = { nome : 1 }
+    }
+    else {
+        orderBy = { dataCriacao : -1 }
     }
     if (search) { 
         var searchClause = new RegExp('.*' + search + '.*', "i")
         filtro.$or = [{ nome : searchClause }, { descricao : searchClause } , { palavrasChave : { $in : [searchClause]} }]
     }
-    model.find(filtro, {}, { skip: skip, limit: 30, sort : "nome" }, function getobjsCB(err, objs) {
+    if (categoria) { 
+        filtro.categoria = categoria
+    }
+    model.find(filtro, {}, { skip: skip, limit: 30}).sort(orderBy).populate({ path : 'categoria', select : '_id nome' }).exec(function getobjsCB(err, objs) {
         if (err) {
             callback(err)
         } else {
@@ -220,11 +255,11 @@ function generatePagination (page, callback) {
     })
 }
 
-function getListLocals(search, page, idCriador, callback) {
+function getListLocals(categoria, order, search, page, idCriador, callback) {
     page = page || 1
     if (page >= 1) {
         var skip = 30 * (page - 1)
-        getAll(search, skip, idCriador, function (err, objs) {
+        getAll(categoria, order, search, skip, idCriador, function (err, objs) {
             if (err) {
                 err.status = 500
                 callback(err)

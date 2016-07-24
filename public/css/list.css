@@ -17,12 +17,13 @@
 }
 
 .detail-container {
-    width:420px;
     margin:10px;
 }
 
 .detail-section {
     margin:10px;
+    word-break:break-word;
+    white-space:normal;
 }
 
 .pag-center {
@@ -89,3 +90,8 @@
         position:absolute;
         bottom:0px;
     }
+
+.modal-responsive {
+    width:auto;
+    max-width:600px;
+}

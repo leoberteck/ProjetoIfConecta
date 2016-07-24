@@ -16,6 +16,14 @@ block content
                 label(for="descricao") Descrição: 
                 textarea(class="form-control", id="descricao", placeholder="Descrição", rows="5", maxlength="500") #{arquivo.descricao}
             .form-group
+                label(for="categoria") Categoria:
+                select(class="form-control", id="categoria")
+                    each categoria, index in locals.categorias
+                        if arquivo.categoria && categoria._id == arquivo.categoria._id.toString()
+                            option(value="#{categoria._id}" selected) #{categoria.nome}
+                        else
+                            option(value="#{categoria._id}") #{categoria.nome}
+            .form-group
                 label(for="chaves") Palavras Chave
                 input(type="text", class="form-control", id="chaves", placeholder="Adicione uma palavra chave", maxlength="50")
                 button(type="button", class="btn select-button", id="add_key") Adicionar

@@ -4,9 +4,6 @@ var UsuarioModel = require('./Usuario.js')
 var gridfs = require('../config/gridfs.js')()
 var Schema = mongoose.Schema
 
-var ARQUIVO_ADD_NOTF = "Você ganhou acesso a um arquivo"
-var ARQUIVO_REMOVED_NOFT = "Um Arquivo foi removido"
-var ARQUIVO_REMOVED_USER_NOTF = "Você perdeu o acesso a um arquivo"
 var ARQUIVO_UPDATE_NOTF = "O arquivo foi alterado"
 
 var arquivoSchema = new Schema({
@@ -16,6 +13,7 @@ var arquivoSchema = new Schema({
     descricao  : String,
     palavrasChave : [{ type: String, trim: true }],
     criador : { type : Schema.Types.ObjectId, ref : 'User' },
+    categoria : { type : Schema.Types.ObjectId, ref : 'Categoria' },
     dataCriacao : Date
 })
 
@@ -40,8 +38,6 @@ arquivoSchema.statics.addNewArquivo = function (file, criador, callback) {
         dataCriacao : new Date()
     }
     gridfs.db.collection('fs.files').update({ _id : newArquivo.gridId }, { $set: { status: 'OK' } })
-    var newnotf = UsuarioModel.generateNotf(criador._id, ARQUIVO_ADD_NOTF, newArquivo, "arquivo")
-    UsuarioModel.update({}, { $push: { notificacoes : newnotf } }, { multi : true }, function (err, result) { })
     model.create(newArquivo, function (err, response) {
         if (err) {
             logger.newErrorLog(err, "Error on save", null, "addNewArquivo")
@@ -61,6 +57,8 @@ arquivoSchema.statics.updateArquivo = function (obj, sessionUser, callback) {
                 callback(err)
             } else {
                 var id = obj._id
+                var newnotf = UsuarioModel.generateNotf(obj.criador._id, ARQUIVO_UPDATE_NOTF, obj, "arquivo")
+                UsuarioModel.update({}, { $push: { notificacoes : newnotf } }, { multi : true }, function (err, result) { })
                 model.findByIdAndUpdate(id, obj, {}, function (err, doc) {
                     if (err) {
                         logger.newErrorLog(err, "Error on route update: ", null, "updateArquivo")

@@ -55,14 +55,18 @@ var navigate = function (event) {
     var page = $target.attr('page-id')
     var search = $("#search").val()
     search = search.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
-    window.location.href = "/arquivo/list/" + page + "/" + search
+    var order = $("#order").val()
+    var categoria = $("#categoria").val()
+    window.location.href = "/arquivo/list/" + page + "?search=" + search + "&order=" + order + "&categoria=" + categoria
 }
 
 function doSearch() {
     $("#search").prop('disabled', true);
     var search = $("#search").val()
     search = search.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
-    window.location.href = "/arquivo/list/1/" + search
+    var order = $("#order").val()
+    var categoria = $("#categoria").val()
+    window.location.href = "/arquivo/list/1?search=" + search + "&order=" + order + "&categoria=" + categoria
 }
 
 $(document).ready(function () {
@@ -71,7 +75,12 @@ $(document).ready(function () {
     $(document).on('click', 'button.show', show)
     $(document).on('click', 'button.down', download)
     $('.pagination').on('click', 'a', navigate)
-
+    $("#order").on('change', function () {
+        doSearch()
+    })
+    $("#categoria").on('change', function () {
+        doSearch()
+    })
     $('#search').keyup(function (event) {
         clearTimeout(typingTimer)
         if (event.which == 13) {

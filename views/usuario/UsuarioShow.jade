@@ -1,0 +1,16 @@
+﻿-var usuario = locals.usuario
+
+div.detail-container
+    div.row
+        h3 #{usuario.nome}
+
+    div.row.detail-section
+        h4 Cargo: #{usuario.cargo.nome}
+
+    div.row.detail-section
+        h4 Campus: #{usuario.campus.nome}
+
+    div.row.detail-section
+        h4 Descrição:
+        p #{usuario.descricao}
+

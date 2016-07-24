@@ -28,12 +28,33 @@ html
                 span.input-group-addon.search-box
                     i.glyphicon.glyphicon-search
                 input(id="search", type="text", class="form-control search-box", placeholder="Buscar...", value="#{locals.search || ''}")
+        .row.netralize-row
+            div(class="pull-right" style="margin-left:10px")
+                select(class="form-control" id="order")
+                    if locals.order == "1"
+                        option(value="1" selected) Ordenar por arquivos mais recentes
+                    else
+                        option(value="1") Ordenar por arquivos mais recentes
+                    if locals.order == "2"
+                        option(value="2" selected) Ordenar por ordem alfabética
+                    else
+                        option(value="2") Ordenar por ordem alfabética
+            div(class="pull-right" style="margin-left:10px")
+                select(class="form-control", id="categoria")
+                    option(value="none") Todas as categorias
+                    each categoria, index in locals.categorias
+                        if(locals.categoria && categoria._id == locals.categoria.toString())
+                            option(value="#{categoria._id}" selected) #{categoria.nome}
+                        else
+                            option(value="#{categoria._id}") #{categoria.nome}
         div.container-fluid
             -var arquivos = locals.arquivos
             each arquivo, index in arquivos
                 div.tile
                     span.texto
                         h4 #{arquivo.nome}
+                        if(arquivo.categoria)
+                            strong #{arquivo.categoria.nome}
                     div(data-id="#{arquivo._id}" grid-id="#{arquivo.gridId}")
                         if locals.admin == true || arquivo.criador == locals.userid
                             button(class = "btn edit")
@@ -57,7 +78,7 @@ html
                         a(page-id="#{pag}") #{pag}
 
     div(class="modal fade", id="arquivoModal", role="dialog")
-        div.modal-dialog
+        div.modal-responsive.modal-dialog
             div(class="modal-content")
                 div.modal-header
                     button(type="button", class="close", data-dismiss="modal") &times;

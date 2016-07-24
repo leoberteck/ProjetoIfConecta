@@ -14,6 +14,7 @@ function save() {
         nome : $("#nome").val(),
         descricao : $("#descricao").val(),
         palavrasChave : chaves,
+        categoria : $("#categoria").val(),
         criador : {
             _id : $("#idcriador").val()
         }

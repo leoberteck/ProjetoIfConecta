@@ -7,6 +7,7 @@ var msgDelError = 'Não foi possível deletar'
 var viewFormUrl = 'usuario/UsuarioForm'
 var viewListUrl = 'usuario/UsuarioList'
 var viewEditUrl = 'usuario/UsuarioEdit'
+var viewShowUrl = 'usuario/UsuarioShow'
 var model = require('../models/Usuario.js')
 var logger = require('../helper/logHelper.js')
 var mongoose = require('mongoose')
@@ -130,6 +131,26 @@ exports.viewNewForm = function (req, res, next) {
             locals.admin = req.session.admin
             locals.message = req.flash('signupMessage')
             res.render('usuario/NewUsuarioForm', locals)
+        }
+    })
+}
+
+//Mostra detalhes do usuario
+exports.viewShow = function (req, res, next) {
+    if (!req.params.id) return next(Error('Nenhum item selecionado'))
+    var id = req.params.id
+    //procura registro
+    model.findOne({ _id : id }).exec(function showFindOneCB(err, obj) {
+        if (err) {
+            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "usuarioShow")
+            next(err)
+        } else {
+            var locals = {
+                usuario : obj,
+                admin : req.session.admin,
+                name : req.session.user.nome
+            }
+            res.render(viewShowUrl, locals)
         }
     })
 }
@@ -267,10 +288,7 @@ function getDashUserLocas(page, idUser, callback) {
             { $limit : limit }
         ], function (err, docs) {
             if (!err && docs) {
-                var notfs = []
-                docs.forEach(function (entry) { 
-                    notfs.push(entry.notificacoes)
-                })
+                var notfs = docs.map(function (entry) { return entry.notificacoes})
                 callback({notificacoes : notfs})
             } else {
                 callback(null)

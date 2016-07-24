@@ -6,7 +6,14 @@ div.detail-container
 
     div.row.detail-section
         h4 Administrador: #{arquivo.criador.nome}
-
+    div.row.detail-section
+        h4 Categoria: #{arquivo.categoria.nome}
     div.row.detail-section
         h4 Descrição:
         p #{arquivo.descricao}
+
+    div.row.detail-section
+        h4 Palavras-chave:
+        each palavra, index in arquivo.palavrasChave
+            div(style="margin:5px;float:left;")
+                p #{palavra}

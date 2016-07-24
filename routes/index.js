@@ -6,6 +6,7 @@ module.exports = {
     campus : require('./campus.js'),
     time : require('./time.js'),
     evento : require('./evento.js'),
+    categoria : require('./categoria.js'),
     arquivo : require('./arquivo.js'),
     index : function (req, res, next) {
         if (req.session && req.session.user && req.session.admin) {

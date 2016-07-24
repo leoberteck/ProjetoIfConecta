@@ -43,6 +43,7 @@
     <Compile Include="helper\logHelper.js" />
     <Compile Include="helper\modelHelper.js" />
     <Compile Include="models\Arquivo.js" />
+    <Compile Include="models\Categoria.js" />
     <Compile Include="models\Campus.js" />
     <Compile Include="models\Cargo.js" />
     <Compile Include="models\Evento.js" />
@@ -54,8 +55,11 @@
     <Compile Include="public\js\bootstrap-filestyle.min.js" />
     <Compile Include="public\js\bootstrap.js" />
     <Compile Include="public\js\bootstrap.min.js" />
+    <Compile Include="public\js\categoriaEdit.js" />
     <Compile Include="public\js\campusEdit.js" />
+    <Compile Include="public\js\categoriaForm.js" />
     <Compile Include="public\js\campusForm.js" />
+    <Compile Include="public\js\categoriaList.js" />
     <Compile Include="public\js\campusList.js" />
     <Compile Include="public\js\cargoEdit.js" />
     <Compile Include="public\js\cargoForm.js" />
@@ -129,6 +133,7 @@
     <Compile Include="public\js\usuarioForm.js" />
     <Compile Include="public\js\usuarioList.js" />
     <Compile Include="routes\arquivo.js" />
+    <Compile Include="routes\categoria.js" />
     <Compile Include="routes\campus.js" />
     <Compile Include="routes\cargo.js" />
     <Compile Include="routes\evento.js" />
@@ -190,6 +195,9 @@
     <Content Include="views\cargo\cargoEdit.jade" />
     <Content Include="views\cargo\cargoForm.jade" />
     <Content Include="views\cargo\cargoList.jade" />
+    <Content Include="views\categoria\categoriaEdit.jade" />
+    <Content Include="views\categoria\categoriaForm.jade" />
+    <Content Include="views\categoria\categoriaList.jade" />
     <Content Include="views\dashadmin.jade" />
     <Content Include="views\dashuser.jade" />
     <Content Include="views\errfile.jade" />
@@ -209,6 +217,7 @@
     <Content Include="views\usuario\UsuarioEdit.jade" />
     <Content Include="views\usuario\UsuarioForm.jade" />
     <Content Include="views\usuario\UsuarioList.jade" />
+    <Content Include="views\usuario\UsuarioShow.jade" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
@@ -230,6 +239,7 @@
     <Folder Include="views\cargo\" />
     <Folder Include="views\evento\" />
     <Folder Include="views\arquivo\" />
+    <Folder Include="views\categoria\" />
     <Folder Include="views\time\" />
     <Folder Include="views\usuario\" />
   </ItemGroup>

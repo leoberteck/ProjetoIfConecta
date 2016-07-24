@@ -26,6 +26,8 @@ block content
                                     span.glyphicon.glyphicon-pencil
                                 button(class = "btn remove")
                                     span.glyphicon.glyphicon-trash
+                                button(type="button", class = "btn show", data-toggle="modal", data-target="#usuarioModal")
+                                    span.glyphicon.glyphicon-eye-open
         -var pages = locals.pages
         -var active = locals.active
         ul.pagination.pag-center
@@ -36,4 +38,18 @@ block content
                 else
                     li
                         a(page-id="#{pag}") #{pag}
-        script(src="../../js/usuarioList.js")
+    div(class="modal fade", id="usuarioModal", role="dialog")
+        div.modal-responsive.modal-dialog
+            div(class="modal-content")
+                div.modal-header
+                    button(type="button", class="close", data-dismiss="modal") &times;
+                    h4.modal-title Detalhes do time
+                div(class="modal-body" id="modalBody" style="height:500px;overflow:auto")
+                div.modal-footer
+                    button(type="button", class="btn btn-default", data-dismiss="modal") Fechar
+    script(src="../../js/usuarioList.js")
+
+block styles
+    link(rel='stylesheet', href='../../css/list.css')
+block javascript
+    script(src="../../js/bootstrap.min.js")
