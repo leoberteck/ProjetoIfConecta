@@ -1,11 +1,11 @@
 ﻿var moment = require('moment-timezone')
 
 function momentifyDate(_date) {
-    var year = _date.getFullYear().toString()
-    var month = _date.getMonth().toString()
-    var day = _date.getDate().toString()
-    var hours = _date.getHours().toString()
-    var minutes = _date.getMinutes().toString()
+    var year = _date.getUTCFullYear().toString()
+    var month = _date.getUTCMonth().toString()
+    var day = _date.getUTCDate().toString()
+    var hours = _date.getUTCHours().toString()
+    var minutes = _date.getUTCMinutes().toString()
     if (month < 10)
         month = "0" + month
     if (day < 10)
