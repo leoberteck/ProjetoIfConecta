@@ -42,6 +42,7 @@
     <Compile Include="enum\notftype.js" />
     <Compile Include="helper\logHelper.js" />
     <Compile Include="helper\modelHelper.js" />
+    <Compile Include="helper\momentify.js" />
     <Compile Include="models\Arquivo.js" />
     <Compile Include="models\Categoria.js" />
     <Compile Include="models\Campus.js" />
