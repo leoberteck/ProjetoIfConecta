@@ -11,7 +11,7 @@ var storage = require('gridfs-storage-engine')({
     url: process.env.MONGO_URL || process.env.MONGODB_URI || 'mongodb://@localhost:27017/ifconecta'
 })
 var logHelper = require('./helper/logHelper.js')
-process.env.TIME_ZONE = "America/Sao_Paulo";
+process.env.TZ = "America/Sao_Paulo";
 
 
 //Configure Environment

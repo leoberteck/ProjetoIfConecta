@@ -10,7 +10,6 @@ var viewEditUrl = 'evento/eventoEdit'
 var viewShowUrl = 'evento/eventoShow'
 var model = require('../models/Evento.js')
 var logger = require('../helper/logHelper.js')
-var momentify = require('../helper/momentify.js')
 
 //Show the form for item edition
 exports.viewEdit = function (req, res, next) {
@@ -28,8 +27,6 @@ exports.viewEdit = function (req, res, next) {
                 if (err) {
                     next(err)
                 } else {
-                    evento.dataIni = momentify.fixTimeZone(evento.dataIni)
-                    evento.dataFim = momentify.fixTimeZone(evento.dataFim)
                     var locals = {
                         usuarios : result.usuarios,
                         times : result.times,
@@ -82,8 +79,6 @@ exports.viewShow = function (req, res, next) {
             logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "eventoViewShow")
             next(err)
         } else {
-            obj.dataIni = momentify.fixTimeZone(obj.dataIni)
-            obj.dataFim = momentify.fixTimeZone(obj.dataFim)
             var locals = {
                 evento : obj,
                 admin : req.session.admin,
@@ -168,10 +163,8 @@ var getAll = function (skip, idCriador, callback) {
             grouped[0] = [] //future
             grouped[1] = [] //ongoing
             grouped[2] = [] //past
-            var today = momentify.fixTimeZone(new Date())
+            var today = new Date()
             objs.forEach(function (evento) {
-                evento.dataIni = momentify.fixTimeZone(evento.dataIni)
-                evento.dataFim = momentify.fixTimeZone(evento.dataFim)
                 if (today >= evento.dataIni && today <= evento.dataFim) {
                     grouped[1].push(evento);
                 } else if (today < evento.dataIni) {
