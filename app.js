@@ -7,18 +7,19 @@ var passport = require('passport')
 var flash = require('connect-flash')
 var insights = require('applicationinsights')
 var multer = require('multer')
+var mongoStore = require('connect-mongo')(session)
 var storage = require('gridfs-storage-engine')({
     url: process.env.MONGO_URL || process.env.MONGODB_URI || 'mongodb://@localhost:27017/ifconecta'
 })
 var logHelper = require('./helper/logHelper.js')
 process.env.TZ = "America/Sao_Paulo";
 
-
 //Configure Environment
 //Adds the function string.parse to the String prototype
 require('./config/confstring.js')()
 //Connects with the database
-var db = require('./config/db.js')()
+var dbInfo = require('./config/db.js')
+var db = dbInfo.getDb()
 insights.setup("01b3ae60-6cb5-4c64-81c6-2b4fc209b99b").start()
 
 var app = express()
@@ -53,7 +54,6 @@ var routes = require('./routes/index.js')
 
 require('./config/passport.js')(passport)
 
-app.use(logger('dev'))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -61,10 +61,15 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(session({
     secret : "037ac86061f8cccc60a64b4d399549fb",
     resave : false  ,
-    saveUninitialized : false
+    saveUninitialized : false,
+    cookie: { secure : false },
+    store: new mongoStore({
+        url: dbInfo.getMongoFullUrl()
+    })
 }))
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(logger('dev'))
 app.use(flash())
 //Multer
 app.use('/uploads', express.static(__dirname + "/uploads"));
@@ -81,6 +86,7 @@ app.post('/login', passport.authenticate('local-login', {
     failureRedirect : '/login',
     failureFlash : true
 }))
+
 app.get('/logout', routes.usuario.logout)
 app.get('/dashadmin', authorizeAdmin, routes.dashadmin)
 app.get('/dashuser/', authorize, routes.dashuser)
@@ -91,11 +97,18 @@ app.get('/401', function (req, res) { res.render('401') })
 app.get('/400', function (req, res) { res.render('400') })
 app.get('/errfile', function (req, res) { res.render('errfile') })
 //Link google account
-app.get('/auth/google', authorize, passport.authorize('google', { scope : ['profile', 'email'] }))
-app.get('/auth/google/callback', passport.authorize('google', {
-    successRedirect : '/',
-    failureRedirect : '/500',
-}))
+app.get('/auth/*', function (req, res, next) {
+    if (req.session.user) {
+        req.session.save(function (err) {
+            next()
+        })
+    }
+    else { 
+        next()
+    }
+})
+app.get('/auth/google', authorize, passport.authenticate('google', { scope : ['profile', 'email'], session : true }) )
+app.get('/auth/google/callback', passport.authorize('google', { successRedirect : '/', failureRedirect : '/500', }) )
 //Usuario
 app.get('/usuario/new', routes.usuario.viewNewForm)
 app.post('/usuario/new', passport.authenticate('local-signup', {
@@ -110,6 +123,9 @@ app.post('/usuario/editusuario', authorize, routes.usuario.editItem)
 app.post('/usuario/removeusuario', authorizeAdmin, routes.usuario.removeItem)
 app.get('/usuario/list/:page', authorize, routes.usuario.viewList)
 app.get('/usuario/show/:id', routes.usuario.viewShow)
+app.get('/pass/requestchange/:email', routes.usuario.requestPassChange)
+app.get('/pass/change/:token', routes.usuario.viewChangePass)
+app.post('/pass/change', routes.usuario.changePass)
 //cargo
 app.post('/cargo/*', authorizeAdmin)
 app.get('/cargo/addcargo', routes.cargo.viewForm)
@@ -203,7 +219,7 @@ app.use(function (err, req, res, next) {
  * and multer rejected them, but they have been kept on harddrive
  */
 function deleteCorruptedFiles() {
-   var db = require('./config/db.js')().connection.db
+   var db = db.connection.db
    var gridfs = require('./config/gridfs.js')()
    db.collection('fs.files')
     .find({ $or : [{ status : { $exists: false } }, { status: null }] })

@@ -1,6 +1,6 @@
 ﻿var mongoose = require('mongoose')
-var bcrypt = require('bcrypt-nodejs')
 var logger = require('../helper/logHelper.js')
+var bcrypt = require('bcrypt-nodejs')
 var notftype = require('../enum/notftype.js')
 
 var Schema = mongoose.Schema

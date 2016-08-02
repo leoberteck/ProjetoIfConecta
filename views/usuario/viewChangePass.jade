@@ -1,0 +1,22 @@
+﻿doctype html
+html
+    head
+        title If Conecta
+        link(rel='stylesheet', href='/css/bootstrap.min.css')
+        script(src="/js/jquery-2.2.0.min.js")
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible" content="IE-edge")
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+    body
+        nav(class="navbar.navbar-default" style="background-color: #82b97f")
+            .container-fluid
+                .navbar-brand
+                    a(href="/" style="color: #FFFFFF;") If Conecta
+        .container-fluid.content-block.col-md-6.col-md-offset-3.col-lg-6.col-lg-offset-3
+            h1 Nova senha para : #{locals.nome}
+            form(role="form", id="psForm" action="/pass/change" method="post")
+                .form-group
+                    label(for="newpass") Nova senha: 
+                    input(type="password", class="form-control", id="newpass", placeholder="Digite uma nova senha", maxlength="39" name="newpass")
+                    input(type="hidden" value="#{locals._id}" id="idusuario", name="idusuario")
+                button(type="submit", class="btn btn-primary") Salvar

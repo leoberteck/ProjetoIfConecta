@@ -4,7 +4,6 @@ var refresh = require('passport-oauth2-refresh')
 var userModel = require('../models/Usuario.js')
 var configAuth = require('./auth.js')
 
-
 module.exports = function (passport) {
     passport.serializeUser(function (user, done) { 
         done(null, user._id)
@@ -63,7 +62,9 @@ module.exports = function (passport) {
                     } else {
                         req.session.user = doc
                         req.session.admin = doc.admin || false
-                        return done(null, doc)
+                        req.session.save(function (err) {
+                            return done(null, doc)
+                        })
                     }
                 }
             })
@@ -79,16 +80,19 @@ module.exports = function (passport) {
         passReqToCallback : true,
     }, function (req, token, refreshToken, profile, done) {
         process.nextTick(function () {
-            req.session.user.google.id = profile.id
-            req.user.google.token = token
-            req.user.google.name = profile.displayName
-            req.user.google.email = profile.emails[0].value
-            req.user.google.refreshToken = refreshToken
-            req.user.save()
-            return done(null, req.session.user)
+            req.session.reload(function (err) {
+                req.session.user.google.id = profile.id
+                req.user.google.token = token
+                req.user.google.name = profile.displayName
+                req.user.google.email = profile.emails[0].value
+                req.user.google.photo = profile.photos[0].value
+                req.user.google.refreshToken = refreshToken
+                req.user.save()
+                return done(null, req.session.user)
+            })
         })
     })
-
+    
     passport.use('local-signup', localSignIn)
     passport.use('local-login', localLogIn)
     passport.use('google', google)

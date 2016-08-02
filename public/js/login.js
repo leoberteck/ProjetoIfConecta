@@ -5,7 +5,14 @@
     }
 }
 
-$(document).ready(function () { 
+$(document).ready(function () {
     $("#login").click(login)
+    $("#changePass").click(function () {
+        if ($('#email').val()) {
+            window.location = "/pass/requestchange/" + encodeURIComponent($('#email').val())
+        } else { 
+            alert("Informe seu email")
+        }
+    })
     $("#loader").hide()
 })

@@ -9,7 +9,9 @@ var viewListUrl = 'usuario/UsuarioList'
 var viewEditUrl = 'usuario/UsuarioEdit'
 var viewShowUrl = 'usuario/UsuarioShow'
 var model = require('../models/Usuario.js')
+var TokenModel = require('../models/Token.js')
 var logger = require('../helper/logHelper.js')
+var mailer = require('../helper/mailer.js')
 var mongoose = require('mongoose')
 
 //login route
@@ -206,6 +208,63 @@ exports.removeItem = function (req, res, next) {
 exports.timeline = function (req, res, next) {
     getDashUserLocas(req.params.page, req.session.user._id, function (locals) {
         res.render("usuario/timeline", locals)
+    })
+}
+
+exports.requestPassChange = function (req, res, next) {
+    var email = req.params.email
+    model.findOne({ email : email }, '_id email', function (err, doc) {
+        if (err || !doc) {
+            res.status(400).send("Usuário não encontrado")
+        }
+        else {
+            var expire = new Date()
+            expire.setDate(expire.getDate() + 1)
+            var newToken = new TokenModel({ usuario : doc._id, expire : expire })
+            newToken.save(function (err) {
+                mailer.sendEmail(
+                    doc.email, 
+                    "Pedido de mudança de senha", 
+                    "<h1>Acesse este link para mudar sua senha</h1><br />" + 
+                    "<a href='http://" + req.get('host') + "/pass/change/" + newToken._id + "'>Clique aqui</a>"
+                )
+                res.render("usuario/passChangeRquest")
+            })
+        }
+    })
+}
+
+exports.viewChangePass = function (req, res, next) {
+    var today = new Date()
+    var tokenId = req.params.token
+    TokenModel.findById(tokenId).populate({ path : 'usuario', select : '_id nome'}).exec(function (err, token) {
+        if (err || !token) {
+            res.status(400).send("Token Inválido")
+        }
+        else {
+            if (token.expire < today) {
+                res.status(400).send("Token Inválido")
+            }
+            else { 
+                res.render('usuario/viewChangePass', token.usuario)
+            }
+        }
+    })
+}
+
+exports.changePass = function (req, res, next) {
+    var id = req.body.idusuario
+    var newpass = req.body.newpass
+    model.findById(id, function (err, doc) {
+        if (err || !doc) {
+            res.status(400).send("Usuário não encontrado")
+        } else {
+            TokenModel.remove({usuario : doc._id}, function () { })
+            doc.senha = model.generateHash(newpass)
+            doc.save(function (err) { 
+                res.redirect('/login')
+            })
+        }
     })
 }
 

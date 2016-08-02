@@ -41,6 +41,7 @@
     <Compile Include="enum\logtype.js" />
     <Compile Include="enum\notftype.js" />
     <Compile Include="helper\logHelper.js" />
+    <Compile Include="helper\mailer.js" />
     <Compile Include="helper\modelHelper.js" />
     <Compile Include="helper\momentify.js" />
     <Compile Include="models\Arquivo.js" />
@@ -50,6 +51,7 @@
     <Compile Include="models\Evento.js" />
     <Compile Include="models\Log.js" />
     <Compile Include="models\Time.js" />
+    <Compile Include="models\Token.js" />
     <Compile Include="models\Usuario.js" />
     <Compile Include="public\js\arquivoPublic.js" />
     <Compile Include="public\js\bootstrap-datetimepicker.min.js" />
@@ -141,7 +143,6 @@
     <Compile Include="routes\index.js" />
     <Compile Include="routes\time.js" />
     <Compile Include="routes\usuario.js" />
-    <Content Include="config\oauth.json" />
     <Content Include="HTML1.html" />
     <Content Include="other\Variables.txt" />
     <Content Include="package.json" />
@@ -214,11 +215,13 @@
     <Content Include="views\time\timeList.jade" />
     <Content Include="views\time\timeShow.jade" />
     <Content Include="views\usuario\NewUsuarioForm.jade" />
+    <Content Include="views\usuario\passChangeRquest.jade" />
     <Content Include="views\usuario\timeline.jade" />
     <Content Include="views\usuario\UsuarioEdit.jade" />
     <Content Include="views\usuario\UsuarioForm.jade" />
     <Content Include="views\usuario\UsuarioList.jade" />
     <Content Include="views\usuario\UsuarioShow.jade" />
+    <Content Include="views\usuario\viewChangePass.jade" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />

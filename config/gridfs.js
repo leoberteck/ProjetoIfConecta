@@ -1,6 +1,6 @@
 ﻿var mongoose = require('mongoose')
 var grid = require('gridfs-stream')
-var mongoose = require("./db.js")()
+var mongoose = require("./db.js").getDb()
 
 var gridfs
 

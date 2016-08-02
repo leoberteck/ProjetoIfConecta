@@ -19,6 +19,7 @@ html
                 if locals.message != null && locals.message != ""
                     div.alert.alert-danger #{locals.message}
                 button(id="login" type="submit" class="btn btn-lg btn-primary btn-block" ) Login
+                button(id="changePass" type="button" class="btn btn-lg btn-default btn-block" ) Esqueci minha senha
                 a(class="btn btn-lg btn-default btn-block" href="/usuario/new" ) Não sou cadastrado
                 a(class="btn btn-lg btn-default btn-block" style="word-wrap:break-word;white-space:normal;" href="/public/list/1" ) Consultar o repositório de arquivos
             div(class="text-center loading-container" id="loader")
