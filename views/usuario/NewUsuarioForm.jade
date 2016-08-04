@@ -28,7 +28,12 @@ html
                     input(type="email", class="form-control", id="email", placeholder="Email", maxlength="200" name="email")
                 .form-group
                     label(for="senha") Senha: 
-                    input(type="password", class="form-control", id="senha", placeholder="Senha", maxlength="12" name="senha")
+                    input(type="password", class="form-control", id="senha", placeholder="Senha", maxlength="16" name="senha")
+                .form-group
+                    label(for="senha2") Confirmação de senha: 
+                    input(type="password", class="form-control", id="senha2", placeholder="Confirmação da senha", maxlength="16" name="senha")
+                .form-group
+                    div(id="msg" class="alert alert-danger") As duas senhas devem coincidir
                 .form-group
                     label(for="cargo") Cargo: 
                     select(class="form-control", id="cargo" name="cargo")
@@ -41,4 +46,6 @@ html
                             option(value="#{campus._id}") !{campus.nome}
                 button(type="submit" class="btn btn-primary" id="btnSubmit") Gravar
                 a(class="btn btn-default" href="/") Cancelar
+        script(src="/js/newUsuarioForm.js")
+
             

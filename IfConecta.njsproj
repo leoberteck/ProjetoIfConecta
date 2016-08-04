@@ -121,6 +121,7 @@
     <Compile Include="public\js\jquery-2.2.0.min.js" />
     <Compile Include="public\js\login.js" />
     <Compile Include="public\js\moment.js" />
+    <Compile Include="public\js\newUsuarioForm.js" />
     <Compile Include="public\js\select2.full.js" />
     <Compile Include="public\js\select2.full.min.js" />
     <Compile Include="public\js\select2.js" />
@@ -135,6 +136,7 @@
     <Compile Include="public\js\usuarioEdit.js" />
     <Compile Include="public\js\usuarioForm.js" />
     <Compile Include="public\js\usuarioList.js" />
+    <Compile Include="public\js\viewChangePass.js" />
     <Compile Include="routes\arquivo.js" />
     <Compile Include="routes\categoria.js" />
     <Compile Include="routes\campus.js" />

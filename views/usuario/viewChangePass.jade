@@ -17,6 +17,12 @@ html
             form(role="form", id="psForm" action="/pass/change" method="post")
                 .form-group
                     label(for="newpass") Nova senha: 
-                    input(type="password", class="form-control", id="newpass", placeholder="Digite uma nova senha", maxlength="39" name="newpass")
+                    input(type="password", class="form-control", id="newpass", placeholder="Digite uma nova senha", maxlength="16" name="newpass" required = "")
+                .form-group 
+                    label(for="newpass2") Confirmação de senha: 
+                    input(type="password", class="form-control", id="newpass2", placeholder="Digite a senha novamente", maxlength="16" name="newpass2" required = "")
+                .form-group
                     input(type="hidden" value="#{locals._id}" id="idusuario", name="idusuario")
-                button(type="submit", class="btn btn-primary") Salvar
+                    div(id="msg" class="alert alert-danger") As duas senhas devem coincidir
+                button(id="btnSubmit" type="submit", class="btn btn-primary") Salvar
+        script(src="/js/viewChangePass.js")

@@ -24,8 +24,8 @@ module.exports.sendEmail = function (to, subject, htmlBody, callback) {
         html: htmlBody
     }
     
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
+    transporter.sendMail(mailOptions, function (err, info) {
+        if (err) {
             callback(err)
         }
         else { 
