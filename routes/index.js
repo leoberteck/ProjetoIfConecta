@@ -18,10 +18,10 @@ module.exports = {
         }
     },
     dashadmin : function (req, res, next) {
-        res.render('dashadmin', { admin : true, name : req.session.user.nome })
+        res.render('dashadmin', { admin : true, name : req.session.user.nome, userid : req.session.user._id })
     },
     dashuser : function (req, res, next) {
-        res.render('dashuser', { admin : false, name : req.session.user.nome })
+        res.render('dashuser', { admin : false, name : req.session.user.nome, userid : req.session.user._id })
     },
     login : function (req, res, next) {
         var locals = { message : req.flash('loginMessage') }

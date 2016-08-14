@@ -28,7 +28,8 @@ function viewEdit(req, res, next) {
                     categorias : categorias,
                     arquivo : obj,
                     admin : req.session.admin,
-                    name : req.session.user.nome
+                    name : req.session.user.nome,
+                    userid : req.session.user._id
                 }
                 res.render(viewEditUrl, locals)
             })
@@ -55,6 +56,7 @@ function viewList(req, res, next) {
                 locals.search = search
                 locals.order = order
                 locals.categoria = categoria
+                locals.userid = req.session.user._d
                 res.render(viewListUrl, locals)
             })
         }
@@ -80,6 +82,7 @@ function viewListMy(req, res, next) {
                 locals.search = search
                 locals.order = order
                 locals.categoria = categoria
+                locals.userid = req.session.user._d
                 res.render(viewListUrl, locals)
             })
         }
@@ -109,7 +112,7 @@ function viewListPublic(req, res, next) {
 
 //Show the form for item inclusion
 function viewForm (req, res, next) {
-    res.render(viewFormUrl, { admin : req.session.admin, name : req.session.user.nome })
+    res.render(viewFormUrl, { admin : req.session.admin, name : req.session.user.nome, userid : req.session.user._id })
 }
 
 //Mostra detalhes do arquivo
@@ -136,8 +139,8 @@ function download(req, res, next) {
     if (!req.params.id) return next(Error('Nenhum item selecionado'))
     var id = req.params.id
     model.getForDownload(id, function (err, file, readstream) {
-        if (err) {
-            res.status(400).send("Erro tentar salvar o item, detalhes : O arquivo não pode ser encontrado");
+        if (err || !file) {
+            res.redirect("/404");
         } else {
             res.set('Content-Type', file.contentType);
             res.set('Content-Disposition', 'attachment; filename="' + file.filename + '"');

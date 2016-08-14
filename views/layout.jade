@@ -22,7 +22,7 @@ html
             .navbar-item-right
                 a(href="/logout") Sair
             .navbar-item-right.name-header
-                p #{locals.name}
+                a(href="/usuario/editusuario/#{locals.userid}") #{locals.name}
 
     .main-menu
         ul
@@ -66,5 +66,5 @@ html
                     span.nav-text Categorias de arquivo
     .container-fluid.content-block.content-top
         div.name-header2 
-            p #{locals.name}
+            a(href="/usuario/editusuario/#{locals.userid}") #{locals.name}
         block content

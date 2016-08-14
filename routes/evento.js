@@ -32,7 +32,8 @@ exports.viewEdit = function (req, res, next) {
                         times : result.times,
                         evento : evento,
                         admin : req.session.admin,
-                        name : req.session.user.nome
+                        name : req.session.user.nome,
+                        userid : req.session.user._id
                     }
                     res.render(viewEditUrl, locals)
                 }
@@ -82,7 +83,8 @@ exports.viewShow = function (req, res, next) {
             var locals = {
                 evento : obj,
                 admin : req.session.admin,
-                name : req.session.user.nome
+                name : req.session.user.nome,
+                userid : req.session.user._id
             }
             res.render(viewShowUrl, locals)
         }

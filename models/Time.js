@@ -68,7 +68,7 @@ timeSchema.statics.addNewTime = function (obj, criador, callback) {
                         callback(err)
                     } else {
                         response.usuarios.forEach(function (entry) {
-                            UsuarioModel.addNotfTime(response.criador, entry, TIME_ADD_NOTF, response)
+                            UsuarioModel.addNotfTime(entry, TIME_ADD_NOTF, response)
                         })
                         upadteUserTeam(response.usuarios, response._id)
                         callback(null, response)
@@ -110,7 +110,7 @@ timeSchema.statics.updateTime = function (obj, usuarios_to_remove, times_to_remo
                                 callback(err)
                             } else {
                                 doc.usuarios.forEach(function (entry) {
-                                    UsuarioModel.addNotfTime(doc.criador, entry, TIME_UPDATE_NOTF, obj)
+                                    UsuarioModel.addNotfTime(entry, TIME_UPDATE_NOTF, obj)
                                 })
                                 upadteUserTeam(obj.usuarios, doc._id)
                                 removeTimeFromUsuarios(usuarios_to_remove, times_to_remove, doc, function () { })
@@ -137,7 +137,7 @@ timeSchema.statics.removeTime = function (id, user, callback) {
         } else {
             if (user.admin == true || doc.criador == user._id) {
                 doc.usuarios.forEach(function (entry) { 
-                    UsuarioModel.addNotfTime(doc.criador, entry, TIME_REMOVED_NOFT, doc)
+                    UsuarioModel.addNotfTime(entry, TIME_REMOVED_NOFT, doc)
                 })
                 removeTimeFromUsuarios(doc.usuarios, [], doc, function (err) {
                     if (err) {
@@ -187,7 +187,7 @@ function removeTimeFromUsuarios(usuarios_to_remove, times_to_remove, time, callb
                     if (index > 0) {
                         entry.times.splice(index, 1)
                         entry.save()
-                        UsuarioModel.addNotfTime(time.criador, entry, TIME_REMOVED_USER_NOTF, time)
+                        UsuarioModel.addNotfTime(entry, TIME_REMOVED_USER_NOTF, time)
                     }
                 })
                 callback()

@@ -16,7 +16,7 @@ exports.viewEdit = function (req, res, next) {
     var id = req.params.id
     model.findOne({ _id : id }, function showFindOneCB(err, obj) {
         if (err) { logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "cargoViewEdit") }
-        var locals = { cargo : obj, admin : req.session.admin, name : req.session.user.nome }
+        var locals = { cargo : obj, admin : req.session.admin, name : req.session.user.nome, userid : req.session.user._id }
         res.render(viewEditUrl, locals)
     })
 }
@@ -41,7 +41,8 @@ exports.viewList = function (req, res, next) {
                             pages : pages,
                             active : page,
                             admin : req.session.admin,
-                            name : req.session.user.nome
+                            name : req.session.user.nome,
+                            userid : req.session.user._id
                         }
                         res.render(viewListUrl, locals)
                     }
@@ -57,7 +58,7 @@ exports.viewList = function (req, res, next) {
 
 //Show the form for item inclusion
 exports.viewForm = function (req, res, next) {
-    res.render(viewFormUrl, { admin: req.session.admin, name : req.session.user.nome })
+    res.render(viewFormUrl, { admin: req.session.admin, name : req.session.user.nome, userid : req.session.user._id})
 }
 
 //Handles save requests

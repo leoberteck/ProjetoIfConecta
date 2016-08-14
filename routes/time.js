@@ -32,7 +32,8 @@ exports.viewEdit = function (req, res, next) {
                         times : result.times,
                         time : time,
                         admin : req.session.admin,
-                        name : req.session.user.nome
+                        name : req.session.user.nome,
+                        userid : req.session.user._id
                     }
                     res.render(viewEditUrl, locals)
                 }
@@ -99,7 +100,8 @@ exports.viewShow = function (req, res, next) {
             var locals = {
                 time : obj,
                 admin : req.session.admin,
-                name : req.session.user.nome
+                name : req.session.user.nome,
+                userid : req.session.user._id
             }
             res.render(viewShowUrl, locals)
         }
@@ -157,9 +159,9 @@ exports.removeItem = function (req, res, next) {
 
 //Generic functions can be used on both request  handlers and api functions
 var getAll = function (skip, idCriador, callback) {
-    var filtro = {}
+    var filtro = { }
     if (idCriador) {
-        filtro = {criador : idCriador}
+        filtro.$or = [{criador : idCriador }, {usuarios : { $in : [idCriador] }}]
     }
     // }).sort({nome : 1}).exec(
     model.find(filtro, {}, { skip: skip, limit: 30, sort: 'nome' }, function getobjsCB(err, objs) {

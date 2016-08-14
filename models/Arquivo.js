@@ -57,13 +57,13 @@ arquivoSchema.statics.updateArquivo = function (obj, sessionUser, callback) {
                 callback(err)
             } else {
                 var id = obj._id
-                var newnotf = UsuarioModel.generateNotf(obj.criador._id, ARQUIVO_UPDATE_NOTF, obj, "arquivo")
-                UsuarioModel.update({}, { $push: { notificacoes : newnotf } }, { multi : true }, function (err, result) { })
                 model.findByIdAndUpdate(id, obj, {}, function (err, doc) {
                     if (err) {
                         logger.newErrorLog(err, "Error on route update: ", null, "updateArquivo")
                         callback(err)
                     } else {
+                        var newnotf = UsuarioModel.generateNotf(ARQUIVO_UPDATE_NOTF, doc, "arquivo")
+                        UsuarioModel.update({}, { $push: { notificacoes : newnotf } }, { multi : true }, function (err, result) { })
                         callback()
                     }
                 })
@@ -109,10 +109,15 @@ arquivoSchema.statics.removeArquivo = function (id, user, callback) {
 
 arquivoSchema.statics.getForDownload = function (id, callback) {
     gridfs.findOne({ _id : id, root : null }, function (err, file) {
-        var readstream = gridfs.createReadStream({
-            _id: id
-        });
-        callback(err, file, readstream)
+        if (err || !file || !file._id) {
+            callback(err, file, null)
+        }
+        else {
+            var readstream = gridfs.createReadStream({
+                _id: id
+            });
+            callback(err, file, readstream)
+        }
     })
 }
 

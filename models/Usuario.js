@@ -23,7 +23,6 @@ var userSchema = new Schema({
     eventos : [{ type : mongoose.Schema.Types.ObjectId, ref : 'Evento' }],
     arquivos : [{ type : mongoose.Schema.Types.ObjectId, ref : 'Arquivo' }],
     notificacoes : [{
-        remetente : { type : mongoose.Schema.Types.ObjectId, ref : 'Usuario' },
         data : Date,
         mensagem : String,
         tag : { type: Schema.Types.Mixed },
@@ -31,25 +30,20 @@ var userSchema = new Schema({
     }]
 })
 
-userSchema.statics.addNotfArquivo = function (idremetente, iddestinatario, mensagem, arquivo, callback) {
-    addNotf(idremetente, iddestinatario, mensagem, arquivo, notftype.arquivo, callback)
+userSchema.statics.addNotfArquivo = function (iddestinatario, mensagem, arquivo, callback) {
+    addNotf(iddestinatario, mensagem, arquivo, notftype.arquivo, callback)
 }
 
-userSchema.statics.addNotfEvento = function (idremetente, iddestinatario, mensagem, evento, callback) {
-    addNotf(idremetente, iddestinatario, mensagem, evento, notftype.evento, callback)
+userSchema.statics.addNotfEvento = function (iddestinatario, mensagem, evento, callback) {
+    addNotf(iddestinatario, mensagem, evento, notftype.evento, callback)
 }
 
-userSchema.statics.addNotfTime = function (idremetente, iddestinatario, mensagem, time, callback) {
-    addNotf(idremetente, iddestinatario, mensagem, time, notftype.time, callback)
+userSchema.statics.addNotfTime = function (iddestinatario, mensagem, time, callback) {
+    addNotf(iddestinatario, mensagem, time, notftype.time, callback)
 }
 
-userSchema.statics.addNotfComunicado = function (idremetente, iddestinatario, mensagem, comunicado, callback) {
-    addNotf(idremetente, iddestinatario, mensagem, comunicado, notftype.comunicado, callback)
-}
-
-userSchema.statics.generateNotf = function (idremetente, mensagem, tag, type) {
+userSchema.statics.generateNotf = function (mensagem, tag, type) {
     return {
-        remetente : idremetente,
         data : new Date(),
         mensagem : mensagem,
         tag : tag,
@@ -57,10 +51,10 @@ userSchema.statics.generateNotf = function (idremetente, mensagem, tag, type) {
     }
 }
 
-function addNotf(idremetente, iddestinatario, mensagem, tag, type, callback) {
+function addNotf(iddestinatario, mensagem, tag, type, callback) {
     var model = require("./Usuario.js")
     callback = callback || function () { }
-    var newnotf = model.generateNotf(idremetente, mensagem, tag, type)
+    var newnotf = model.generateNotf(mensagem, tag, type)
     model.update({ _id : iddestinatario }, { $push: { notificacoes : newnotf } }, function (err, docs) {
         if (err) {
             callback(err)

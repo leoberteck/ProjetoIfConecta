@@ -57,21 +57,27 @@ exports.viewEdit = function (req, res, next) {
             next(err)
         } else {
             var usuario = obj
-            //busca por todos os cargos e campus para preencher dropdowns
-            getFormLocals(function (err, result) {
-                if (err) {
-                    next(err)
-                } else {
-                    var locals = {
-                        cargos : result.cargos,
-                        campuss : result.campuss,
-                        usuario : usuario,
-                        admin : req.session.admin,
-                        name : req.session.user.nome
+            //verificar as permissões do usuário
+            if (usuario._id == req.session.user._id || req.session.admin) {
+                //busca por todos os cargos e campus para preencher dropdowns
+                getFormLocals(function (err, result) {
+                    if (err) {
+                        next(err)
+                    } else {
+                        var locals = {
+                            cargos : result.cargos,
+                            campuss : result.campuss,
+                            usuario : usuario,
+                            admin : req.session.admin,
+                            name : req.session.user.nome,
+                            userid : req.session.user._id
+                        }
+                        res.render(viewEditUrl, locals)
                     }
-                    res.render(viewEditUrl, locals)
-                }
-            })
+                })
+            } else { 
+                res.render("401");
+            }
         }
     })
 }
@@ -96,7 +102,8 @@ exports.viewList = function (req, res, next) {
                             pages : pages,
                             active : page,
                             admin : req.session.admin,
-                            name : req.session.user.nome
+                            name : req.session.user.nome,
+                            userid : req.session.user._id
                         }
                         res.render(viewListUrl, locals)
                     }
@@ -150,7 +157,8 @@ exports.viewShow = function (req, res, next) {
             var locals = {
                 usuario : obj,
                 admin : req.session.admin,
-                name : req.session.user.nome
+                name : req.session.user.nome,
+                userid : req.session.user._id
             }
             res.render(viewShowUrl, locals)
         }
@@ -178,15 +186,20 @@ exports.saveItem = function (req, res, next) {
 exports.editItem = function (req, res, next) {
     var usuario = req.body.usuario
     var times_to_remove = req.body.times_to_remove
-    model.updateUser(usuario, times_to_remove, function (err) {
-        if (err) {
-            logger.newErrorLog(err, "Error on route editItem: ", req.session.user, "usuarioeditItem")
-            res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
-        } else {
-            logger.newLogUpdate(usuario, req.session.user, "UsuarioUpdated")
-            res.status(200).send("Alterado com sucesso") 
-        }
-    })
+    //verificar as permissões do usuário
+    if (usuario._id.toString() == req.session.user._id.toString() || req.session.admin) {
+        model.updateUser(usuario, times_to_remove, function (err) {
+            if (err) {
+                logger.newErrorLog(err, "Error on route editItem: ", req.session.user, "usuarioeditItem")
+                res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+            } else {
+                logger.newLogUpdate(usuario, req.session.user, "UsuarioUpdated")
+                res.status(200).send("Alterado com sucesso")
+            }
+        })
+    } else { 
+        res.status(401).send("Acesso não permitido")
+    }
 }
 
 //Handles deletion requests

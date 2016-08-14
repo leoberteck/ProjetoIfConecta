@@ -2,7 +2,6 @@
 var logger = require('../helper/logHelper.js')
 var Schema = mongoose.Schema
 var UsuarioModel = require('./Usuario.js')
-var TimeModel = require('./Time.js')
 var helper = require('../helper/modelHelper.js')
 
 var EVENTO_ADD_NOTF = "Você foi incluído em um evento"
@@ -59,7 +58,7 @@ eventoSchema.statics.addNewEvento = function (obj, criador, callback) {
                     } else {
                         upadteUserEvento(evento.usuarios, evento)
                         evento.usuarios.forEach(function (entry) { 
-                            UsuarioModel.addNotfEvento(evento.criador, entry, EVENTO_ADD_NOTF, evento)
+                            UsuarioModel.addNotfEvento(entry, EVENTO_ADD_NOTF, evento)
                         })
                         callback(err, evento)
                     }
@@ -79,6 +78,7 @@ eventoSchema.statics.updateEvento = function (obj, usuarios_to_remove, times_to_
             } else {
                 var id = obj._id
                 //Retira os usuários do envento.usuários antes de da update
+                var TimeModel = require('../models/Time.js')
                 TimeModel.find({ _id : { $in : times_to_remove } }, {}, {}, function (err, times) {
                     if (times) {
                         for (var x = 0; x < times.length; x++) {
@@ -105,7 +105,7 @@ eventoSchema.statics.updateEvento = function (obj, usuarios_to_remove, times_to_
                                 upadteUserEvento(obj.usuarios, doc)
                                 removeEventoFromUsuarios(usuarios_to_remove, times_to_remove, doc, function () { })
                                 doc.usuarios.forEach(function (entry) {
-                                    UsuarioModel.addNotfEvento(doc.criador, entry, EVENTO_UPDATE_NOTF, obj)
+                                    UsuarioModel.addNotfEvento(entry, EVENTO_UPDATE_NOTF, obj)
                                 })
                                 callback()
                             }
@@ -130,7 +130,7 @@ eventoSchema.statics.removeEvento = function (id, user, callback) {
         } else {
             if (user.admin == true || doc.criador == user._id) {
                 doc.usuarios.forEach(function (entry, doc) {
-                    UsuarioModel.addNotfEvento(doc.criador, entry, EVENTO_REMOVED_NOFT, doc)
+                    UsuarioModel.addNotfEvento(entry, EVENTO_REMOVED_NOFT, doc)
                 })
                 removeEventoFromUsuarios(doc.usuarios, [], doc, function (err) {
                     if (err) {
@@ -167,7 +167,7 @@ function removeEventoFromUsuarios(usuarios_to_remove, times_to_remove, evento, c
                     if (index >= 0) {
                         entry.eventos.splice(index, 1)
                         entry.save()
-                        UsuarioModel.addNotfEvento(evento.criador, entry._id, EVENTO_REMOVED_USER_NOTF, evento)
+                        UsuarioModel.addNotfEvento(entry._id, EVENTO_REMOVED_USER_NOTF, evento)
                     }
                 })
                 callback()
