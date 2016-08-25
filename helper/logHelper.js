@@ -44,3 +44,5 @@ exports.newLogAdd = newLogAdd;
 exports.newLogUpdate = newLogUpdate;
 exports.newLogRemove = newLogRemove;
 exports.newLogAccessDenied = newLogAccessDenied;
+
+//teste
