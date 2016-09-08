@@ -22,22 +22,27 @@ exports.viewEdit = function (req, res, next) {
             next(err)
         } else {
             var evento = obj
-            //busca por todos os usuarios para preencher dropdowns
-            getFormLocals(function (err, result) {
-                if (err) {
-                    next(err)
-                } else {
-                    var locals = {
-                        usuarios : result.usuarios,
-                        times : result.times,
-                        evento : evento,
-                        admin : req.session.admin,
-                        name : req.session.user.nome,
-                        userid : req.session.user._id
+            if (req.session.admin || req.session.user._id == evento.criador._id) {
+                //busca por todos os usuarios para preencher dropdowns
+                getFormLocals(function (err, result) {
+                    if (err) {
+                        next(err)
+                    } else {
+                        var locals = {
+                            usuarios : result.usuarios,
+                            times : result.times,
+                            evento : evento,
+                            admin : req.session.admin,
+                            name : req.session.user.nome,
+                            userid : req.session.user._id
+                        }
+                        res.render(viewEditUrl, locals)
                     }
-                    res.render(viewEditUrl, locals)
-                }
-            })
+                })
+            }
+            else {
+                res.render("401")
+            }
         }
     })
 }

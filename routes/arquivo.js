@@ -23,16 +23,20 @@ function viewEdit(req, res, next) {
             logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "arquivoViewEdit")
             next(err)
         } else {
-            CategoriaModel.find({}, function (err, categorias) {
-                var locals = {
-                    categorias : categorias,
-                    arquivo : obj,
-                    admin : req.session.admin,
-                    name : req.session.user.nome,
-                    userid : req.session.user._id
-                }
-                res.render(viewEditUrl, locals)
-            })
+            if (req.session.admin || req.session.user._id == obj.criador._id) {
+                CategoriaModel.find({}, function (err, categorias) {
+                    var locals = {
+                        categorias : categorias,
+                        arquivo : obj,
+                        admin : req.session.admin,
+                        name : req.session.user.nome,
+                        userid : req.session.user._id
+                    }
+                    res.render(viewEditUrl, locals)
+                })
+            } else {
+                res.render("401");
+            }
         }
     })
 }
