@@ -3,5 +3,6 @@
     add : "add",
     update : "update",
     remove : "remove",
-    accessdenied : "accessdenied"    
+    accessdenied : "accessdenied",
+    accessok : "accessok"
 }

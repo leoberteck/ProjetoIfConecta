@@ -15,7 +15,7 @@ exports.viewEdit = function (req, res, next) {
     if (!req.params.id) return next(Error('Nenhum item selecionado'))
     var id = req.params.id
     model.findOne({ _id : id }, function showFindOneCB(err, obj) {
-        if (err) { logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "viewEdit") }
+        if (err) { logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user._id, "viewEdit") }
         var locals = { campus : obj, admin : req.session.admin, name : req.session.user.nome, userid : req.session.user._id }
         res.render(viewEditUrl, locals)
     })
@@ -66,10 +66,10 @@ exports.saveItem = function (req, res, next) {
     console.log(req.body)
     model.addNewCampus(req.body, function (err, response) {
         if (err) {
-            logger.newErrorLog(err, "Error on route saveItem: ", req.session.user, "campusSaveItem")
+            logger.newErrorLog(err, "Error on route saveItem: ", req.session.user._id, "campusSaveItem")
             res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
-            logger.newLogAdd(req.body, req.session.user, "CampusAdded")
+            logger.newLogAdd(req.body, req.session.user._id, "CampusAdded")
             res.status(200).send("Salvo com sucesso")
         }
     })
@@ -79,10 +79,10 @@ exports.saveItem = function (req, res, next) {
 exports.editItem = function (req, res, next) {
     model.updateCampus(req.body, function (err) {
         if (err) {
-            logger.newErrorLog(err, "Error on route editItem: ", req.session.user, "campusEditItem")
+            logger.newErrorLog(err, "Error on route editItem: ", req.session.user._id, "campusEditItem")
             res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
-            logger.newLogUpdate(req.body, req.session.user, "CampusUpdated")
+            logger.newLogUpdate(req.body, req.session.user._id, "CampusUpdated")
             res.status(200).send("Alterado com sucesso")
         }
     })
@@ -94,10 +94,10 @@ exports.removeItem = function (req, res, next) {
     if (obj.id) {
         model.removeCampus(obj.id, function (err) {
             if (err) {
-                logger.newErrorLog(err, "Error on route removeItem: ", req.session.user, "campusRemoveItem")
+                logger.newErrorLog(err, "Error on route removeItem: ", req.session.user._id, "campusRemoveItem")
                 res.status(err.status || 500).send("Erro tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
-                logger.newLogRemove(obj, req.session.user, "CampusRemoved")
+                logger.newLogRemove(obj, req.session.user._id, "CampusRemoved")
                 res.status(200).send("Removido com sucesso")
             }
         })

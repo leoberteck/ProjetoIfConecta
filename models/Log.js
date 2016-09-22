@@ -2,7 +2,7 @@
 
 var Schema = mongoose.Schema
 var logSchema = new Schema({
-    usuario : {type : Schema.Types.Mixed},
+    usuario : {type : Schema.Types.ObjectId},
     descricao : String,
     json: { type: Schema.Types.Mixed },
     data: { type: Date, default: Date.now },

@@ -51,7 +51,7 @@ timeSchema.statics.addNewTime = function (obj, criador, callback) {
     var model = this
     model.validateTeam(obj, false, function (err) {
         if (err) {
-            logger.newErrorLog(err, "Error on route save validator: ", criador, "addNewTime")
+            logger.newErrorLog(err, "Error on route save validator: ", criador._id, "addNewTime")
             callback(err)
         } else {
             helper.generateUsersArray(obj.usuarios, obj.times, function (usuarios) {
@@ -64,7 +64,7 @@ timeSchema.statics.addNewTime = function (obj, criador, callback) {
                 }
                 model.create(newtime, function saveCB(err, response) {
                     if (err) {
-                        logger.newErrorLog(err, "Error on route save: ", criador, "addNewTime")
+                        logger.newErrorLog(err, "Error on route save: ", criador._id, "addNewTime")
                         callback(err)
                     } else {
                         response.usuarios.forEach(function (entry) {
@@ -84,7 +84,7 @@ timeSchema.statics.updateTime = function (obj, usuarios_to_remove, times_to_remo
         var model = this
         model.validateTeam(obj, true, function (err) {
             if (err) {
-                logger.newErrorLog(err, "Error on route update validator: ", null, "updateTime")
+                logger.newErrorLog(err, "Error on route update validator: ", sessionUser._id, "updateTime")
                 callback(err)
             } else {
                 var id = obj._id
@@ -106,7 +106,7 @@ timeSchema.statics.updateTime = function (obj, usuarios_to_remove, times_to_remo
                         obj.usuarios = usuarios;
                         model.findByIdAndUpdate(id, obj, {}, function (err, doc) {
                             if (err) {
-                                logger.newErrorLog(err, "Error on route update: ", null, "updateTime")
+                                logger.newErrorLog(err, "Error on route update: ", sessionUser._id, "updateTime")
                                 callback(err)
                             } else {
                                 doc.usuarios.forEach(function (entry) {
@@ -132,7 +132,7 @@ timeSchema.statics.removeTime = function (id, user, callback) {
     var model = this
     model.findById(id, function delCB(err, doc) {
         if (err) {
-            logger.newErrorLog(err, "Error on remove", null, "removeTime")
+            logger.newErrorLog(err, "Error on remove", user._id, "removeTime")
             callback(err)
         } else {
             if (user.admin == true || doc.criador == user._id) {

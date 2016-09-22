@@ -20,7 +20,7 @@ function viewEdit(req, res, next) {
     //procura registro a ser atualizado
     model.findOne({ _id : id }).populate({ path : 'criador', select : '_id nome' }).populate({ path : 'categoria', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "arquivoViewEdit")
+            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user._id, "arquivoViewEdit")
             next(err)
         } else {
             if (req.session.admin || req.session.user._id == obj.criador._id) {
@@ -49,7 +49,7 @@ function viewList(req, res, next) {
     var page = req.params.page
     getListLocals(categoria, order, search, page, null, function (err, locals) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewList: ", req.session.user, "arquivoviewList")
+            logger.newErrorLog(err, "Error on route viewList: ", req.session.user._id, "arquivoviewList")
             next(err)
         } else {
             CategoriaModel.find({}, function (err, categorias) {
@@ -75,7 +75,7 @@ function viewListMy(req, res, next) {
     var page = req.params.page
     getListLocals(categoria, order, search, page, idCriador, function (err, locals) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewList: ", req.session.user, "arquivoviewList")
+            logger.newErrorLog(err, "Error on route viewList: ", req.session.user._id, "arquivoviewList")
             next(err)
         } else {
             CategoriaModel.find({}, function (err, categorias) {
@@ -100,7 +100,7 @@ function viewListPublic(req, res, next) {
     var page = req.params.page
     getListLocals(categoria, order, search, page, null, function (err, locals) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewList: ", req.session.user, "arquivoviewList")
+            logger.newErrorLog(err, "Error on route viewList: ", req.session.user._id, "arquivoviewList")
             next(err)
         } else {
             CategoriaModel.find({}, function (err, categorias) {
@@ -126,7 +126,7 @@ function viewShow (req, res, next) {
     //procura registro
     model.findOne({ _id : id }).populate({ path : 'criador', select : '_id nome' }).populate({ path : 'categoria', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewShow: ", req.session.user, "arquivoViewShow")
+            logger.newErrorLog(err, "Error on route viewShow: ", req.session.user._id, "arquivoViewShow")
             next(err)
         } else {
             var locals = {
@@ -162,15 +162,15 @@ function saveItem (req, res, next) {
     if (req.file) {
         model.addNewArquivo(req.file, req.session.user, function (err, newid) {
             if (err) {
-                logger.newErrorLog(err, "Error on route saveItem: ", req.session.user, "arquivoSaveItem")
+                logger.newErrorLog(err, "Error on route saveItem: ", req.session.user._id, "arquivoSaveItem")
                 res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
-                logger.newLogAdd(req.body, req.session.user, "ArquivoAdded")
+                logger.newLogAdd(req.body, req.session.user._id, "ArquivoAdded")
                 res.redirect('/arquivo/editarquivo/' + newid);
             }
         })
     } else {
-        logger.newErrorLog("A file was not uploaded", "Error on route saveItem: ", req.session.user, "arquivoSaveItem")
+        logger.newErrorLog("A file was not uploaded", "Error on route saveItem: ", req.session.user._id, "arquivoSaveItem")
         res.status(400).send("Erro tentar salvar o item, detalhes : Nenhum arquivo foi recebido");
     }
 }
@@ -180,10 +180,10 @@ function editItem (req, res, next) {
     var arquivo = req.body.arquivo
     model.updateArquivo(arquivo, req.session.user, function (err) {
         if (err) {
-            logger.newErrorLog(err, "Error on route editItem: ", req.session.user, "arquivoEditItem")
+            logger.newErrorLog(err, "Error on route editItem: ", req.session.user._id, "arquivoEditItem")
             res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
-            logger.newLogUpdate(arquivo, req.session.user, "ArquivoUpdated")
+            logger.newLogUpdate(arquivo, req.session.user._id, "ArquivoUpdated")
             res.status(200).send("Alterado com sucesso")
         }
     })
@@ -195,10 +195,10 @@ function removeItem (req, res, next) {
     if (obj.id) {
         model.removeArquivo(obj.id, req.session.user, function (err) {
             if (err) {
-                logger.newErrorLog(err, "Error on route removeItem: ", req.session.user, "arquivoRemoveItem")
+                logger.newErrorLog(err, "Error on route removeItem: ", req.session.user._id, "arquivoRemoveItem")
                 res.status(err.status || 500).send("Erro tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
-                logger.newLogRemove(obj, req.session.user, "ArquivoRemoved")
+                logger.newLogRemove(obj, req.session.user._id, "ArquivoRemoved")
                 res.status(200).send("Removido com sucesso")
             }
         })

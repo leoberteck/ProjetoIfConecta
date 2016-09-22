@@ -12,13 +12,7 @@ var userSchema = new Schema({
     cargo : { type: { id : mongoose.Schema.Types.ObjectId, nome : String } },
     campus : { type: { id : mongoose.Schema.Types.ObjectId, nome : String } },
     admin : { type: Boolean, default: false },
-    google : {
-        id : String,
-        token : String,
-        email : String,
-        name : String,
-        refreshToken : String
-    },
+    ativo : { type: Boolean, default: true },
     times : [{ type : mongoose.Schema.Types.ObjectId, ref : 'Time' }],
     eventos : [{ type : mongoose.Schema.Types.ObjectId, ref : 'Evento' }],
     arquivos : [{ type : mongoose.Schema.Types.ObjectId, ref : 'Arquivo' }],
@@ -189,25 +183,15 @@ userSchema.statics.updateUser = function (obj, times_to_remove, callback) {
 
 userSchema.statics.removeUser = function (id, callback) {
     var model = this
-    model.findByIdAndRemove(id, function delCB(err, doc) {
-        if (err) {
-            logger.newErrorLog(err, "Error on remove", null, "removeUser")
+    model.findById(id, function delCB(err, doc) {
+        if (err || !doc) {
+            logger.newErrorLog(err, "Error while deactivating user", null, "removeUser")
             callback(err)
-        } else {
-            removeUsuarioFromTimes(doc.times, doc._id, function (err) {
-                if (err) {
-                    callback(err)
-                } else {
-                    removeUsuarioFromEventos(doc.eventos, doc._id, function (err) {
-                        if (err) {
-                            callback(err)
-                        } else {
-                            removeUsuarioFromArquivos(doc.arquivos, doc._id, function (err) {
-                                callback(err)
-                            })
-                        }
-                    })
-                }
+        }
+        else {
+            doc.ativo = !doc.ativo
+            doc.save(function (err) {
+                callback(err)
             })
         }
     })
@@ -218,7 +202,7 @@ function removeUsuarioFromTimes (times_to_remove, idUser, callback) {
         TimeModel = require('./Time.js')
         TimeModel.update({ _id : { $in : times_to_remove } }, { $pull : {usuarios : idUser}}, {multi : true}, function (err, docs) {
             if (err) {
-                logger.newErrorLog(err, "Error getting times for update", mull, "removeUsuarioFromTimes")
+                logger.newErrorLog(err, "Error getting times for update", null, "removeUsuarioFromTimes")
                 callback(err)
             } else {
                 callback()

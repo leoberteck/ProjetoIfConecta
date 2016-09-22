@@ -3,6 +3,7 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 var refresh = require('passport-oauth2-refresh')
 var userModel = require('../models/Usuario.js')
 var configAuth = require('./auth.js')
+var logHelper = require('../helper/logHelper.js')
 
 module.exports = function (passport) {
     passport.serializeUser(function (user, done) { 
@@ -53,13 +54,16 @@ module.exports = function (passport) {
         var email = req.body.email
         var pass = req.body.senha
         if (email && pass) {
-            userModel.findOne({ email : email }, function (err, doc) {
+            userModel.findOne({ email : email, ativo : true }, { notificacoes : false} , function (err, doc) {
                 if (err || !doc) {
+                    logHelper.newLogAccessDenied(email, "Email ou senha incorretos")
                     return done(null, false, req.flash('loginMessage', 'Erro de autenticação. Detalhes: Email ou senha incorretos'))
                 } else {
                     if (!userModel.validatePassword(pass, doc.senha)) {
+                        logHelper.newLogAccessDenied(email, "Email ou senha incorretos")
                         return done(null, false, req.flash('loginMessage', 'Erro de autenticação. Detalhes: Email ou senha incorretos'))
                     } else {
+                        logHelper.newLogAccessOk(email, "OK")
                         req.session.user = doc
                         req.session.admin = doc.admin || false
                         req.session.save(function (err) {
@@ -69,6 +73,7 @@ module.exports = function (passport) {
                 }
             })
         } else {
+            logHelper.newLogAccessDenied(email, "Email ou senha incorretos")
             return done(null, false, req.flash('loginMessage', 'Erro de autenticação. Detalhes: Informe email e a senha'))
         }
     })

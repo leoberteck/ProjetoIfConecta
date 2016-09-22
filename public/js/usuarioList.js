@@ -6,7 +6,7 @@
 };
 
 var remove = function (event) {
-    var conf = confirm("Deseja realmente excluir o item selecionado?")
+    var conf = confirm("Deseja realmente alterar o status deste usuário?")
     if (conf === true) {
         var $tr = findTr(event);
         var id = $tr.attr('data-id');

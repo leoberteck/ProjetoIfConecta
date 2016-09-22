@@ -21,11 +21,11 @@ exports.login = function (req, res, next) {
     if (email && pass) {
         model.findOne({ email : email }, function (err, doc) {
             if (err || !doc) {
-                logger.newLogAccessDenied({email : email, senha : pass}, "login")
+                logger.newLogAccessDenied(email, "login")
                 res.status(400).send("Email ou senha incorretos")
             } else {
                 if (!model.validatePassword(pass, doc.senha)) {
-                    logger.newLogAccessDenied({ email : email, senha : pass }, "login")
+                    logger.newLogAccessDenied(email, "login")
                     res.status(400).send("Email ou senha incorretos")
                 } else {
                     req.session.user = doc
@@ -35,7 +35,7 @@ exports.login = function (req, res, next) {
             }
         })
     } else {
-        logger.newLogAccessDenied({ email : email, senha : pass }, "login")
+        logger.newLogAccessDenied(email, "login")
         res.status(400).send("Informe email e a senha")
     }
 }
@@ -53,7 +53,7 @@ exports.viewEdit = function (req, res, next) {
     //procura registro a ser atualizado
     model.findOne({ _id : id }).populate({path : 'times', select : '_id nome', options : {sort : 'nome'}}).exec(function showFindOneCB(err, obj) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "usuarioviewEdit")
+            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user._id, "usuarioviewEdit")
             next(err)
         } else {
             var usuario = obj
@@ -121,7 +121,7 @@ exports.viewList = function (req, res, next) {
 exports.viewForm = function (req, res, next) {
     getFormLocals(function (err, locals) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewForm: ", req.session.user, "usuarioviewForm")
+            logger.newErrorLog(err, "Error on route viewForm: ", req.session.user._id, "usuarioviewForm")
             next(err)
         } else {
             locals.admin = req.session.admin
@@ -134,7 +134,7 @@ exports.viewForm = function (req, res, next) {
 exports.viewNewForm = function (req, res, next) {
     getFormLocals(function (err, locals) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewNewForm: ", req.session.user, "usuarioviewNewForm")
+            logger.newErrorLog(err, "Error on route viewNewForm: ", req.session.user._id, "usuarioviewNewForm")
             next(err)
         } else {
             locals.admin = req.session.admin
@@ -151,7 +151,7 @@ exports.viewShow = function (req, res, next) {
     //procura registro
     model.findOne({ _id : id }).exec(function showFindOneCB(err, obj) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "usuarioShow")
+            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user._id, "usuarioShow")
             next(err)
         } else {
             var locals = {
@@ -170,10 +170,10 @@ exports.saveItem = function (req, res, next) {
     if (req.body && (req.body.admin == false || req.session.admin == true)) {
         model.addNewUser(req.body, function (err, response) {
             if (err) {
-                logger.newErrorLog(err, "Error on route saveItem: ", req.session.user, "usuariosaveItem")
+                logger.newErrorLog(err, "Error on route saveItem: ", req.session.user._id, "usuariosaveItem")
                 res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
-                logger.newLogAdd(req.body, req.session.user, "UsuarioAdded")
+                logger.newLogAdd(req.body, req.session.user._id, "UsuarioAdded")
                 res.status(200).send("Salvo com sucesso")
             }
         })
@@ -190,10 +190,10 @@ exports.editItem = function (req, res, next) {
     if (usuario._id.toString() == req.session.user._id.toString() || req.session.admin) {
         model.updateUser(usuario, times_to_remove, function (err) {
             if (err) {
-                logger.newErrorLog(err, "Error on route editItem: ", req.session.user, "usuarioeditItem")
+                logger.newErrorLog(err, "Error on route editItem: ", req.session.user._id, "usuarioeditItem")
                 res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
-                logger.newLogUpdate(usuario, req.session.user, "UsuarioUpdated")
+                logger.newLogUpdate(usuario, req.session.user._id, "UsuarioUpdated")
                 res.status(200).send("Alterado com sucesso")
             }
         })
@@ -208,11 +208,11 @@ exports.removeItem = function (req, res, next) {
     if (obj.id) {
         model.removeUser(obj.id, function (err) {
             if (err) {
-                logger.newErrorLog(err, "Error on route removeItem: ", req.session.user, "usuarioremoveItem")
-                res.status(err.status || 500).send("Erro tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+                logger.newErrorLog(err, "Error on route removeItem: ", req.session.user._id, "usuarioremoveItem")
+                res.status(err.status || 500).send("Erro tentar mudar status do item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
-                logger.newLogRemove(obj, req.session.user, "UsuarioRemoved")
-                res.status(200).send("Removido com sucesso")
+                logger.newLogRemove(obj, req.session.user._id, "UsuarioRemoved")
+                res.status(200).send("Status alterado com sucesso")
             }
         })
     }
@@ -226,7 +226,7 @@ exports.timeline = function (req, res, next) {
 
 exports.requestPassChange = function (req, res, next) {
     var email = req.params.email
-    model.findOne({ email : email }, '_id email', function (err, doc) {
+    model.findOne({ email : email, ativo : true }, '_id email', function (err, doc) {
         if (err || !doc) {
             res.status(400).send("Usuário não encontrado")
         }
@@ -283,7 +283,7 @@ exports.changePass = function (req, res, next) {
 
 //Generic functions can be used on both request  handlers and api functions
 var getAll = function (skip, callback) {
-    model.find({}, {}, { skip: skip, limit: 30, sort : "nome" }, function getobjsCB(err, objs) {
+    model.find({}, { notificacoes : false }, { skip: skip, limit: 30, sort : "nome" }, function getobjsCB(err, objs) {
         if (err) {
             callback(err)
         } else { 

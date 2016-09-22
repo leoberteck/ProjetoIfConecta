@@ -199,9 +199,9 @@ app.use(function (req, res, next) {
 // development error handler
 // will print stacktrace
 app.use(function (err, req, res, next) {
-    logHelper.newErrorLog(err, "Error : ", req.session ? req.session.user : "no session data", "error middleware")
     err.status = err.status || 500;
     res.status(err.status)
+    logHelper.newErrorLog(err, "Error : ", req.session.user ? req.session.user._id : "no session data", "error middleware")
     if (err.code == "LIMIT_FILE_SIZE") {
         deleteCorruptedFiles()
         res.redirect('/errfile')

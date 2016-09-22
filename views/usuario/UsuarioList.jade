@@ -13,6 +13,7 @@ block content
                 tr
                     th Nome
                     th Cargo
+                    th Situação
                     th.pull-right Ações
             tbody
                 -var usuarios = locals.usuarios
@@ -21,11 +22,21 @@ block content
                         td #{usuario.nome}
                         td #{usuario.cargo.nome}
                         td
+                            if usuario.ativo
+                                p Ativo
+                            else
+                                p Inativo
+                        td
                             div.pull-right
                                 button(class = "btn edit")
                                     span.glyphicon.glyphicon-pencil
-                                button(class = "btn remove")
-                                    span.glyphicon.glyphicon-trash
+                                if usuario.ativo
+                                    button(class = "btn remove")
+                                        span.fa.fa-times
+                                else
+                                    button(class = "btn remove")
+                                        span.fa.fa-check
+                                
                                 button(type="button", class = "btn show", data-toggle="modal", data-target="#usuarioModal")
                                     span.glyphicon.glyphicon-eye-open
         -var pages = locals.pages

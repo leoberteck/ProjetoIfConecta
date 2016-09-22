@@ -38,7 +38,7 @@ eventoSchema.statics.addNewEvento = function (obj, criador, callback) {
     obj['criador'] = criador._id
     model.validateEvento(obj, function (err) {
         if (err) {
-            logger.newErrorLog(err, "Error on save validator", criador, "addNewEvento")
+            logger.newErrorLog(err, "Error on save validator", criador._id, "addNewEvento")
             callback(err)
         } else {
             helper.generateUsersArray(obj.usuarios, obj.times, function (usuarios) {
@@ -53,7 +53,7 @@ eventoSchema.statics.addNewEvento = function (obj, criador, callback) {
                 }
                 model.create(newevento, function (err, evento) {
                     if (err) {
-                        logger.newErrorLog(err, "Error on save route : ", criador, "addNewEvento")
+                        logger.newErrorLog(err, "Error on save route : ", criador._id, "addNewEvento")
                         callback(err)
                     } else {
                         upadteUserEvento(evento.usuarios, evento)
@@ -73,7 +73,7 @@ eventoSchema.statics.updateEvento = function (obj, usuarios_to_remove, times_to_
     if ((obj.criador._id == sessionUser._id) || sessionUser.admin) {
         model.validateEvento(obj, function (err) {
             if (err) { 
-                logger.newErrorLog(err, "Error on route update validator: ", null, "updateEvento")
+                logger.newErrorLog(err, "Error on route update validator: ", sessionUser._id, "updateEvento")
                 callback(err)
             } else {
                 var id = obj._id
@@ -99,7 +99,7 @@ eventoSchema.statics.updateEvento = function (obj, usuarios_to_remove, times_to_
                         //update o evento    
                         model.findByIdAndUpdate(id, obj, {}, function (err, doc) {
                             if (err) {
-                                logger.newErrorLog(err, "Error on route update: ", null, "updateEvento")
+                                logger.newErrorLog(err, "Error on route update: ", sessionUser._id, "updateEvento")
                                 callback(err)
                             } else {
                                 upadteUserEvento(obj.usuarios, doc)
@@ -125,7 +125,7 @@ eventoSchema.statics.removeEvento = function (id, user, callback) {
     var model = this
     model.findById(id, function delCB(err, doc) {
         if (err) {
-            logger.newErrorLog(err, "Error on remove")
+            logger.newErrorLog(err, "Error on remove", user._id)
             callback(err)
         } else {
             if (user.admin == true || doc.criador == user._id) {

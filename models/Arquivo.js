@@ -53,13 +53,13 @@ arquivoSchema.statics.updateArquivo = function (obj, sessionUser, callback) {
         var model = this
         model.validateArquivo(obj, function (err) {
             if (err) {
-                logger.newErrorLog(err, "Error on route update validator: ", null, "updateArquivo")
+                logger.newErrorLog(err, "Error on route update validator: ", sessionUser._id, "updateArquivo")
                 callback(err)
             } else {
                 var id = obj._id
                 model.findByIdAndUpdate(id, obj, {}, function (err, doc) {
                     if (err) {
-                        logger.newErrorLog(err, "Error on route update: ", null, "updateArquivo")
+                        logger.newErrorLog(err, "Error on route update: ", sessionUser._id, "updateArquivo")
                         callback(err)
                     } else {
                         var newnotf = UsuarioModel.generateNotf(ARQUIVO_UPDATE_NOTF, doc, "arquivo")
@@ -80,7 +80,7 @@ arquivoSchema.statics.removeArquivo = function (id, user, callback) {
     var model = this
     model.findById(id, function delCB(err, doc) {
         if (err) {
-            logger.newErrorLog(err, "Error on remove", null, "removeArquivo")
+            logger.newErrorLog(err, "Error on remove", user._id, "removeArquivo")
             callback(err)
         } else {
             if (user.admin == true || doc.criador == user._id) {

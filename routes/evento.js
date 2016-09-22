@@ -18,7 +18,7 @@ exports.viewEdit = function (req, res, next) {
     //procura registro a ser atualizado
     model.findOne({ _id : id }).populate({ path : 'usuarios', select : '_id nome', options : { sort : 'nome' } }).populate({ path : 'times', select : '_id nome', options : { sort : 'nome' } }).populate({ path : 'criador', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "eventoViewEdit")
+            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user._id, "eventoViewEdit")
             next(err)
         } else {
             var evento = obj
@@ -82,7 +82,7 @@ exports.viewShow = function (req, res, next) {
     //procura registro
     model.findOne({ _id : id }).populate({ path : 'usuarios', select : '_id nome', options : { sort : 'nome' } }).populate({ path : 'criador', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "eventoViewShow")
+            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user._id, "eventoViewShow")
             next(err)
         } else {
             var locals = {
@@ -112,10 +112,10 @@ exports.viewListAll = function (req, res, next) {
 exports.saveItem = function (req, res, next) {
     model.addNewEvento(req.body, req.session.user, function (err, response) {
         if (err) {
-            logger.newErrorLog(err, "Error on route saveItem: ", req.session.user, "eventoSaveItem")
+            logger.newErrorLog(err, "Error on route saveItem: ", req.session.user._id, "eventoSaveItem")
             res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
-            logger.newLogAdd(req.body, req.session.user, "EventoAdded")
+            logger.newLogAdd(req.body, req.session.user._id, "EventoAdded")
             res.status(200).send("Salvo com sucesso")
         }
     })
@@ -128,10 +128,10 @@ exports.editItem = function (req, res, next) {
     var times_to_remove = req.body.times_to_remove
     model.updateEvento(evento, usuarios_to_remove, times_to_remove, req.session.user, function (err) {
         if (err) {
-            logger.newErrorLog(err, "Error on route editItem: ", req.session.user, "eventoEditItem")
+            logger.newErrorLog(err, "Error on route editItem: ", req.session.user._id, "eventoEditItem")
             res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
-            logger.newLogUpdate(evento, req.session.user, "EventoUpdated")
+            logger.newLogUpdate(evento, req.session.user._id, "EventoUpdated")
             res.status(200).send("Alterado com sucesso")
         }
     })
@@ -143,10 +143,10 @@ exports.removeItem = function (req, res, next) {
     if (obj.id) {
         model.removeEvento(obj.id, req.session.user, function (err) {
             if (err) {
-                logger.newErrorLog(err, "Error on route removeItem: ", req.session.user, "eventoRemoveItem")
+                logger.newErrorLog(err, "Error on route removeItem: ", req.session.user._id, "eventoRemoveItem")
                 res.status(err.status || 500).send("Erro tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
-                logger.newLogRemove(obj, req.session.user, "EventoRemoved")
+                logger.newLogRemove(obj, req.session.user._id, "EventoRemoved")
                 res.status(200).send("Removido com sucesso")
             }
         })

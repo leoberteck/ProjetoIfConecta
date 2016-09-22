@@ -18,7 +18,7 @@ exports.viewEdit = function (req, res, next) {
     //procura registro a ser atualizado
     model.findOne({ _id : id }).populate({ path : 'usuarios', select : '_id nome', options : { sort : 'nome' } }).populate({ path : 'times', select : '_id nome', options : { sort : 'nome' } }).populate({ path : 'criador', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "timeViewEdit")
+            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user._id, "timeViewEdit")
             next(err)
         } else {
             var time = obj
@@ -52,7 +52,7 @@ exports.viewList = function (req, res, next) {
     var idCriador = req.session.admin == true || req.params.all ? null : req.session.user._id
     getListLocals(req.params.page, idCriador, function (err, locals) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewList: ", req.session.user, "timeviewList")
+            logger.newErrorLog(err, "Error on route viewList: ", req.session.user._id, "timeviewList")
             next(err)
         } else {
             locals.admin = req.session.admin
@@ -66,7 +66,7 @@ exports.viewList = function (req, res, next) {
 exports.viewListAll = function (req, res, next) {
     getListLocals(req.params.page, null, function (err, locals) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewListAll: ", req.session.user, "timeviewListAll")
+            logger.newErrorLog(err, "Error on route viewListAll: ", req.session.user._id, "timeviewListAll")
             next(err)
         } else {
             locals.admin = req.session.admin
@@ -82,7 +82,7 @@ exports.viewListAll = function (req, res, next) {
 exports.viewForm = function (req, res, next) {
     getFormLocals(function (err, locals) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewForm: ", req.session.user, "timeviewForm")
+            logger.newErrorLog(err, "Error on route viewForm: ", req.session.user._id, "timeviewForm")
             next(err)
         } else {
             locals.admin = req.session.admin
@@ -99,7 +99,7 @@ exports.viewShow = function (req, res, next) {
     //procura registro
     model.findOne({ _id : id }).populate({ path : 'usuarios', select : '_id nome', options : { sort : 'nome' } }).populate({ path : 'criador', select : '_id nome' }).exec(function showFindOneCB(err, obj) {
         if (err) {
-            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "timeViewShow")
+            logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user._id, "timeViewShow")
             next(err)
         } else {
             var locals = {
@@ -118,10 +118,10 @@ exports.saveItem = function (req, res, next) {
     console.log(req.body)
     model.addNewTime(req.body, req.session.user, function (err, response) {
         if (err) {
-            logger.newErrorLog(err, "Error on route saveItem: ", req.session.user, "timeSaveItem")
+            logger.newErrorLog(err, "Error on route saveItem: ", req.session.user._id, "timeSaveItem")
             res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
-            logger.newLogAdd(req.body, req.session.user, "TimeAdded")
+            logger.newLogAdd(req.body, req.session.user._id, "TimeAdded")
             res.status(200).send("Salvo com sucesso")
         }
     })
@@ -135,10 +135,10 @@ exports.editItem = function (req, res, next) {
 
     model.updateTime(time, usuarios_to_remove, times_to_remove, req.session.user, function (err) {
         if (err) {
-            logger.newErrorLog(err, "Error on route editItem: ", req.session.user, "timeEditItem")
+            logger.newErrorLog(err, "Error on route editItem: ", req.session.user._id, "timeEditItem")
             res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
-            logger.newLogUpdate(time, req.session.user, "TimeUpdated")
+            logger.newLogUpdate(time, req.session.user._id, "TimeUpdated")
             res.status(200).send("Alterado com sucesso")
         }
     })   
@@ -150,10 +150,10 @@ exports.removeItem = function (req, res, next) {
     if (obj.id) {
         model.removeTime(obj.id, req.session.user, function (err) {
             if (err) {
-                logger.newErrorLog(err, "Error on route removeItem: ", req.session.user, "timeRemoveItem")
+                logger.newErrorLog(err, "Error on route removeItem: ", req.session.user._id, "timeRemoveItem")
                 res.status(err.status || 500).send("Erro tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
-                logger.newLogRemove(obj, req.session.user, "TimeRemoved")
+                logger.newLogRemove(obj, req.session.user._id, "TimeRemoved")
                 res.status(200).send("Removido com sucesso")
             }
         })

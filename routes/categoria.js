@@ -15,7 +15,7 @@ exports.viewEdit = function (req, res, next) {
     if (!req.params.id) return next(Error('Nenhum item selecionado'))
     var id = req.params.id
     model.findOne({ _id : id }, function showFindOneCB(err, obj) {
-        if (err) { logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "viewEdit") }
+        if (err) { logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user._id, "viewEdit") }
         var locals = { categoria : obj, admin : req.session.admin, name : req.session.user.nome, userid : req.session.user._id }
         res.render(viewEditUrl, locals)
     })
@@ -66,10 +66,10 @@ exports.saveItem = function (req, res, next) {
     console.log(req.body)
     model.addNewCategoria(req.body, function (err, response) {
         if (err) {
-            logger.newErrorLog(err, "Error on route saveItem: ", req.session.user, "categoriaSaveItem")
+            logger.newErrorLog(err, "Error on route saveItem: ", req.session.user._id, "categoriaSaveItem")
             res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
-            logger.newLogAdd(req.body, req.session.user, "CategoriaAdded")
+            logger.newLogAdd(req.body, req.session.user._id, "CategoriaAdded")
             res.status(200).send("Salvo com sucesso")
         }
     })
@@ -79,10 +79,10 @@ exports.saveItem = function (req, res, next) {
 exports.editItem = function (req, res, next) {
     model.updateCategoria(req.body, function (err) {
         if (err) {
-            logger.newErrorLog(err, "Error on route editItem: ", req.session.user, "categoriaEditItem")
+            logger.newErrorLog(err, "Error on route editItem: ", req.session.user._id, "categoriaEditItem")
             res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
-            logger.newLogUpdate(req.body, req.session.user, "CategoriaUpdated")
+            logger.newLogUpdate(req.body, req.session.user._id, "CategoriaUpdated")
             res.status(200).send("Alterado com sucesso")
         }
     })
@@ -94,10 +94,10 @@ exports.removeItem = function (req, res, next) {
     if (obj.id) {
         model.removeCategoria(obj.id, function (err) {
             if (err) {
-                logger.newErrorLog(err, "Error on route removeItem: ", req.session.user, "categoriaRemoveItem")
+                logger.newErrorLog(err, "Error on route removeItem: ", req.session.user._id, "categoriaRemoveItem")
                 res.status(err.status || 500).send("Erro tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
-                logger.newLogRemove(obj, req.session.user, "CategoriaRemoved")
+                logger.newLogRemove(obj, req.session.user._id, "CategoriaRemoved")
                 res.status(200).send("Removido com sucesso")
             }
         })

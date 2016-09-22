@@ -15,7 +15,7 @@ exports.viewEdit = function (req, res, next) {
     if (!req.params.id) return next(Error('Nenhum item selecionado'))
     var id = req.params.id
     model.findOne({ _id : id }, function showFindOneCB(err, obj) {
-        if (err) { logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user, "cargoViewEdit") }
+        if (err) { logger.newErrorLog(err, "Error on route viewEdit: ", req.session.user._id, "cargoViewEdit") }
         var locals = { cargo : obj, admin : req.session.admin, name : req.session.user.nome, userid : req.session.user._id }
         res.render(viewEditUrl, locals)
     })
@@ -65,10 +65,10 @@ exports.viewForm = function (req, res, next) {
 exports.saveItem = function (req, res, next) {
     model.addNewCargo(req.body, function (err, response) {
         if (err) {
-            logger.newErrorLog(err, "Error on route saveItem: ", req.session.user, "cargoSaveItem")
+            logger.newErrorLog(err, "Error on route saveItem: ", req.session.user._id, "cargoSaveItem")
             res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
-            logger.newLogAdd(req.body, req.session.user, "CargoAdded")
+            logger.newLogAdd(req.body, req.session.user._id, "CargoAdded")
             res.status(200).send("Salvo com sucesso")
         }
     })
@@ -78,10 +78,10 @@ exports.saveItem = function (req, res, next) {
 exports.editItem = function (req, res, next) {
     model.updateCargo(req.body, function (err) {
         if (err) {
-            logger.newErrorLog(err, "Error on route editItem: ", req.session.user, "cargoEditItem")
+            logger.newErrorLog(err, "Error on route editItem: ", req.session.user._id, "cargoEditItem")
             res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
-            logger.newLogUpdate(req.body, req.session.user, "CargoUpdated")
+            logger.newLogUpdate(req.body, req.session.user._id, "CargoUpdated")
             res.status(200).send("Alterado com sucesso")
         }
     })
@@ -93,10 +93,10 @@ exports.removeItem = function (req, res, next) {
     if (obj.id) {
         model.removeCargo(obj.id, function (err) {
             if (err) {
-                logger.newErrorLog(err, "Error on route removeItem: ", req.session.user, "cargoRemoveItem")
+                logger.newErrorLog(err, "Error on route removeItem: ", req.session.user._id, "cargoRemoveItem")
                 res.status(err.status || 500).send("Erro tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
-                logger.newLogRemove(obj, req.session.user, "CargoRemoved")
+                logger.newLogRemove(obj, req.session.user._id, "CargoRemoved")
                 res.status(200).send("Removido com sucesso")
             }
         })

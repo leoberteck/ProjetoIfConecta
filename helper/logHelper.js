@@ -25,6 +25,10 @@ function newLogAccessDenied(obj, descricao) {
     newLog(obj, null, descricao, logType.accessdenied)
 }
 
+function newLogAccessOk(obj, descricao) {
+    newLog(obj, null, descricao, logType.accessok)
+}
+
 function newLog(obj, usuario, descricao, type) {
     var newlog = new logModel()
     newlog.data = new Date()
@@ -44,5 +48,4 @@ exports.newLogAdd = newLogAdd;
 exports.newLogUpdate = newLogUpdate;
 exports.newLogRemove = newLogRemove;
 exports.newLogAccessDenied = newLogAccessDenied;
-
-//teste
+exports.newLogAccessOk = newLogAccessOk;

@@ -143,6 +143,7 @@
     <Compile Include="routes\cargo.js" />
     <Compile Include="routes\evento.js" />
     <Compile Include="routes\index.js" />
+    <Compile Include="routes\logRoute.js" />
     <Compile Include="routes\time.js" />
     <Compile Include="routes\usuario.js" />
     <Content Include="HTML1.html" />
