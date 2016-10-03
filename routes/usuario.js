@@ -40,6 +40,28 @@ exports.login = function (req, res, next) {
     }
 }
 
+exports.singup = function (req, res, next) {
+    var user = {
+        nome : req.body.nome,
+        descricao : req.body.descricao,
+        email : req.body.email,
+        senha : req.body.senha,
+        cargo : {
+            id : req.body.cargo
+        },
+        campus : {
+            id : req.body.campus
+        }
+    }
+    model.addNewUser(user, function (err, newUser) {
+        if (err) {
+            res.status(400).send('Erro ao criar usuario. Detalhes: ' + err.message || err || "Detalhes indisponíveis")
+        } else {
+            res.redirect('/');
+        }
+    })
+}
+
 exports.logout = function (req, res, next) {
     req.session.destroy(function (err) { 
         res.redirect('/')

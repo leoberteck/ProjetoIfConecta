@@ -52,11 +52,10 @@ var authorize = function (req, res, next) {
 //Routes variables
 var routes = require('./routes/index.js')
 
-require('./config/passport.js')(passport)
-
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: true }))
+require('./config/passport.js')(passport)
 //Os cookies são cookies de sessão, ou seja, quando fecha a aba perde os cookies
 app.use(session({
     secret : "037ac86061f8cccc60a64b4d399549fb",

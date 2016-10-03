@@ -62,7 +62,7 @@ arquivoSchema.statics.updateArquivo = function (obj, sessionUser, callback) {
                         logger.newErrorLog(err, "Error on route update: ", sessionUser._id, "updateArquivo")
                         callback(err)
                     } else {
-                        var newnotf = UsuarioModel.generateNotf(ARQUIVO_UPDATE_NOTF, doc, "arquivo")
+                        var newnotf = UsuarioModel.generateNotf(ARQUIVO_UPDATE_NOTF, obj, "arquivo")
                         UsuarioModel.update({}, { $push: { notificacoes : newnotf } }, { multi : true }, function (err, result) { })
                         callback()
                     }

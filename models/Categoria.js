@@ -35,7 +35,7 @@ categoriaSchema.statics.updateCategoria = function (obj, callback) {
             var id = obj._id
             model.findOne({ _id : id }, function (err, doc) {
                 if (err) {
-                    logger.newErrorLog(err, "Error on route update: ", null, "updateCategoria")
+                    logger.newErrorLog(err, "Error on route update: ", null, "updateCategoria")   
                     callback(err)
                 } else {
                     doc.nome = obj.nome
