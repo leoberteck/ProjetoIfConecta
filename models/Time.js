@@ -109,7 +109,7 @@ timeSchema.statics.updateTime = function (obj, usuarios_to_remove, times_to_remo
                                 logger.newErrorLog(err, "Error on route update: ", sessionUser._id, "updateTime")
                                 callback(err)
                             } else {
-                                doc.usuarios.forEach(function (entry) {
+                                obj.usuarios.forEach(function (entry) {
                                     UsuarioModel.addNotfTime(entry, TIME_UPDATE_NOTF, obj)
                                 })
                                 upadteUserTeam(obj.usuarios, doc._id)

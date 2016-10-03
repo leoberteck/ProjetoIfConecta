@@ -104,7 +104,7 @@ eventoSchema.statics.updateEvento = function (obj, usuarios_to_remove, times_to_
                             } else {
                                 upadteUserEvento(obj.usuarios, doc)
                                 removeEventoFromUsuarios(usuarios_to_remove, times_to_remove, doc, function () { })
-                                doc.usuarios.forEach(function (entry) {
+                                obj.usuarios.forEach(function (entry) {
                                     UsuarioModel.addNotfEvento(entry, EVENTO_UPDATE_NOTF, obj)
                                 })
                                 callback()
