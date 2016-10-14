@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"ifconecta.times"},{"v":1,"unique":true,"key":{"nome":1},"name":"nome_1","ns":"ifconecta.times","background":true}]}
