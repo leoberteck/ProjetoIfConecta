@@ -80,7 +80,7 @@ function adduser() {
 }
 function addtime() {
     var timeop = "#time_select option[value='" + $("#time_select").val() + "']"
-    $("#users_table > tbody:last-child").append(createRow($("#time_select").val(), "team", $(timeop).text()))
+    $("#times_table > tbody:last-child").append(createRow($("#time_select").val(), "team", $(timeop).text()))
     $(timeop).wrap("<span/>")
     var index = times_to_remove.indexOf(id)
     if (index >= 0) {

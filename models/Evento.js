@@ -56,6 +56,7 @@ eventoSchema.statics.addNewEvento = function (obj, criador, callback) {
                         logger.newErrorLog(err, "Error on save route : ", criador._id, "addNewEvento")
                         callback(err)
                     } else {
+                        updateUserTime(evento.times, evento)
                         upadteUserEvento(evento.usuarios, evento)
                         evento.usuarios.forEach(function (entry) { 
                             UsuarioModel.addNotfEvento(entry, EVENTO_ADD_NOTF, evento)
@@ -102,12 +103,16 @@ eventoSchema.statics.updateEvento = function (obj, usuarios_to_remove, times_to_
                                 logger.newErrorLog(err, "Error on route update: ", sessionUser._id, "updateEvento")
                                 callback(err)
                             } else {
-                                upadteUserEvento(obj.usuarios, doc)
-                                removeEventoFromUsuarios(usuarios_to_remove, times_to_remove, doc, function () { })
                                 obj.usuarios.forEach(function (entry) {
                                     UsuarioModel.addNotfEvento(entry, EVENTO_UPDATE_NOTF, obj)
                                 })
-                                callback()
+                                updateUserTime(obj.times, doc)
+                                upadteUserEvento(obj.usuarios, doc)
+                                removeEventoFromUsuarios(usuarios_to_remove, times_to_remove, doc, function () {
+                                    removeEventoFromTimes(times_to_remove, doc, function () {
+                                        callback()
+                                    })
+                                })
                             }
                         })
                     })
@@ -136,12 +141,14 @@ eventoSchema.statics.removeEvento = function (id, user, callback) {
                     if (err) {
                         callback(err)
                     } else {
-                        doc.remove(function (err) {
-                            if (err) {
-                                callback(err)
-                            } else {
-                                callback()
-                            }
+                        removeEventoFromTimes(doc.times, doc, function (err2) {
+                            doc.remove(function (err3) {
+                                if (err3) {
+                                    callback(err3)
+                                } else {
+                                    callback()
+                                }
+                            })
                         })
                     }
                 })
@@ -152,6 +159,30 @@ eventoSchema.statics.removeEvento = function (id, user, callback) {
             }
         }
     })
+}
+
+function removeEventoFromTimes(times_to_remove, evento, callback) {
+    var idEvento = evento._id
+    if (times_to_remove) {
+        var TimeModel = require('../models/Time.js')
+        TimeModel.find({ _id : { $in : times_to_remove }}, function (err, docs) {
+            if (err) {
+                logger.newErrorLog(err, "Error getting times for update", null, "removeEventoFromTimes")
+                callback(err)
+            } else {
+                docs.forEach(function (entry) {
+                    var index = entry.time_eventos.indexOf(idEvento)
+                    if (index >= 0) {
+                        entry.time_eventos.splice(index, 1)
+                        entry.save()
+                    }
+                })
+                callback()
+            }
+        })
+    } else {
+        callback()
+    }
 }
 
 function removeEventoFromUsuarios(usuarios_to_remove, times_to_remove, evento, callback) {
@@ -176,6 +207,18 @@ function removeEventoFromUsuarios(usuarios_to_remove, times_to_remove, evento, c
     } else {
         callback()
     }
+}
+
+function updateUserTime(times, evento) { 
+    var idEvento = evento._id
+    times.forEach(function (time) {
+        var TimeModel = require('../models/Time.js')
+        TimeModel.update({ _id : time }, { $addToSet: { time_eventos : idEvento } }, function (err, docs) {
+            if (err) {
+                logger.newErrorLog(err, "Error updating teams Events", null, "upadteTeamEvento")
+            }
+        })
+    })
 }
 
 function upadteUserEvento(usuarios, evento) {
