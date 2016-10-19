@@ -28,6 +28,12 @@ exports.viewEdit = function (req, res, next) {
                     if (err) {
                         next(err)
                     } else {
+                        if (result.times && result.times.length > 0) {
+                            var index = result.times.map(function (e) { return e._id.toString(); }).indexOf(time._id.toString())
+                            if (index >= 0) { 
+                                result.times.splice(index, 1)
+                            }
+                        }
                         var locals = {
                             usuarios : result.usuarios,
                             times : result.times,
