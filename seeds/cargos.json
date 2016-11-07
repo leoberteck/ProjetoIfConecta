@@ -1,0 +1,65 @@
+{"_id":{"$oid":"57fce4ab6d267bea6fcd710f"},"nome":"ADMINISTRADOR"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7110"},"nome":"ANALISTA DE TECNOLOGIA DA INFORMAÇÃO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7111"},"nome":"ARQUITETO E URBANISTA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7112"},"nome":"ARQUIVISTA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7113"},"nome":"ASSISTENTE SOCIAL"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7114"},"nome":"AUDITOR"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7115"},"nome":"BIBLIOTECÁRIO - DOCUMENTALISTA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7116"},"nome":"BIÓLOGO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7117"},"nome":"CONTADOR"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7118"},"nome":"ECONOMISTA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7119"},"nome":"BIOMÉDICO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd711a"},"nome":"ENFERMEIRO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd711b"},"nome":"ENGENHEIRO/ÁREA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd711c"},"nome":"FARMACÊUTICO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd711d"},"nome":"FÍSICO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd711e"},"nome":"FISIOTERAPEUTA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd711f"},"nome":"MÉDICO/ÁREA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7120"},"nome":"NUTRICIONISTA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7121"},"nome":"ODONTÓLOGO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7122"},"nome":"ORTOPTISTA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7123"},"nome":"PEDAGOGO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7124"},"nome":"PROGRAMADOR VISUAL"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7125"},"nome":"PSICÓLOGO/ÁREA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7126"},"nome":"PUBLICITÁRIO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7127"},"nome":"RELAÇÕES PÚBLICAS"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7128"},"nome":"SANITARISTA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7129"},"nome":"SECRETÁRIO EXECUTIVO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd712a"},"nome":"TRADUTOR E INTÉRPRETE"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd712b"},"nome":"TÉCNICO EM ASSUNTOS"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd712c"},"nome":"TECNÓLOGO EM COOPERATIVISMO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd712d"},"nome":"MÉDICO VETERINÁRIO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd712e"},"nome":"TECNÓLOGO / FORMAÇÃO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd712f"},"nome":"TERAPEUTA OCUPACIONAL"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7130"},"nome":"ZOOTECNISTA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7131"},"nome":"ASSISTENTE DE ALUNOS"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7132"},"nome":"ASSISTENTE EM ADMINISTRAÇÃO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7133"},"nome":"AUXILIAR DE ENFERMAGEM"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7134"},"nome":"AUXILIAR EM ASSUNTOS"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7135"},"nome":"DESENHISTA DE ARTES GRÁFICAS"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7136"},"nome":"DESENHISTA PROJETISTA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7137"},"nome":"INSTRUMENTADOR CIRÚRGICO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7138"},"nome":"TÉCNICO DE TECNOLOGIA DA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7139"},"nome":"TÉCNICO DE LABORATÓRIO/ÁREA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd713a"},"nome":"TÉCNICO EM AGRIMENSURA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd713b"},"nome":"MOTORISTA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd713c"},"nome":"TÉCNICO EM ANATOMIA E NECROPSIA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd713d"},"nome":"TÉCNICO EM AGROPECUÁRIA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd713e"},"nome":"TÉCNICO EM CARTOGRAFIA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd713f"},"nome":"TÉCNICO EM AUDIOVISUAL"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7140"},"nome":"TÉCNICO EM CONTABILIDADE"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7141"},"nome":"TÉCNICO EM EDIFICAÇÕES"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7142"},"nome":"TÉCNICO EM ELETROELETRÔNICA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7143"},"nome":"TÉCNICO EM ENFERMAGEM"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7144"},"nome":"JORNALISTA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7145"},"nome":"MÚSICO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7146"},"nome":"QUÍMICO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7147"},"nome":"TÉCNICO EM EQUIPAMENTOS MÉDICOODONTOLÓGICO"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7148"},"nome":"TÉCNICO EM FARMÁCIA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd7149"},"nome":"TÉCNICO EM MECÂNICA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd714a"},"nome":"TÉCNICO EM NUTRIÇÃO E DIETÉTICA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd714b"},"nome":"TÉCNICO EM QUÍMICA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd714c"},"nome":"TÉCNICO EM RADIOLOGIA"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd714d"},"nome":"TÉCNICO EM TELECOMUNICAÇÕES"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd714e"},"nome":"VIGILANTE"}
+{"_id":{"$oid":"57fce4ab6d267bea6fcd714f"},"nome":"FONOAUDIÓLOGO"}

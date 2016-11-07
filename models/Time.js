@@ -34,7 +34,7 @@ timeSchema.statics.validateTeam = function (time, isUpdate, callback) {
         //Verifica se o nome é duplicado
         model.findOne({ nome : time.nome }, {}, {}, function (err, doc) {
             if (doc) {
-                if (isUpdate && (doc._id && time._id && doc._id.toString() != time._id.toString())) {
+                if (!isUpdate || (doc._id && time._id && doc._id.toString() != time._id.toString())) {
                     err = new Error("Ja existe um time com este nome")
                     err.status = 400
                     callback(err)
