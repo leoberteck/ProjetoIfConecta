@@ -145,7 +145,9 @@ exports.editItem = function (req, res, next) {
             res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
             logger.newLogUpdate(time, req.session.user._id, "TimeUpdated")
-            res.status(200).send("Alterado com sucesso")
+            try {
+                res.status(200).send("Alterado com sucesso")
+            } catch (err) { }
         }
     })   
 }

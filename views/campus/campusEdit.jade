@@ -8,7 +8,8 @@ block content
                 -var campus = locals.campus
                 label(for="nome") Nome:
                 input(type="hidden" id="id" value="#{campus._id}")
-                input(type="text", class="form-control", id="nome", placeholder="Nome", maxlength="200" value="!{campus.nome}")
+                span(id="nm" style="display:none;") !{campus.nome}
+                input(type="text", class="form-control", id="nome", placeholder="Nome", maxlength="200") 
             button(type="button" class="btn btn-primary" id="btnSubmit") Alterar
             a(class="btn btn-default" href="/") Cancelar
         script(src="../../js/campusEdit.js")

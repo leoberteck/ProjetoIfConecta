@@ -26,3 +26,8 @@ function save() {
         }
     })
 }
+
+$(document).ready(function() {
+    var nome = $("#nm").html();
+    $("#nome").val(nome);
+})

@@ -97,7 +97,8 @@ $(document).ready(function () {
         format: 'DD/MM/YYYY HH:mm',
         locale: 'pt-BR',
         inline: true,
-        sideBySide: true
+        sideBySide: true,
+        minDate : new Date()
     })
 
     $("#dataFim").datetimepicker({
