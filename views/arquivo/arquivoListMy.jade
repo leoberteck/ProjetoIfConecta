@@ -1,0 +1,77 @@
+﻿extends ../layout
+
+block content
+    div.table-responsive.col-md-8.col-md-offset-2
+        h2 Lista de arquivos
+        .row
+            .input-group.search-box
+                span.input-group-addon.search-box
+                    i.glyphicon.glyphicon-search
+                input(id="search", type="text", class="form-control search-box", placeholder="Buscar...", value="#{locals.search || ''}")
+        .row.netralize-row
+            div(class="pull-right" style="margin-left:10px")
+                a(class="btn btn-default" href="/arquivo/addarquivo") Novo    
+                    span.glyphicon.glyphicon-plus
+            div(class="pull-right" style="margin-left:10px")
+                select(class="form-control" id="order")
+                    if locals.order == "1"
+                        option(value="1" selected) Ordenar por arquivos mais recentes
+                    else
+                        option(value="1") Ordenar por arquivos mais recentes
+                    if locals.order == "2"
+                        option(value="2" selected) Ordenar por ordem alfabética
+                    else
+                        option(value="2") Ordenar por ordem alfabética
+            div(class="pull-right" style="margin-left:10px")
+                select(class="form-control", id="categoria")
+                    option(value="none") Todas as categorias
+                    each categoria, index in locals.categorias
+                        if(locals.categoria && categoria._id == locals.categoria.toString())
+                            option(value="#{categoria._id}" selected) #{categoria.nome}
+                        else
+                            option(value="#{categoria._id}") #{categoria.nome}
+        div.container-fluid
+            -var arquivos = locals.arquivos
+            each arquivo, index in arquivos
+                div.tile
+                    span.texto
+                        h4 #{arquivo.nome}
+                        if(arquivo.categoria)
+                            strong #{arquivo.categoria.nome}
+                    div(data-id="#{arquivo._id}" grid-id="#{arquivo.gridId}")
+                        if locals.admin == true || arquivo.criador == locals.userid
+                            button(class = "btn edit")
+                                span.glyphicon.glyphicon-pencil
+                            button(class = "btn remove")
+                                span.glyphicon.glyphicon-trash
+                        button(type="button", class = "btn show", data-toggle="modal", data-target="#arquivoModal")
+                            span.glyphicon.glyphicon-eye-open
+                        button(type="button", class = "btn down")
+                            span.fa.fa-arrow-down
+                        
+        -var pages = locals.pages
+        -var active = locals.active
+        ul.pagination.pag-center
+            each pag, index in pages
+                if pag == active
+                    li(class = "active")
+                        a(page-id="#{pag}") #{pag}
+                else
+                    li
+                        a(page-id="#{pag}") #{pag}
+
+    div(class="modal fade", id="arquivoModal", role="dialog")
+        div.modal-responsive.modal-dialog
+            div(class="modal-content")
+                div.modal-header
+                    button(type="button", class="close", data-dismiss="modal") &times;
+                    h4.modal-title Detalhes do arquivo
+                div(class="modal-body" id="modalBody" style="height:500px;overflow:auto")
+                div.modal-footer
+                    button(type="button", class="btn btn-default", data-dismiss="modal") Fechar
+    script(src="../../../js/arquivoListMy.js")
+
+block styles
+    link(rel='stylesheet', href='../../../css/list.css')
+block javascript
+    script(src="../../../js/bootstrap.min.js")

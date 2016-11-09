@@ -53,6 +53,7 @@
     <Compile Include="models\Time.js" />
     <Compile Include="models\Token.js" />
     <Compile Include="models\Usuario.js" />
+    <Compile Include="public\js\arquivoListMy.js" />
     <Compile Include="public\js\arquivoPublic.js" />
     <Compile Include="public\js\bootstrap-datetimepicker.min.js" />
     <Compile Include="public\js\bootstrap-filestyle.min.js" />
@@ -191,6 +192,7 @@
     <Content Include="views\500.jade" />
     <Content Include="views\arquivo\arquivoEdit.jade" />
     <Content Include="views\arquivo\arquivoForm.jade" />
+    <Content Include="views\arquivo\arquivoListMy.jade" />
     <Content Include="views\arquivo\arquivoList.jade" />
     <Content Include="views\arquivo\arquivoListPublic.jade" />
     <Content Include="views\arquivo\arquivoShow.jade" />

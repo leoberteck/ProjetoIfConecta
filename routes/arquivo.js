@@ -60,7 +60,6 @@ function viewList(req, res, next) {
                 locals.search = search
                 locals.order = order
                 locals.categoria = categoria
-                locals.userid = req.session.user._d
                 res.render(viewListUrl, locals)
             })
         }
@@ -86,8 +85,7 @@ function viewListMy(req, res, next) {
                 locals.search = search
                 locals.order = order
                 locals.categoria = categoria
-                locals.userid = req.session.user._d
-                res.render(viewListUrl, locals)
+                res.render("arquivo/arquivoListMy", locals)
             })
         }
     })
