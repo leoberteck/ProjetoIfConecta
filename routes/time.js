@@ -24,7 +24,7 @@ exports.viewEdit = function (req, res, next) {
             var time = obj
             if (req.session.admin || req.session.user._id == time.criador._id) {
                 //busca por todos os usuarios para preencher dropdowns
-                getFormLocals(function (err, result) {
+                getFormLocals(req.session.user._id, function (err, result) {
                     if (err) {
                         next(err)
                     } else {
@@ -86,7 +86,7 @@ exports.viewListAll = function (req, res, next) {
 
 //Show the form for item inclusion
 exports.viewForm = function (req, res, next) {
-    getFormLocals(function (err, locals) {
+    getFormLocals(req.session.user._id, function (err, locals) {
         if (err) {
             logger.newErrorLog(err, "Error on route viewForm: ", req.session.user._id, "timeviewForm")
             next(err)
@@ -170,25 +170,8 @@ exports.removeItem = function (req, res, next) {
     }
 }
 
-//Generic functions can be used on both request  handlers and api functions
-var getAll = function (skip, idCriador, callback) {
-    var filtro = { }
-    if (idCriador) {
-        filtro.$or = [{criador : idCriador }, {usuarios : { $in : [idCriador] }}]
-    }
-    // }).sort({nome : 1}).exec(
-    model.find(filtro, {}, { skip: skip, limit: 30, sort: 'nome' }, function getobjsCB(err, objs) {
-        if (err) {
-            callback(err)
-        } else {
-            callback(null, objs)
-        }
-        return objs
-    })
-}
-
 //Search for all cargos and all campus to fill form dropdowns
-function getFormLocals(callback) {
+function getFormLocals(idUsuario, callback) {
     var locals
     var UsuarioModel = require('../models/Usuario.js')
     //Get usuarios
@@ -198,7 +181,7 @@ function getFormLocals(callback) {
             callback(error)
         } else {
             locals = { usuarios : usuarios, times : null, admin : false }
-            model.find({}, {}, {sort : "nome"}, function (err, times) {
+            model.getAllForUsuario(null, idUsuario, function (err, times) {
                 if (err) {
                     callback(err)
                 } else {
@@ -238,7 +221,7 @@ function getListLocals(page, idCriador, callback) {
     page = page || 1
     if (page >= 1) {
         var skip = 30 * (page - 1)
-        getAll(skip, idCriador, function (err, objs) {
+        model.getAllForUsuario(skip, idCriador, function (err, objs) {
             if (err) {
                 err.status = 500
                 callback(err)

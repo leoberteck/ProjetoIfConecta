@@ -24,7 +24,7 @@ exports.viewEdit = function (req, res, next) {
             var evento = obj
             if (req.session.admin || req.session.user._id == evento.criador._id) {
                 //busca por todos os usuarios para preencher dropdowns
-                getFormLocals(function (err, result) {
+                getFormLocals(req.session.user._id, function (err, result) {
                     if (err) {
                         next(err)
                     } else {
@@ -64,7 +64,7 @@ exports.viewList = function (req, res, next) {
 
 //Show the form for item inclusion
 exports.viewForm = function (req, res, next) {
-    getFormLocals(function (err, locals) {
+    getFormLocals(req.session.user._id, function (err, locals) {
         if (err) {
             next(err)
         } else {
@@ -186,7 +186,7 @@ var getAll = function (skip, idCriador, callback) {
 }
 
 //Search for all cargos and all campus to fill form dropdowns
-function getFormLocals(callback) {
+function getFormLocals(idUsuario, callback) {
     var locals
     var UsuarioModel = require('../models/Usuario.js')
     var TimeModel = require('../models/Time.js')
@@ -197,7 +197,7 @@ function getFormLocals(callback) {
             callback(error)
         } else {
             locals = { usuarios : usuarios, times : null, admin : false }
-            TimeModel.find({}, {}, {sort : "nome" }, function (err, times) {
+            TimeModel.getAllForUsuario(null, idUsuario, function (err, times) {
                 if (err) {
                     callback(err)
                 } else {

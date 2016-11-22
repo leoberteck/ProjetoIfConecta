@@ -45,7 +45,7 @@ function save() {
         data: JSON.stringify(obj),
         success : function (data, status, xhr) {
             alert(data)
-            window.location.href = "/usuario/list/1"
+            window.location.href = "/"
         },
         error : function (jqXHR, status, error) {
             if (jqXHR.status == 500) {

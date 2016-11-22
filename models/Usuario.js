@@ -74,7 +74,7 @@ userSchema.statics.validateUser = function (usuario, isUpdate, callback) {
         err = new Error('Email do usuario vazio')
     } else if (!usuario.senha && !isUpdate) {
         err = new Error('Senha do usuario vazia')
-    } else if (usuario.senha.length < 3) {
+    } else if ((!usuario.senha && !isUpdate) && usuario.senha.length < 3) {
         err = new Error('Senha deve conter no mínimo 3 caracteres')
     } else if (!usuario.cargo || !usuario.cargo.id) {
         var err = new Error('Cargo do usuario vazio')

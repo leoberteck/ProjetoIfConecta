@@ -184,6 +184,24 @@ timeSchema.statics.removeTime = function (id, user, callback) {
     })
 }
 
+timeSchema.statics.getAllForUsuario = function (skip, idCriador, callback) {
+    var model = this
+    var filtro = {}
+    if (idCriador) {
+        filtro.$or = [{ criador : idCriador }, { usuarios : { $in : [idCriador] } }]
+    }
+    
+    var options = { sort: 'nome' }
+    if (skip) {
+        options.skip = skip
+        options.limit = 30
+    }
+
+    model.find(filtro, {}, options, function getobjsCB(err, objs) {
+        callback(err, objs)
+    })
+}
+
 function removeTimeFromUsuarios(usuarios_to_remove, times_to_remove, time, callback) {
     var idTime = time._id
     if (usuarios_to_remove) {

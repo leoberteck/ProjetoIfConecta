@@ -114,7 +114,8 @@ $(document).ready(function () {
         format: 'DD/MM/YYYY HH:mm',
         locale: 'pt-BR',
         inline: true,
-        sideBySide: true
+        sideBySide: true,
+        minDate : new Date()
     })
     
     $("#dataFim").datetimepicker({
@@ -122,7 +123,8 @@ $(document).ready(function () {
         locale: 'pt-BR',
         useCurrent: false,
         inline: true,
-        sideBySide: true
+        sideBySide: true,
+        minDate : new Date()
     })
     
     $("#dataIni").on("dp.change", function (e) {
