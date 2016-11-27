@@ -121,6 +121,7 @@
     <Compile Include="public\js\InsigthsPageView.js" />
     <Compile Include="public\js\jquery-2.2.0.min.js" />
     <Compile Include="public\js\login.js" />
+    <Compile Include="public\js\logList.js" />
     <Compile Include="public\js\moment.js" />
     <Compile Include="public\js\newUsuarioForm.js" />
     <Compile Include="public\js\select2.full.js" />
@@ -144,7 +145,7 @@
     <Compile Include="routes\cargo.js" />
     <Compile Include="routes\evento.js" />
     <Compile Include="routes\index.js" />
-    <Compile Include="routes\logRoute.js" />
+    <Compile Include="routes\logs.js" />
     <Compile Include="routes\time.js" />
     <Compile Include="routes\usuario.js" />
     <Content Include="HTML1.html" />
@@ -215,6 +216,8 @@
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />
     <Content Include="views\login.jade" />
+    <Content Include="views\log\viewList.jade" />
+    <Content Include="views\log\viewShow.jade" />
     <Content Include="views\time\timeEdit.jade" />
     <Content Include="views\time\timeForm.jade" />
     <Content Include="views\time\timeList.jade" />
@@ -249,6 +252,7 @@
     <Folder Include="views\evento\" />
     <Folder Include="views\arquivo\" />
     <Folder Include="views\categoria\" />
+    <Folder Include="views\log\" />
     <Folder Include="views\time\" />
     <Folder Include="views\usuario\" />
   </ItemGroup>

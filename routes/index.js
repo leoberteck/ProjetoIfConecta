@@ -1,6 +1,7 @@
 ﻿//TODO: require all other route file here and exports them
 
 module.exports = {
+    log : require('./logs.js'),
     usuario : require('./usuario.js'),
     cargo : require('./cargo.js'),
     campus : require('./campus.js'),

@@ -1,0 +1,25 @@
+﻿-var log = locals.log
+-function prettyDate(dateString){
+    -var date = new Date(dateString);
+    -var d = date.getDate();
+    -var monthNames = [ "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" ];
+    -var m = monthNames[date.getMonth()];
+    -var y = date.getFullYear();
+    -var h = date.getHours();
+    -var min = date.getMinutes();
+    -if(min < 10)
+        -min = '0' + min;
+    -return d+' '+m+' '+y +' - '+h+':'+min;
+-}
+div.detail-container
+    div.row
+        h3 #{prettyDate(log.data)} - #{log.descricao}
+    if(log.usuario)
+        div.row.detail-section
+            h4 Usuário associado: #{log.usuario.nome}
+    div.row.detail-section
+        h4 Tipo:
+        p #{log.type}
+    div.row.detail-section
+        h4 Json associado:
+        p !{JSON.stringify(log.json,null,2)}

@@ -107,7 +107,11 @@ app.get('/auth/*', function (req, res, next) {
     }
 })
 app.get('/auth/google', authorize, passport.authenticate('google', { scope : ['profile', 'email'], session : true }) )
-app.get('/auth/google/callback', passport.authorize('google', { successRedirect : '/', failureRedirect : '/500', }) )
+app.get('/auth/google/callback', passport.authorize('google', { successRedirect : '/', failureRedirect : '/500', }))
+//LOGS
+app.get('/log/*', authorizeAdmin)
+app.get('/log/list/:page', routes.log.viewList)
+app.get('/log/show/:id', routes.log.viewShow)
 //Usuario
 app.get('/usuario/new', routes.usuario.viewNewForm)
 app.post('/usuario/new', passport.authenticate('local-signup', {
