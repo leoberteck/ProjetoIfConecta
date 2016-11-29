@@ -13,12 +13,6 @@ cargoSchema.pre('save', function cargoPreSaveHook(next) {
     })
 })
 
-cargoSchema.pre('remove', function cargoPreRemoveHook(next) {
-    Usuario.remove({ 'cargo.id' : this._id }, function (err, count) {
-        next(err)
-    })
-})
-
 cargoSchema.statics.addNewCargo = function (obj, callback) {
     var model = this
     model.validateCargo(obj, function (err) {
@@ -67,12 +61,20 @@ cargoSchema.statics.removeCargo = function (id, callback) {
             logger.newErrorLog(err, "Error on remove", null, "removeCargo")
             callback(err)
         } else {
-            doc.remove(function (err, doc) {
-                if (err) {
-                    logger.newErrorLog(err, "Error on remove", null, "removeCargo")
-                    callback(err)
-                } else {
-                    callback()
+            Usuario.find({ "cargo.id" : doc._id }, function (err, users) {
+                if (users && users.length > 0) {
+                    var erro = new Error("Não é possível remover este cargo. Há usuários atrelados a ele.")
+                    callback(erro)
+                }
+                else {
+                    doc.remove(function (err, doc) {
+                        if (err) {
+                            logger.newErrorLog(err, "Error on remove", null, "removeCargo")
+                            callback(err)
+                        } else {
+                            callback()
+                        }
+                    })
                 }
             })
         }

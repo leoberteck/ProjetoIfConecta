@@ -16,18 +16,6 @@ campusSchema.pre('save', function campusPreSaveHook(next) {
     })
 })
 
-campusSchema.pre('remove', function campusPreRemoveHook(next) {
-    Usuario.remove({ 'campus.id' : this._id }, function (err, count) {
-        if (err) {
-            logger.newErrorLog(err, "Error on campus hook: pre remove", null, "campusPreRemoveHook")
-        } else {
-            console.log('Users with campus : ' + this.nome + ' have been removed')
-        }
-        next()
-    })
-})
-
-
 campusSchema.statics.addNewCampus = function (obj, callback) {
     var model = this
     model.validateCampus(obj, function (err) {
@@ -76,12 +64,20 @@ campusSchema.statics.removeCampus = function (id, callback) {
             logger.newErrorLog(err, "Error on remove", null, "removeCampus")
             callback(err)
         } else {
-            doc.remove(function (err, doc) {
-                if (err) {
-                    logger.newErrorLog(err, "Error on remove", null, "removeCampus")
-                    callback(err)
-                } else {
-                    callback()
+            Usuario.find({ "campus.id" : doc._id }, function (err, users) {
+                if (users && users.length > 0) {
+                    var erro = new Error("Não é possível remover este campus. Há usuários atrelados a ele.")
+                    callback(erro)
+                }
+                else { 
+                    doc.remove(function (err, doc) {
+                        if (err) {
+                            logger.newErrorLog(err, "Error on remove", null, "removeCampus")
+                            callback(err)
+                        } else {
+                            callback()
+                        }
+                    })
                 }
             })
         }
