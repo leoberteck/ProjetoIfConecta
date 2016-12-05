@@ -67,6 +67,7 @@ userSchema.statics.validatePassword = function (password, hash) {
 }
 
 userSchema.statics.validateUser = function (usuario, isUpdate, callback) {
+    var model = this
     var err = null
     if (!usuario.nome) {
         err = new Error('Nome do usuario vazio')
@@ -95,13 +96,13 @@ userSchema.statics.validateUser = function (usuario, isUpdate, callback) {
                     err.status = 400
                     callback(err)
                 } else {
-                    this.model.fillCargoCampus(usuario, function (userFilled) {
+                    model.fillCargoCampus(usuario, function (userFilled) {
                         callback(null, userFilled)
                     })
                 }
             }
             else {
-                this.model.fillCargoCampus(usuario, function (userFilled) {
+                model.fillCargoCampus(usuario, function (userFilled) {
                     callback(null, userFilled)
                 })
             }
