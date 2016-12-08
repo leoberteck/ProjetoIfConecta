@@ -41,6 +41,7 @@ eventoSchema.statics.addNewEvento = function (obj, criador, callback) {
             logger.newErrorLog(err, "Error on save validator", criador._id, "addNewEvento")
             callback(err)
         } else {
+            obj.usuarios.push(criador._id.toString())
             helper.generateUsersArray(obj.usuarios, obj.times, function (usuarios) {
                 var newevento = {
                     nome : obj.nome,
@@ -133,7 +134,7 @@ eventoSchema.statics.removeEvento = function (id, user, callback) {
             logger.newErrorLog(err, "Error on remove", user._id)
             callback(err)
         } else {
-            if (user.admin == true || doc.criador == user._id) {
+            if (user.admin == true || doc.criador.toString() == user._id.toString()) {
                 doc.usuarios.forEach(function (entry, doc) {
                     UsuarioModel.addNotfEvento(entry, EVENTO_REMOVED_NOFT, doc)
                 })

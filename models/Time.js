@@ -56,6 +56,7 @@ timeSchema.statics.addNewTime = function (obj, criador, callback) {
             logger.newErrorLog(err, "Error on route save validator: ", criador._id, "addNewTime")
             callback(err)
         } else {
+            obj.usuarios.push(criador._id.toString())
             helper.generateUsersArray(obj.usuarios, obj.times, function (usuarios) {
                 var newtime = {
                     nome : obj.nome,

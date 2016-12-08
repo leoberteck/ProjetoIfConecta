@@ -5,7 +5,6 @@ var bodyParser = require('body-parser')
 var session = require('express-session')
 var passport = require('passport')
 var flash = require('connect-flash')
-var insights = require('applicationinsights')
 var multer = require('multer')
 var mongoStore = require('connect-mongo')(session)
 var storage = require('gridfs-storage-engine')({
@@ -20,7 +19,6 @@ require('./config/confstring.js')()
 //Connects with the database
 var dbInfo = require('./config/db.js')
 var db = dbInfo.getDb()
-insights.setup("01b3ae60-6cb5-4c64-81c6-2b4fc209b99b").start()
 
 var app = express()
 
