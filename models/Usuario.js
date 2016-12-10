@@ -258,7 +258,7 @@ function validateEmail(email) {
 }
 
 function checkForSpecialCharacters(str) {
-    var pattern = new RegExp(/[~`!@#$%\^&*+=\-\[\]\.\\';,/{ }|\\":<>\?]/);
+    var pattern = new RegExp(/[~`!@#$%\^&*+=\-\[\]\.\\';,/{}|\\":<>\?]/);
     return pattern.test(str)
 }
 
