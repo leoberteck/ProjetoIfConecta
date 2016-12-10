@@ -66,7 +66,7 @@ exports.saveItem = function (req, res, next) {
     model.addNewCargo(req.body, function (err, response) {
         if (err) {
             logger.newErrorLog(err, "Error on route saveItem: ", req.session.user._id, "cargoSaveItem")
-            res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+            res.status(err.status || 500).send("Erro ao tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
             logger.newLogAdd(req.body, req.session.user._id, "CargoAdded")
             res.status(200).send("Salvo com sucesso")
@@ -79,7 +79,7 @@ exports.editItem = function (req, res, next) {
     model.updateCargo(req.body, function (err) {
         if (err) {
             logger.newErrorLog(err, "Error on route editItem: ", req.session.user._id, "cargoEditItem")
-            res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+            res.status(err.status || 500).send("Erro ao tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
             logger.newLogUpdate(req.body, req.session.user._id, "CargoUpdated")
             res.status(200).send("Alterado com sucesso")
@@ -94,7 +94,7 @@ exports.removeItem = function (req, res, next) {
         model.removeCargo(obj.id, function (err) {
             if (err) {
                 logger.newErrorLog(err, "Error on route removeItem: ", req.session.user._id, "cargoRemoveItem")
-                res.status(err.status || 500).send("Erro tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+                res.status(err.status || 500).send("Erro ao tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
                 logger.newLogRemove(obj, req.session.user._id, "CargoRemoved")
                 res.status(200).send("Removido com sucesso")

@@ -161,7 +161,7 @@ function saveItem (req, res, next) {
         model.addNewArquivo(req.file, req.session.user, function (err, newid) {
             if (err) {
                 logger.newErrorLog(err, "Error on route saveItem: ", req.session.user._id, "arquivoSaveItem")
-                res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+                res.status(err.status || 500).send("Erro ao tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
                 logger.newLogAdd(req.body, req.session.user._id, "ArquivoAdded")
                 res.redirect('/arquivo/editarquivo/' + newid);
@@ -169,7 +169,7 @@ function saveItem (req, res, next) {
         })
     } else {
         logger.newErrorLog("A file was not uploaded", "Error on route saveItem: ", req.session.user._id, "arquivoSaveItem")
-        res.status(400).send("Erro tentar salvar o item, detalhes : Nenhum arquivo foi recebido");
+        res.status(400).send("Erro ao tentar salvar o item, detalhes : Nenhum arquivo foi recebido");
     }
 }
 
@@ -179,7 +179,7 @@ function editItem (req, res, next) {
     model.updateArquivo(arquivo, req.session.user, function (err) {
         if (err) {
             logger.newErrorLog(err, "Error on route editItem: ", req.session.user._id, "arquivoEditItem")
-            res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+            res.status(err.status || 500).send("Erro ao tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
             logger.newLogUpdate(arquivo, req.session.user._id, "ArquivoUpdated")
             res.status(200).send("Alterado com sucesso")
@@ -194,7 +194,7 @@ function removeItem (req, res, next) {
         model.removeArquivo(obj.id, req.session.user, function (err) {
             if (err) {
                 logger.newErrorLog(err, "Error on route removeItem: ", req.session.user._id, "arquivoRemoveItem")
-                res.status(err.status || 500).send("Erro tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+                res.status(err.status || 500).send("Erro ao tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
                 logger.newLogRemove(obj, req.session.user._id, "ArquivoRemoved")
                 res.status(200).send("Removido com sucesso")

@@ -193,14 +193,14 @@ exports.saveItem = function (req, res, next) {
         model.addNewUser(req.body, function (err, response) {
             if (err) {
                 logger.newErrorLog(err, "Error on route saveItem: ", req.session.user._id, "usuariosaveItem")
-                res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+                res.status(err.status || 500).send("Erro ao tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
                 logger.newLogAdd(req.body, req.session.user._id, "UsuarioAdded")
                 res.status(200).send("Salvo com sucesso")
             }
         })
     } else {
-        res.status(400).send("Erro tentar salvar o item, detalhes : formulário não preenchido corretamente.")
+        res.status(400).send("Erro ao tentar salvar o item, detalhes : formulário não preenchido corretamente.")
     }
 }
 
@@ -213,7 +213,7 @@ exports.editItem = function (req, res, next) {
         model.updateUser(usuario, times_to_remove, function (err) {
             if (err) {
                 logger.newErrorLog(err, "Error on route editItem: ", req.session.user._id, "usuarioeditItem")
-                res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+                res.status(err.status || 500).send("Erro ao tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
                 logger.newLogUpdate(usuario, req.session.user._id, "UsuarioUpdated")
                 res.status(200).send("Alterado com sucesso")
@@ -231,7 +231,7 @@ exports.removeItem = function (req, res, next) {
         model.removeUser(obj.id, function (err) {
             if (err) {
                 logger.newErrorLog(err, "Error on route removeItem: ", req.session.user._id, "usuarioremoveItem")
-                res.status(err.status || 500).send("Erro tentar mudar status do item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+                res.status(err.status || 500).send("Erro ao tentar mudar status do item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
                 logger.newLogRemove(obj, req.session.user._id, "UsuarioRemoved")
                 res.status(200).send("Status alterado com sucesso")

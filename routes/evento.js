@@ -113,7 +113,7 @@ exports.saveItem = function (req, res, next) {
     model.addNewEvento(req.body, req.session.user, function (err, response) {
         if (err) {
             logger.newErrorLog(err, "Error on route saveItem: ", req.session.user._id, "eventoSaveItem")
-            res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+            res.status(err.status || 500).send("Erro ao tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
             logger.newLogAdd(req.body, req.session.user._id, "EventoAdded")
             res.status(200).send("Salvo com sucesso")
@@ -129,7 +129,7 @@ exports.editItem = function (req, res, next) {
     model.updateEvento(evento, usuarios_to_remove, times_to_remove, req.session.user, function (err) {
         if (err) {
             logger.newErrorLog(err, "Error on route editItem: ", req.session.user._id, "eventoEditItem")
-            res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+            res.status(err.status || 500).send("Erro ao tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
             logger.newLogUpdate(evento, req.session.user._id, "EventoUpdated")
             res.status(200).send("Alterado com sucesso")
@@ -144,7 +144,7 @@ exports.removeItem = function (req, res, next) {
         model.removeEvento(obj.id, req.session.user, function (err) {
             if (err) {
                 logger.newErrorLog(err, "Error on route removeItem: ", req.session.user._id, "eventoRemoveItem")
-                res.status(err.status || 500).send("Erro tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+                res.status(err.status || 500).send("Erro ao tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
                 logger.newLogRemove(obj, req.session.user._id, "EventoRemoved")
                 res.status(200).send("Removido com sucesso")

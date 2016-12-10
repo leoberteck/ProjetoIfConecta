@@ -69,10 +69,14 @@ userSchema.statics.validatePassword = function (password, hash) {
 userSchema.statics.validateUser = function (usuario, isUpdate, callback) {
     var model = this
     var err = null
-    if (!usuario.nome) {
+    if (!usuario.nome || usuario.nome.trim().length == 0) {
         err = new Error('Nome do usuario vazio')
+    } else if (checkForSpecialCharacters(usuario.nome)) {
+        err = new Error('Nome do usuario não pode conter caracters especiais')
     } else if (!usuario.email) {
         err = new Error('Email do usuario vazio')
+    } else if (!validateEmail(usuario.email)) {
+        err = new Error('Email do usuario inválido')
     } else if (!usuario.senha && !isUpdate) {
         err = new Error('Senha do usuario vazia')
     } else if ((!usuario.senha && !isUpdate) && usuario.senha.length < 3) {
@@ -247,5 +251,16 @@ function removeUsuarioFromArquivos(arquivos_to_remove, idUser, callback) {
         callback()
     }
 }
+
+function validateEmail(email) {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
+function checkForSpecialCharacters(str) {
+    var pattern = new RegExp(/[~`!@#$%\^&*+=\-\[\]\.\\';,/{ }|\\":<>\?]/);
+    return pattern.test(str)
+}
+
 
 module.exports = mongoose.model('User', userSchema)

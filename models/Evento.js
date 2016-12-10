@@ -21,8 +21,10 @@ var eventoSchema = new Schema({
 
 eventoSchema.statics.validateEvento = function (evento, callback) {
     var err = null
-    if (!evento.nome)
+    if (!evento.nome || evento.nome.trim().length == 0)
         err = new Error("Nome do evento vazio")
+    else if (checkForSpecialCharacters(evento.nome))
+        err = new Error("Nome do evento não pode conter caracters especiais")
     if (!evento.criador)
         err = new Error("O evento deve possuir um criardor")
     if (err) {
@@ -231,6 +233,11 @@ function upadteUserEvento(usuarios, evento) {
             }
         })
     })
+}
+
+function checkForSpecialCharacters(str) {
+    var pattern = new RegExp(/[~`!@#$%\^&*+=\-\[\]\.\\';,/ { }|\\":<>\?]/);
+    return pattern.test(str)
 }
 
 module.exports = mongoose.model('Evento', eventoSchema)

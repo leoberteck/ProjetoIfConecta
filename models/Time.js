@@ -23,8 +23,10 @@ var timeSchema = new Schema({
 timeSchema.statics.validateTeam = function (time, isUpdate, callback) {
     var model = this
     var err = null
-    if (!time.nome) {
+    if (!time.nome || time.nome.trim().length == 0) {
         err = new Error('Nome do time vazio')
+    } else if (checkForSpecialCharacters(time.nome)) {
+        err = new Error("Nome do time não pode conter caracters especiais")
     }
     
     if (err) {
@@ -386,6 +388,11 @@ function upadteUserTeam(usuarios, idTime) {
             }
         })
     })
+}
+
+function checkForSpecialCharacters(str) {
+    var pattern = new RegExp(/[~`!@#$%\^&*+=\-\[\]\.\\';,/ { }|\\":<>\?]/);
+    return pattern.test(str)
 }
 
 module.exports = mongoose.model('Time', timeSchema)

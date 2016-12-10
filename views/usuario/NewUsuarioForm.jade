@@ -19,29 +19,29 @@ html
             form(role="form", id="usForm" action="/usuario/new" method="post")
                 .form-group
                     label(for="nome") Nome: 
-                    input(type="text", class="form-control", id="nome", placeholder="Nome", maxlength="200" name="nome")
+                    input(type="text", class="form-control", id="nome", placeholder="Nome", maxlength="200" name="nome" required="")
                 .form-group
                     label(for="descricao") Descrição: 
-                    textarea(class="form-control", id="descricao", placeholder="Descrição", rows="5", maxlength="500" name="descricao")
+                    textarea(class="form-control", id="descricao", placeholder="Descrição", rows="5", maxlength="500" name="descricao" )
                 .form-group
                     label(for="email") Email: 
-                    input(type="email", class="form-control", id="email", placeholder="Email", maxlength="200" name="email")
+                    input(type="email", class="form-control", id="email", placeholder="Email", maxlength="200" name="email" required="")
                 .form-group
                     label(for="senha") Senha: 
-                    input(type="password", class="form-control", id="senha", placeholder="Senha", maxlength="16" name="senha")
+                    input(type="password", class="form-control", id="senha", placeholder="Senha", maxlength="16" name="senha" required="")
                 .form-group
                     label(for="_confirmaSenha") Confirmação de senha: 
-                    input(type="password", class="form-control", id="_confirmaSenha", placeholder="Confirmação da senha", maxlength="16" name="_confirmaSenha")
+                    input(type="password", class="form-control", id="_confirmaSenha", placeholder="Confirmação da senha", maxlength="16" name="_confirmaSenha" required="")
                 .form-group
                     div(id="msg" class="alert alert-danger") As duas senhas devem coincidir
                 .form-group
                     label(for="cargo") Cargo: 
-                    select(class="form-control", id="cargo" name="cargo")
+                    select(class="form-control", id="cargo" name="cargo" required="")
                         each cargo, index in locals.cargos
                             option(value="#{cargo._id}") #{cargo.nome}
                 .form-group
                     label(for="campus") Campus:
-                    select(class="form-control", id="campus" name="campus")
+                    select(class="form-control", id="campus" name="campus" required="")
                         each campus, index in locals.campuss
                             option(value="#{campus._id}") !{campus.nome}
                 button(type="submit" class="btn btn-primary" id="btnSubmit") Gravar

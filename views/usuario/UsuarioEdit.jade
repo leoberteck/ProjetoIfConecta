@@ -8,16 +8,16 @@ block content
             .form-group
                 input(type="hidden" id="id" value="#{usuario._id}")
                 label(for="nome") Nome: 
-                input(type="text", class="form-control", id="nome", placeholder="Nome", maxlength="200", value="#{usuario.nome}")
+                input(type="text", class="form-control", id="nome", placeholder="Nome", maxlength="200", value="#{usuario.nome}" required="")
             .form-group
                 label(for="descricao") Descrição: 
                 textarea(class="form-control", id="descricao", placeholder="Descrição", rows="5", maxlength="500") #{usuario.descricao}
             .form-group
                 label(for="email") Email: 
-                input(type="email", class="form-control", id="email", placeholder="Email", maxlength="200", value="#{usuario.email}")
+                input(type="email", class="form-control", id="email", placeholder="Email", maxlength="200", value="#{usuario.email}" required="")
             .form-group
                 label(for="cargo") Cargo: 
-                select(class="form-control", id="cargo")
+                select(class="form-control", id="cargo" required="")
                     each cargo, index in locals.cargos
                         if cargo._id == usuario.cargo.id.toString()
                             option(value="#{cargo._id}" selected) #{cargo.nome}
@@ -25,7 +25,7 @@ block content
                             option(value="#{cargo._id}") #{cargo.nome}
             .form-group
                 label(for="campus") Campus:
-                select(class="form-control", id="campus")
+                select(class="form-control", id="campus" required="")
                     each campus, index in locals.campuss
                         if campus._id == usuario.campus.id.toString()
                             option(value="#{campus._id}" selected) !{campus.nome}

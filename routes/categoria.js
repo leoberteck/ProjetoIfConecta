@@ -67,7 +67,7 @@ exports.saveItem = function (req, res, next) {
     model.addNewCategoria(req.body, function (err, response) {
         if (err) {
             logger.newErrorLog(err, "Error on route saveItem: ", req.session.user._id, "categoriaSaveItem")
-            res.status(err.status || 500).send("Erro tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+            res.status(err.status || 500).send("Erro ao tentar salvar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
             logger.newLogAdd(req.body, req.session.user._id, "CategoriaAdded")
             res.status(200).send("Salvo com sucesso")
@@ -80,7 +80,7 @@ exports.editItem = function (req, res, next) {
     model.updateCategoria(req.body, function (err) {
         if (err) {
             logger.newErrorLog(err, "Error on route editItem: ", req.session.user._id, "categoriaEditItem")
-            res.status(err.status || 500).send("Erro tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+            res.status(err.status || 500).send("Erro ao tentar alterar o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
         } else {
             logger.newLogUpdate(req.body, req.session.user._id, "CategoriaUpdated")
             res.status(200).send("Alterado com sucesso")
@@ -95,7 +95,7 @@ exports.removeItem = function (req, res, next) {
         model.removeCategoria(obj.id, function (err) {
             if (err) {
                 logger.newErrorLog(err, "Error on route removeItem: ", req.session.user._id, "categoriaRemoveItem")
-                res.status(err.status || 500).send("Erro tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
+                res.status(err.status || 500).send("Erro ao tentar remover o item, detalhes : \n" + err.message || err || "Detalhes indisponíveis")
             } else {
                 logger.newLogRemove(obj, req.session.user._id, "CategoriaRemoved")
                 res.status(200).send("Removido com sucesso")
